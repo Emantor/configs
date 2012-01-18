@@ -1,0 +1,19 @@
+#
+# look and feel for the bottom two lines.
+#
+shell -bash
+
+# backtick für Batterieprozentsatz
+backtick 1 60 60 /Users/phoenix/bin/batterypercent
+backtick 2 60 60 /Users/phoenix/bin/externalcheck
+
+
+caption     always        "%{+b rk}%H%{gk} |%c %{yk}%d.%m.%Y | Load: %l | Battery: %1` | External Power: %2` %{wk} "
+hardstatus alwayslastline "%?%{yk}%-Lw%?%{wb}%n*%f %t%?(%u)%?%?%{yk}%+Lw%?"
+#
+#  Toggle 'fullscreen' or not.
+#
+bind f eval "caption splitonly" "hardstatus ignore"
+bind F eval "caption always"    "hardstatus alwayslastline"
+
+defscrollback 5000

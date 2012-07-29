@@ -3,6 +3,9 @@
 #
 shell -bash
 
+# disable splash screen
+startup_message off
+
 # backtick für Batterieprozentsatz
 backtick 1 60 60 /Users/phoenix/bin/batterypercent
 backtick 2 60 60 /Users/phoenix/bin/externalcheck

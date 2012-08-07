@@ -6,12 +6,7 @@ shell -bash
 # disable splash screen
 startup_message off
 
-# backtick für Batterieprozentsatz
-backtick 1 60 60 /Users/phoenix/bin/batterypercent
-backtick 2 60 60 /Users/phoenix/bin/externalcheck
-
-
-caption     always        "%{+b rk}%H%{gk} |%c %{yk}%d.%m.%Y | Load: %l | Battery: %1` | External Power: %2` %{wk} "
+caption     always        "%{+b rk}%H%{gk} |%c %{yk}%d.%m.%Y | Load: %l"
 hardstatus alwayslastline "%?%{yk}%-Lw%?%{wb}%n*%f %t%?(%u)%?%?%{yk}%+Lw%?"
 #
 #  Toggle 'fullscreen' or not.

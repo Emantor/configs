@@ -1,0 +1,22 @@
+Config { font = "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true"  
+     , bgColor = "#000000"  
+     , fgColor = "grey"  
+     , position = Static { xpos = 0 , ypos = 0, width = 1504, height = 16 }  
+     , commands = [ Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 20  
+             , Run Network "lan" ["-L","0","-H","70","--normal","green","--high","red"] 20   
+             , Run Network "wlan" ["-L","0","-H","70","--normal","green","--high","red"] 20   
+             , Run Memory ["-t","Mem: <usedratio>%"] 20  
+           , Run Date "%k:%M" "date" 10  
+           , Run StdinReader  
+           , Run BatteryP ["BAT0"]
+              ["-t", "<left>% <fc=red><leftbar></fc> <timeleft>",
+               "-L", "10", "-H", "80", "-p", "3",
+               "--", "-O", "<fc=green>On</fc> - ", "-o", "",
+               "-L", "-15", "-H", "-5",
+               "-l", "red", "-m", "blue", "-h", "green"]
+              600
+           ]  
+     , sepChar = "%"  
+     , alignSep = "}{"  
+     , template = " %StdinReader%}{ <fc=grey>%cpu% ~ %memory% ~ %lan% ~ %wlan% </fc> ~ %battery% ~ <fc=yellow>%date%</fc> " 
+     }  

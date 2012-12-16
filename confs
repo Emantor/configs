@@ -3,6 +3,7 @@
 case $1 in
 collect)
   cp ~/.vimrc vimrc
+  cp -R ~/.vim/* vim/
   cp ~/.screenrc screenrc
   cp ~/.xmonad/xmonad.hs xmonad/xmonad.hs
   cp ~/.config/dunstrc config/dunstrc
@@ -21,6 +22,7 @@ deploy)
   cp xprofile ~/.xprofile
   cp zshenv ~/.zshenv
   cp -r -T zsh ~/.zsh
+  cp -r -T vim ~/.vim
   cp xmobarrc ~/.xmobarrc
   ;;
 *)

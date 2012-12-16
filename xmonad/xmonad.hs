@@ -1,25 +1,41 @@
 import XMonad
 import XMonad.Layout.NoBorders
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageHelpers
 import XMonad.Util.Run(spawnPipe)
 import Graphics.X11.ExtraTypes.XF86
 import XMonad.Util.EZConfig(additionalKeys)
 import System.IO
 
+
 -- ManageHook für Docks und Apps 
 myManageHook = manageHook defaultConfig <+> manageDocks <+> composeAll
     [ className =? "Gimp"      --> doFloat
-    , className =? "Pidgin"    --> doShift "2:chat"
-    , className =? "Thunderbird"    --> doShift "3:mail"
+    , className =? "Steam"      --> doFloat <+> doFullFloat <+> doIgnore
+    , className =? "Pidgin"    --> doShift "7:chat"
+    , className =? "Thunderbird"    --> doShift "8:mail"
     ]
+
+-- LogHooks
+myLogHook :: Handle -> X ()
+myLogHook xmproc = dynamicLogWithPP $ customPP { ppOutput = hPutStrLn xmproc }
+                       
+customPP :: PP
+customPP = xmobarPP { ppTitle = xmobarColor "blue" "" . shorten 100 } 
+
+fadeLogHook :: X ()
+fadeLogHook = fadeInactiveLogHook fadeAmount
+  where fadeAmount = 0.9
 
 -- LayoutHook mit SmartBorders und Struts 
 myLayoutHook = smartBorders $ avoidStruts  $  layoutHook defaultConfig
 
 -- Workspaces
-myWorkspaces = ["1:main","2:chat","3:mail","4:whatever","5:media","6","7","8:web","9:movie"]
+myWorkspaces = ["1","2","3","4","5","6","7:chat","8:mail","9:movie"]
 
+-- Xmonad starten
 main = do
     -- Xmobar starten
     xmproc <- spawnPipe "/usr/bin/xmobar /home/phoenix/.xmobarrc"
@@ -27,14 +43,11 @@ main = do
     xmonad $ defaultConfig
         { manageHook = myManageHook
         , layoutHook = myLayoutHook 
-        , logHook = dynamicLogWithPP xmobarPP
-          { ppOutput = hPutStrLn xmproc
-          , ppTitle = xmobarColor "blue" "" . shorten 50
-          }
+        , logHook = myLogHook xmproc >> (fadeLogHook)
         , modMask = mod4Mask     -- Rebind Mod to the Windows key
         , terminal = "urxvt"
         , borderWidth = 2
-        , focusedBorderColor = "#0000FF"
+        , focusedBorderColor = "#FF0000"
         , workspaces = myWorkspaces
         } `additionalKeys`
         -- Headphone Volume
@@ -60,4 +73,10 @@ main = do
         , ((mod4Mask, xF86XK_AudioPlay), spawn "mpc -h bibliothekar toggle")
         , ((mod4Mask, xF86XK_AudioPrev), spawn "mpc -h bibliothekar prev")
         , ((mod4Mask, xF86XK_AudioNext), spawn "mpc -h bibliothekar next")
+        -- Touchpad toggle
+        -- , ((0, xF86XK_TouchpadToggle), spawn "/sbin/trackpad-toggle.sh")
+        -- Cmus Remote (Currently not working)
+        , ((0, xF86XK_AudioPlay), spawn "cmus-remote -u")
+        , ((0, xF86XK_AudioPrev), spawn "cmus-remote -p")
+        , ((0, xF86XK_AudioNext), spawn "cmus-remote -n")
         ]

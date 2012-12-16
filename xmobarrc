@@ -9,9 +9,9 @@ Config { font = "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true"
            , Run Date "%k:%M" "date" 10  
            , Run StdinReader  
            , Run BatteryP ["BAT0"]
-              ["-t", "<left>% <fc=red><leftbar></fc> <timeleft>",
+              ["-t", "<fc=red><leftbar></fc> <acstatus> -> <timeleft>",
                "-L", "10", "-H", "80", "-p", "3",
-               "--", "-O", "<fc=green>On</fc> - ", "-o", "",
+               "--", "-O", "- <fc=green>On</fc>", "-o", "- <fc=red>Off</fc>",
                "-L", "-15", "-H", "-5",
                "-l", "red", "-m", "blue", "-h", "green"]
               600

@@ -20,3 +20,6 @@ alias sfb880='ssh -C -X rouven@sfb880.tu-bs.de'
 alias systemctl='sudo systemctl'
 alias pacman='sudo pacman'
 alias netcfg='sudo netcfg'
+
+# Aliases für Stratum0
+alias spacekiste='ssh stratum0@192.168.178.196'

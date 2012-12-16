@@ -31,3 +31,6 @@ set expandtab
 inoremap jj <esc>
 " foldmethod
 set foldmethod=syntax
+
+" Colorscheme
+colorscheme molokai

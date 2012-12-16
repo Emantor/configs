@@ -1,0 +1,29 @@
+#!/bin/bash
+
+case $1 in
+collect)
+  cp ~/.vimrc vimrc
+  cp ~/.screenrc screenrc
+  cp ~/.xmonad/xmonad.hs xmonad/xmonad.hs
+  cp ~/.config/dunstrc config/dunstrc
+  cp ~/.xinitrc xinitrc
+  cp ~/.xprofile xprofile
+  cp ~/.zshenv zshenv
+  cp -R ~/.zsh/* zsh
+  cp ~/.xmobarrc xmobarrc
+  ;;
+deploy)
+  cp vimrc ~/.vimrc
+  cp screenrc ~/.screenrc
+  cp xmonad/xmonad.hs ~/.xmonad/xmonad.hs
+  cp config/dunstrc ~/.config/dunstrc
+  cp xinitrc ~/.xinitrc
+  cp xprofile ~/.xprofile
+  cp zshenv ~/.zshenv
+  cp -r -T zsh ~/.zsh
+  cp xmobarrc ~/.xmobarrc
+  ;;
+*)
+  echo "No Argument specified, usage:"
+  echo "./confs [deploy|collect]"
+esac

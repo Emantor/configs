@@ -1,1 +1,4 @@
 My config files for Xmonad, XMobar, dunst, screen...
+
+Molokai.vim: https://github.com/tomasr/molokai
+zsh-git-prompt: https://github.com/olivierverdier/zsh-git-prompt

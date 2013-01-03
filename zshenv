@@ -25,5 +25,3 @@ alias netcfg='sudo netcfg'
 
 # Aliases für Stratum0
 alias spacekiste='ssh stratum0@192.168.178.196'
-
-fortune hitchhiker

@@ -1,5 +1,6 @@
 import XMonad
 import XMonad.Layout.NoBorders
+import XMonad.Actions.NoBorders
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageDocks
@@ -8,12 +9,14 @@ import XMonad.Util.Run(spawnPipe)
 import Graphics.X11.ExtraTypes.XF86
 import XMonad.Util.EZConfig(additionalKeys)
 import System.IO
+-- Java Workaround
+import XMonad.Hooks.SetWMName
 
 
 -- ManageHook für Docks und Apps 
 myManageHook = manageHook defaultConfig <+> manageDocks <+> composeAll
     [ className =? "Gimp"      --> doFloat
-    , className =? "Steam"      --> doFloat <+> doFullFloat <+> doIgnore
+--    , className =? "Steam"      --> doFloat <+> doFullFloat <+> doIgnore
     , className =? "Pidgin"    --> doShift "7:chat"
     , className =? "Thunderbird"    --> doShift "8:mail"
     ]
@@ -23,17 +26,22 @@ myLogHook :: Handle -> X ()
 myLogHook xmproc = dynamicLogWithPP $ customPP { ppOutput = hPutStrLn xmproc }
                        
 customPP :: PP
-customPP = xmobarPP { ppTitle = xmobarColor "blue" "" . shorten 100 } 
+customPP = xmobarPP { ppTitle = xmobarColor "blue" "" . shorten 80 } 
 
-fadeLogHook :: X ()
-fadeLogHook = fadeInactiveLogHook fadeAmount
-  where fadeAmount = 0.9
+--fadeLogHook :: X ()
+--fadeLogHook = fadeInactiveLogHook fadeAmount
+--  where fadeAmount = 0.9
 
 -- LayoutHook mit SmartBorders und Struts 
-myLayoutHook = smartBorders $ avoidStruts  $  layoutHook defaultConfig
+myLayoutHook = avoidStruts (tiled ||| Mirror tiled ||| noBorders Full)
+  where
+    tiled = Tall nmaster delta ratio
+    nmaster = 1
+    ratio = 1/2
+    delta = 3/100
 
 -- Workspaces
-myWorkspaces = ["1","2","3","4","5","6","7:chat","8:mail","9:movie"]
+myWorkspaces = ["1:web","2","3","4","5","6:music","7:chat","8:mail","9:movie"]
 
 -- Xmonad starten
 main = do
@@ -43,7 +51,8 @@ main = do
     xmonad $ defaultConfig
         { manageHook = myManageHook
         , layoutHook = myLayoutHook 
-        , logHook = myLogHook xmproc >> (fadeLogHook)
+        , startupHook = setWMName "LG3D"
+        , logHook = myLogHook xmproc -- >> (fadeLogHook)
         , modMask = mod4Mask     -- Rebind Mod to the Windows key
         , terminal = "urxvt"
         , borderWidth = 2
@@ -51,11 +60,8 @@ main = do
         , workspaces = myWorkspaces
         } `additionalKeys`
         -- Headphone Volume
-        [ ((0, xF86XK_AudioLowerVolume), spawn "amixer set Headphone playback 1-")
-        , ((0, xF86XK_AudioRaiseVolume), spawn "amixer set Headphone playback 1+")
-        -- Master Volume
-        , ((mod4Mask, xF86XK_AudioLowerVolume), spawn "amixer set Master playback 1-")
-        , ((mod4Mask, xF86XK_AudioRaiseVolume), spawn "amixer set Master playback 1+")
+        [ ((0, xF86XK_AudioLowerVolume), spawn "amixer set Master playback 1-")
+        , ((0, xF86XK_AudioRaiseVolume), spawn "amixer set Master playback 1+")
         -- Brightness
         , ((mod1Mask, xF86XK_AudioLowerVolume), spawn "xbacklight -10")
         , ((mod1Mask, xF86XK_AudioRaiseVolume), spawn "xbacklight +10")
@@ -67,16 +73,18 @@ main = do
         , ((mod1Mask .|. mod4Mask, xK_5), spawn "xbacklight =100")
         --Dock ein und ausblenden
         , ((mod4Mask, xK_b), sendMessage ToggleStruts)
+        -- Border ein und ausblenden
+        , ((mod4Mask, xK_n), withFocused toggleBorder)
         -- Apps starten
         , ((mod4Mask, xK_f), spawn "firefox")
         -- MPD Control Bibliothekar
         , ((mod4Mask, xF86XK_AudioPlay), spawn "mpc -h bibliothekar toggle")
         , ((mod4Mask, xF86XK_AudioPrev), spawn "mpc -h bibliothekar prev")
         , ((mod4Mask, xF86XK_AudioNext), spawn "mpc -h bibliothekar next")
+        -- Cmus Control
+        , ((0, xF86XK_AudioPlay), spawn "cmus-remote -u")
+        , ((0, xF86XK_AudioPrev), spawn "cmus-remote -r")
+        , ((0, xF86XK_AudioNext), spawn "cmus-remote -n")
         -- Touchpad toggle
         -- , ((0, xF86XK_TouchpadToggle), spawn "/sbin/trackpad-toggle.sh")
-        -- Cmus Remote (Currently not working)
-        , ((0, xF86XK_AudioPlay), spawn "cmus-remote -u")
-        , ((0, xF86XK_AudioPrev), spawn "cmus-remote -p")
-        , ((0, xF86XK_AudioNext), spawn "cmus-remote -n")
         ]

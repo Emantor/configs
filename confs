@@ -10,6 +10,7 @@ collect)
   cp ~/.xinitrc xinitrc
   cp ~/.xprofile xprofile
   cp ~/.zshenv zshenv
+  cp ~/.zshrc  zshrc
   cp -R ~/.zsh/* zsh
   cp ~/.xmobarrc xmobarrc
   ;;
@@ -21,6 +22,7 @@ deploy)
   cp xinitrc ~/.xinitrc
   cp xprofile ~/.xprofile
   cp zshenv ~/.zshenv
+  cp zshrc ~/.zshrc
   cp -r -T zsh ~/.zsh
   cp -r -T vim ~/.vim
   cp xmobarrc ~/.xmobarrc

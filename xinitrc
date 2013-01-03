@@ -22,6 +22,8 @@ xsetroot -cursor_name left_ptr
 # exec startkde
 # exec startxfce4
 # ...or the Window Manager of your choice
+# start xscreensaver
+/usr/bin/xscreensaver -no-splash &
 # Set Keyboard layout
 setxkbmap -layout de
 # start xmonad

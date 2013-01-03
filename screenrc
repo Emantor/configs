@@ -1,7 +1,7 @@
 #
 # look and feel for the bottom two lines.
 #
-shell -bash
+shell -zsh
 
 # disable splash screen
 startup_message off

@@ -1,5 +1,10 @@
 import XMonad
 import XMonad.Layout.NoBorders
+import XMonad.Layout.Renamed
+import XMonad.Layout.PerWorkspace
+import XMonad.Layout.IM
+import XMonad.Layout.Grid
+import XMonad.Layout.Reflect
 import XMonad.Actions.NoBorders
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.FadeInactive
@@ -11,6 +16,7 @@ import XMonad.Util.EZConfig(additionalKeys)
 import System.IO
 -- Java Workaround
 import XMonad.Hooks.SetWMName
+import Data.Ratio ((%))
 
 
 -- ManageHook für Docks und Apps 
@@ -33,12 +39,27 @@ customPP = xmobarPP { ppTitle = xmobarColor "blue" "" . shorten 80 }
 --  where fadeAmount = 0.9
 
 -- LayoutHook mit SmartBorders und Struts 
-myLayoutHook = avoidStruts (tiled ||| Mirror tiled ||| noBorders Full)
-  where
-    tiled = Tall nmaster delta ratio
-    nmaster = 1
-    ratio = 1/2
-    delta = 3/100
+myLayoutHook = onWorkspace "7:chat" myChat $
+               myStandard
+                 where
+                   -- Standard Layouts
+                   myStandard = avoidStruts (smartBorders (tiled ||| Grid) ||| noBorders Full)
+                     where
+                       tiled = Tall nmaster delta ratio
+                       nmaster = 1
+                       ratio = 1/2
+                       delta = 3/100
+                   -- Layout(s) for chat workspace
+                   myChat = renamed [Replace "Chat"] $ avoidStruts (myChat' Grid)
+                   -- Chat modifier, used on 7:chat workspace
+                   myChat' base = mirror base $ withIM size roster
+                     where
+                      -- Ratios of the screen roster will occupy
+                      size = 1%6
+                      -- Match roster window
+                      roster = Title "Buddy-Liste"
+                   -- mirror modifier used for chat
+                   mirror base a = reflectHoriz $ a $ reflectHoriz base
 
 -- Workspaces
 myWorkspaces = ["1:web","2","3","4","5","6:music","7:chat","8:mail","9:movie"]

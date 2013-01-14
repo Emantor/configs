@@ -39,16 +39,25 @@ customPP = xmobarPP { ppTitle = xmobarColor "blue" "" . shorten 80 }
 --  where fadeAmount = 0.9
 
 -- LayoutHook mit SmartBorders und Struts 
-myLayoutHook = onWorkspace "7:chat" myChat $
-               myStandard
+myLayoutHook = onWorkspace "1:web" myTileFirst $
+               onWorkspace "7:chat" myChat $
+               myGridFirst
                  where
-                   -- Standard Layouts
-                   myStandard = avoidStruts (smartBorders (tiled ||| Grid) ||| noBorders Full)
+                   -- Tile First Layout
+                   myTileFirst = avoidStruts (smartBorders (tiled ||| Grid) ||| noBorders Full)
                      where
                        tiled = Tall nmaster delta ratio
                        nmaster = 1
                        ratio = 1/2
                        delta = 3/100
+                   -- Grid als Erstes Layout
+                   myGridFirst = avoidStruts (smartBorders (Grid ||| tiled) ||| noBorders Full)
+                     where
+                       tiled = Tall nmaster delta ratio
+                       nmaster = 1
+                       ratio = 1/2
+                       delta = 3/100
+
                    -- Layout(s) for chat workspace
                    myChat = renamed [Replace "Chat"] $ avoidStruts (myChat' Grid)
                    -- Chat modifier, used on 7:chat workspace

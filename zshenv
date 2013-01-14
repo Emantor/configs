@@ -5,7 +5,7 @@ export EDITOR=vim
 export PATH=$PATH:/home/phoenix/bin
 
 # Aliases
-alias ls='ls --color -h'
+alias ls='ls --color=auto -h'
 
 # Aliases für Terra Netzwerk
 alias zephyda='ssh -p 8022 root@zephyda'
@@ -17,6 +17,7 @@ alias ncmpc='ncmpc -c'
 alias willi='ssh -C -X rouven@willi'
 alias bibo='ssh -C -X rouven@bibo'
 alias sfb880='ssh rouven@sfb880.tu-bs.de'
+alias infam='ssh rouven@infam.rz.tu-bs.de'
 
 # Aliases für arch
 alias systemctl='sudo systemctl'

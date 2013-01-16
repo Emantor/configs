@@ -6,6 +6,7 @@ export PATH=$PATH:/home/phoenix/bin
 
 # Aliases
 alias ls='ls --color=auto -h'
+alias :q='exit'
 
 # Aliases für Terra Netzwerk
 alias zephyda='ssh -p 8022 root@zephyda'
@@ -26,3 +27,6 @@ alias netcfg='sudo netcfg'
 
 # Aliases für Stratum0
 alias spacekiste='ssh stratum0@192.168.178.196'
+
+# Alias für vserver
+alias tiffany='ssh tiffanyaching.emantor.de'

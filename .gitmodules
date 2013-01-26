@@ -1,0 +1,6 @@
+[submodule "external/molokai"]
+	path = external/molokai
+	url = https://github.com/tomasr/molokai
+[submodule "external/zsh-git-prompt"]
+	path = external/zsh-git-prompt
+	url = https://github.com/olivierverdier/zsh-git-prompt

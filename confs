@@ -27,7 +27,7 @@ collect)
   cp ~/.xmobarrc xmobarrc
   ;;
 deploy)
-  git submodules update
+  git submodule update
   cp vimrc ~/.vimrc
   cp screenrc ~/.screenrc
   cp xmonad/xmonad.hs ~/.xmonad/xmonad.hs

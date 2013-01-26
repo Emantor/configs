@@ -3,7 +3,6 @@
 case $1 in
 collect)
   cp ~/.vimrc vimrc
-  cp -R ~/.vim/* vim/
   cp ~/.screenrc screenrc
   cp ~/.xmonad/xmonad.hs xmonad/xmonad.hs
   cp ~/.config/dunstrc config/dunstrc
@@ -11,10 +10,24 @@ collect)
   cp ~/.xprofile xprofile
   cp ~/.zshenv zshenv
   cp ~/.zshrc  zshrc
+  cp -R ~/.vim/*  vim
+  if [ -e vim/colors ]; then
+    echo -n "Entferne molokai color scheme..."
+    rm -R vim/colors
+    rm vim/README.md
+    echo " Done"
+  fi
   cp -R ~/.zsh/* zsh
+  if [ -e zsh/git-prompt ]; then
+    echo -n "Entferne zsh-git-prompt..."
+    rm -R zsh/git-prompt
+    rm zsh/zshrc.sh
+    echo " Done"
+  fi
   cp ~/.xmobarrc xmobarrc
   ;;
 deploy)
+  git submodules update
   cp vimrc ~/.vimrc
   cp screenrc ~/.screenrc
   cp xmonad/xmonad.hs ~/.xmonad/xmonad.hs
@@ -23,8 +36,8 @@ deploy)
   cp xprofile ~/.xprofile
   cp zshenv ~/.zshenv
   cp zshrc ~/.zshrc
-  cp -r -T zsh ~/.zsh
-  cp -r -T vim ~/.vim
+  cp -r external/zsh-git-prompt/ ~/.zsh/
+  cp -r external/molokai/* ~/.vim/
   cp xmobarrc ~/.xmobarrc
   ;;
 *)

@@ -117,4 +117,5 @@ main = do
         , ((0, xF86XK_AudioNext), spawn "cmus-remote -n")
         -- Touchpad toggle
         -- , ((0, xF86XK_TouchpadToggle), spawn "/sbin/trackpad-toggle.sh")
+        , ((mod4Mask, xK_BackSpace), spawn "xscreensaver-command -lock")
         ]

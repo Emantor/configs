@@ -7,6 +7,7 @@ export PATH=$PATH:/home/phoenix/bin
 # Aliases
 alias ls='ls --color=auto -h'
 alias :q='exit'
+alias iptables='echo "Alias: sudo iptables" && sudo iptables'
 
 # Aliases für Terra Netzwerk
 alias zephyda='ssh -p 8022 root@zephyda'

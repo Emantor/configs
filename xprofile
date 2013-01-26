@@ -7,6 +7,6 @@ trayer --edge top --align right --SetDockType true --SetPartialStrut true --expa
 # dunst
 dunst &
 # feh
-feh --bg-fill /home/phoenix/Bilder/noahbradley_lotr.jpg
+feh --bg-fill /home/phoenix/Bilder/samcha.png
 # Stratum 0 Tray Icon
 stratum0trayicon  &

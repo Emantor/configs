@@ -18,13 +18,29 @@ import System.IO
 import XMonad.Hooks.SetWMName
 import Data.Ratio ((%))
 
+-- Prompts
+import XMonad.Prompt
+import XMonad.Prompt.DirExec
+import XMonad.Prompt.Shell
+import XMonad.Prompt.Workspace
+import XMonad.Prompt.Window
+import XMonad.Prompt.Man
+
+
+import qualified XMonad.StackSet as W
+import qualified Data.Map        as M
+
+
+myXPConfig :: XPConfig
+myXPConfig = defaultXPConfig
 
 -- ManageHook für Docks und Apps 
 myManageHook = manageHook defaultConfig <+> manageDocks <+> composeAll
     [ className =? "Gimp"      --> doFloat
 --    , className =? "Steam"      --> doFloat <+> doFullFloat <+> doIgnore
-    , className =? "Pidgin"    --> doShift "7:chat"
-    , className =? "Thunderbird"    --> doShift "8:mail"
+    , className =? "Pidgin"    --> doShift "im"
+    , className =? "Steam"    --> doShift "steam"
+    , className =? "Thunderbird"    --> doShift "mail"
     ]
 
 -- LogHooks
@@ -39,8 +55,9 @@ customPP = xmobarPP { ppTitle = xmobarColor "blue" "" . shorten 80 }
 --  where fadeAmount = 0.9
 
 -- LayoutHook mit SmartBorders und Struts 
-myLayoutHook = onWorkspace "1:web" myTileFirst $
-               onWorkspace "7:chat" myChat $
+myLayoutHook = onWorkspaces ["web","web2","web3"] myTileFirst $
+               onWorkspace "im" myChat $
+               onWorkspace "steam" mySteam $
                myGridFirst
                  where
                    -- Tile First Layout
@@ -70,9 +87,30 @@ myLayoutHook = onWorkspace "1:web" myTileFirst $
                    -- mirror modifier used for chat
                    mirror base a = reflectHoriz $ a $ reflectHoriz base
 
--- Workspaces
-myWorkspaces = ["1:web","2","3","4","5","6:music","7:chat","8:mail","9:movie"]
+                   -- Layout(s) for steam workspace
+                   mySteam = renamed [Replace "Steam"] $ avoidStruts (mySteam' Grid)
+                   -- Steam modifier, used on 7:chat workspace
+                   mySteam' base = mirror base $ withIM size roster
+                     where
+                      -- Ratios of the screen roster will occupy
+                      size = 1%6
+                      -- Match roster window
+                      roster = Title "Friends"
 
+-- Workspaces
+-- myWorkspaces = ["1:web","2","3","4","5","6:music","7:chat","8:mail","9:movie"]
+myWorkspaces = map show [1..9] ++ 
+               [ "web"
+               , "im"
+               , "irc"
+               , "mail"
+               , "dev"
+               , "adm"
+               , "steam"
+               , "tmp"
+               , "music"
+               , "vpn"
+               ]
 -- Xmonad starten
 main = do
     -- Xmobar starten
@@ -82,12 +120,12 @@ main = do
         { manageHook = myManageHook
         , layoutHook = myLayoutHook 
         , startupHook = setWMName "LG3D"
+        , workspaces = myWorkspaces
         , logHook = myLogHook xmproc -- >> (fadeLogHook)
         , modMask = mod4Mask     -- Rebind Mod to the Windows key
         , terminal = "urxvt"
         , borderWidth = 2
         , focusedBorderColor = "#FF0000"
-        , workspaces = myWorkspaces
         } `additionalKeys`
         -- Headphone Volume
         [ ((0, xF86XK_AudioLowerVolume), spawn "amixer set Master playback 1-")
@@ -117,5 +155,7 @@ main = do
         , ((0, xF86XK_AudioNext), spawn "cmus-remote -n")
         -- Touchpad toggle
         -- , ((0, xF86XK_TouchpadToggle), spawn "/sbin/trackpad-toggle.sh")
-        , ((mod4Mask, xK_BackSpace), spawn "xscreensaver-command -lock")
+ --       , ((mod1Mask .|. mod4Mask, xK_BackSpace), spawn "xscreensaver-command -lock")
+        , ((mod4Mask              , xK_z     ), workspacePrompt defaultXPConfig (windows . W.view))
+        , ((mod4Mask .|. shiftMask, xK_z     ), workspacePrompt defaultXPConfig (windows . W.shift))
         ]

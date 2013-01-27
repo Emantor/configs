@@ -40,8 +40,11 @@ zle -N zle-line-init
 bindkey -v
 # Remap ESC to jj
 bindkey -M viins 'jj' vi-cmd-mode
-
-PROMPT='%{$fg[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m%{$reset_color%}:%{$fg[yellow]%}%3~%{$reset_color%}$(git_super_status)%#'
+#if hostname == keks; then
+#  PROMPT='%{$fg[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m%{$reset_color%}:%{$fg[yellow]%}%3~%{$reset_color%}$(git_super_status)%#'
+#else
+  PROMPT='%{$fg[red]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%}:%{$fg[yellow]%}%3~%{$reset_color%}$(git_super_status)%#'
+#fi
 RPROMPT="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
 
 have_fortune=`which fortune`

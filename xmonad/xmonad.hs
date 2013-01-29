@@ -41,6 +41,7 @@ myManageHook = manageHook defaultConfig <+> manageDocks <+> composeAll
     , className =? "Pidgin"    --> doShift "im"
     , className =? "Steam"    --> doShift "steam"
     , className =? "Thunderbird"    --> doShift "mail"
+    , className =? "Guild Wars"    --> doFloat
     ]
 
 -- LogHooks
@@ -155,7 +156,7 @@ main = do
         , ((0, xF86XK_AudioNext), spawn "cmus-remote -n")
         -- Touchpad toggle
         -- , ((0, xF86XK_TouchpadToggle), spawn "/sbin/trackpad-toggle.sh")
- --       , ((mod1Mask .|. mod4Mask, xK_BackSpace), spawn "xscreensaver-command -lock")
+        , ((mod1Mask .|. mod4Mask, xK_BackSpace), spawn "xscreensaver-command -lock")
         , ((mod4Mask              , xK_z     ), workspacePrompt defaultXPConfig (windows . W.view))
         , ((mod4Mask .|. shiftMask, xK_z     ), workspacePrompt defaultXPConfig (windows . W.shift))
         ]

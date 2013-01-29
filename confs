@@ -18,11 +18,6 @@ collect)
     echo " Done"
   fi
   cp -R ~/.zsh/* zsh/
-  if [ -e zsh/git-prompt ]; then
-    echo -n "Entferne zsh-git-prompt..."
-    rm -R zsh/git-prompt
-    echo " Done"
-  fi
   cp ~/.xmobarrc xmobarrc
   ;;
 deploy)
@@ -36,10 +31,6 @@ deploy)
   cp zshenv ~/.zshenv
   cp zshrc ~/.zshrc
   cp -r -T zsh ~/.zsh
-  if [ ! -e ~/.zsh/git-prompt ]; then
-    mkdir -p ~/.zsh/git-prompt
-  fi
-  cp external/zsh-git-prompt/gitstatus.py ~/.zsh/git/prompt/
   cp -r external/molokai/* ~/.vim/
   cp xmobarrc ~/.xmobarrc
   ;;

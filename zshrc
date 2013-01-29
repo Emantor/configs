@@ -12,13 +12,19 @@ zstyle :compinstall filename '/home/phoenix/.zshrc'
 # Complete with menu
 zstyle ':completion:*' menu select
 
-autoload -Uz colors compinit promptinit
+autoload -Uz colors compinit promptinit vcs_info
 compinit
 colors
 
-# source zshrc.sh for git-prompt
-source /home/phoenix/.zsh/zshrc.sh
+zstyle ':vcs_info:*' unstagedstr '●'
+zstyle ':vcs_info:*' stagedstr '✔'
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' actionformats '(%F{10}%s->%F{3}%r%f|%F{14}%b%f%)%F{9}%u%F{10}%c%f(%F{9}%a%f)'
+zstyle ':vcs_info:*' formats '(%F{10}%s->%F{3}%r%f|%F{14}%b%f%)%F{9}%u%F{10}%c%f'
+zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{3}%r'
+precmd () { vcs_info }
 
+# Colored Cursor in Vi Mode
 zle-keymap-select () {
   if [ $TERM = "rxvt-256color" ]; then
     if [ $KEYMAP = vicmd ]; then
@@ -40,11 +46,13 @@ zle -N zle-line-init
 bindkey -v
 # Remap ESC to jj
 bindkey -M viins 'jj' vi-cmd-mode
-#if hostname == keks; then
-#  PROMPT='%{$fg[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m%{$reset_color%}:%{$fg[yellow]%}%3~%{$reset_color%}$(git_super_status)%#'
-#else
-  PROMPT='%{$fg[red]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%}:%{$fg[yellow]%}%3~%{$reset_color%}$(git_super_status)%#'
-#fi
+
+bindkey '^[[Z' reverse-menu-complete
+bindkey '^A' vi-beginning-of-line
+bindkey '^E' vi-end-of-line
+
+setopt prompt_subst
+PROMPT='%{$fg[red]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%}:%{$fg[yellow]%}%3~%{$reset_color%}${vcs_info_msg_0_}%#'
 RPROMPT="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
 
 have_fortune=`which fortune`

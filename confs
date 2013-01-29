@@ -3,6 +3,7 @@
 case $1 in
 collect)
   cp ~/.vimrc vimrc
+  cp ~/.Xdefaults Xdefaults
   cp ~/.screenrc screenrc
   cp ~/.xmonad/xmonad.hs xmonad/xmonad.hs
   cp ~/.config/dunstrc config/dunstrc
@@ -23,6 +24,7 @@ collect)
 deploy)
   git submodule update
   cp vimrc ~/.vimrc
+  cp Xdefaults ~/.Xdefaults
   cp screenrc ~/.screenrc
   cp xmonad/xmonad.hs ~/.xmonad/xmonad.hs
   cp config/dunstrc ~/.config/dunstrc

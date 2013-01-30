@@ -129,8 +129,8 @@ main = do
         , focusedBorderColor = "#FF0000"
         } `additionalKeys`
         -- Headphone Volume
-        [ ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 0 -- -5%")
-        , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume 0 +5%")
+        [ ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 0 -- -1%")
+        , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume 0 +1%")
         , ((0, xF86XK_AudioMute), spawn "~/bin/pa_toggle.sh")
         -- Brightness
         , ((mod1Mask, xF86XK_AudioLowerVolume), spawn "xbacklight -10")

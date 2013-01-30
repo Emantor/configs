@@ -42,6 +42,7 @@ zle-line-init () {
     fi
 }
 zle -N zle-line-init
+
  # VI Keybindings
 bindkey -v
 # Remap ESC to jj
@@ -55,9 +56,10 @@ setopt prompt_subst
 PROMPT='%{$fg[red]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%}:%{$fg[yellow]%}%3~%{$reset_color%}${vcs_info_msg_0_}%#'
 RPROMPT="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
 
-have_fortune=`which fortune`
-if [ -e have_fortune ]; then
-    echo ""
-    fortune 
-    echo ""
+if [ -e `which fortune` ]; then
+  if [ -e /usr/share/fortune/discworld ]; then
+    echo "`fortune discworld`"
+  else
+    echo "`fortune`"
+  fi
 fi

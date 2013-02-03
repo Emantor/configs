@@ -1,9 +1,10 @@
-!-- Xft settings -- !
-Xft.dpi:        96
-Xft.antialias:  true
-Xft.rgba:       rgb
-Xft.hinting:    true
-Xft.hintstyle:  hintslight
+#!-- Xft settings -- !
+#Xft.dpi:        131
+#Xft.antialias:  true
+#Xft.rgba:       rgb
+#Xft.lcdfilter:  lcddefault
+#Xft.hinting:    true
+#Xft.hintstyle:  hintslight
 
 # Transparency - true or false (default)
 #URxvt*transparent: true
@@ -36,8 +37,8 @@ URxvt*letterSpace: -1
 #
 # Xft: DejaVu fonts
 #  Fedora/debian packages: dejavu-sans-mono-fonts/ttf-dejavu 
-URxvt*font: xft:Droid Sans Mono:pixelsize=10
-URxvt*boldFont: xft:Droid Sans Mono:bold:pixelsize=10
+URxvt*font: xft:Droid Sans Mono:pixelsize=11
+URxvt*boldFont: xft:Droid Sans Mono:bold:pixelsize=11
 #
 # Xft: Liberation fonts
 #  Fedora/debian packages: liberation-mono-fonts/ttf-liberation
@@ -124,3 +125,5 @@ URxvt.depth: 32
 ! LightGrey + White
 *color7:  #cccccc
 *color15: #ffffff
+! 16 BG Color
+*color16: #111111

@@ -6,6 +6,7 @@ import XMonad.Layout.IM
 import XMonad.Layout.Grid
 import XMonad.Layout.Reflect
 import XMonad.Actions.NoBorders
+import XMonad.Actions.GridSelect
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageDocks
@@ -37,7 +38,6 @@ myXPConfig = defaultXPConfig
 -- ManageHook für Docks und Apps 
 myManageHook = manageHook defaultConfig <+> manageDocks <+> composeAll
     [ className =? "Gimp"      --> doFloat
---    , className =? "Steam"      --> doFloat <+> doFullFloat <+> doIgnore
     , className =? "Pidgin"    --> doShift "im"
     , className =? "Steam"    --> doShift "steam"
     , className =? "Thunderbird"    --> doShift "mail"
@@ -49,14 +49,10 @@ myLogHook :: Handle -> X ()
 myLogHook xmproc = dynamicLogWithPP $ customPP { ppOutput = hPutStrLn xmproc }
                        
 customPP :: PP
-customPP = xmobarPP { ppTitle = xmobarColor "blue" "" . shorten 80 } 
+customPP = xmobarPP {ppLayout = xmobarColor "orange" "", ppTitle = xmobarColor "cyan" "" . shorten 80 } 
 
---fadeLogHook :: X ()
---fadeLogHook = fadeInactiveLogHook fadeAmount
---  where fadeAmount = 0.9
-
--- LayoutHook mit SmartBorders und Struts 
-myLayoutHook = onWorkspaces ["web","web2","web3"] myTileFirst $
+-- LayoutHook: certain workspaces get a specific layout or layout order.
+myLayoutHook = onWorkspace "web" myTileFirst $
                onWorkspace "im" myChat $
                onWorkspace "steam" mySteam $
                myGridFirst
@@ -68,7 +64,7 @@ myLayoutHook = onWorkspaces ["web","web2","web3"] myTileFirst $
                        nmaster = 1
                        ratio = 1/2
                        delta = 3/100
-                   -- Grid als Erstes Layout
+                   -- Grid as First Layout
                    myGridFirst = avoidStruts (smartBorders (Grid ||| tiled) ||| noBorders Full)
                      where
                        tiled = Tall nmaster delta ratio
@@ -85,12 +81,13 @@ myLayoutHook = onWorkspaces ["web","web2","web3"] myTileFirst $
                       size = 1%6
                       -- Match roster window
                       roster = Title "Buddy-Liste"
-                   -- mirror modifier used for chat
+
+                   -- mirror modifier used for chat and steam
                    mirror base a = reflectHoriz $ a $ reflectHoriz base
 
                    -- Layout(s) for steam workspace
                    mySteam = renamed [Replace "Steam"] $ avoidStruts (mySteam' Grid)
-                   -- Steam modifier, used on 7:chat workspace
+                   -- Steam modifier, used on steam workspace
                    mySteam' base = mirror base $ withIM size roster
                      where
                       -- Ratios of the screen roster will occupy
@@ -99,7 +96,6 @@ myLayoutHook = onWorkspaces ["web","web2","web3"] myTileFirst $
                       roster = Title "Friends"
 
 -- Workspaces
--- myWorkspaces = ["1:web","2","3","4","5","6:music","7:chat","8:mail","9:movie"]
 myWorkspaces = map show [1..9] ++ 
                [ "web"
                , "im"
@@ -112,27 +108,28 @@ myWorkspaces = map show [1..9] ++
                , "music"
                , "vpn"
                ]
+
 -- Xmonad starten
 main = do
     -- Xmobar starten
-    xmproc <- spawnPipe "/usr/bin/xmobar /home/phoenix/.xmobarrc"
+    xmproc <- spawnPipe "/usr/local/bin/xmobar /home/phoenix/.xmobarrc"
     -- Xmonad starten
     xmonad $ defaultConfig
         { manageHook = myManageHook
         , layoutHook = myLayoutHook 
         , startupHook = setWMName "LG3D"
         , workspaces = myWorkspaces
-        , logHook = myLogHook xmproc -- >> (fadeLogHook)
+        , logHook = myLogHook xmproc
         , modMask = mod4Mask     -- Rebind Mod to the Windows key
         , terminal = "urxvt"
         , borderWidth = 2
         , focusedBorderColor = "#FF0000"
         } `additionalKeys`
-        -- Headphone Volume
+        -- Volume Control
         [ ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 0 -- -1%")
         , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume 0 +1%")
         , ((0, xF86XK_AudioMute), spawn "~/bin/pa_toggle.sh")
-        -- Brightness
+        -- Brightness Control
         , ((mod1Mask, xF86XK_AudioLowerVolume), spawn "xbacklight -10")
         , ((mod1Mask, xF86XK_AudioRaiseVolume), spawn "xbacklight +10")
         -- Brightness Hotkeys: 1 25 50 75 100
@@ -141,23 +138,26 @@ main = do
         , ((mod1Mask .|. mod4Mask, xK_3), spawn "xbacklight =50")
         , ((mod1Mask .|. mod4Mask, xK_4), spawn "xbacklight =75")
         , ((mod1Mask .|. mod4Mask, xK_5), spawn "xbacklight =100")
-        --Dock ein und ausblenden
+        -- Show and hide dock
         , ((mod4Mask, xK_b), sendMessage ToggleStruts)
-        -- Border ein und ausblenden
+        -- show and hide border
         , ((mod4Mask, xK_n), withFocused toggleBorder)
-        -- Apps starten
+        -- Firefox Hotkey
         , ((mod4Mask, xK_f), spawn "firefox")
-        -- MPD Control Bibliothekar
+        -- MPD Control External mpd Server Bibliothekar
         , ((mod4Mask, xF86XK_AudioPlay), spawn "mpc -h bibliothekar toggle")
         , ((mod4Mask, xF86XK_AudioPrev), spawn "mpc -h bibliothekar prev")
         , ((mod4Mask, xF86XK_AudioNext), spawn "mpc -h bibliothekar next")
-        -- Cmus Control
-        , ((0, xF86XK_AudioPlay), spawn "cmus-remote -u")
-        , ((0, xF86XK_AudioPrev), spawn "cmus-remote -r")
-        , ((0, xF86XK_AudioNext), spawn "cmus-remote -n")
-        -- Touchpad toggle
-        -- , ((0, xF86XK_TouchpadToggle), spawn "/sbin/trackpad-toggle.sh")
+        -- Local mpd control
+        , ((0, xF86XK_AudioPlay), spawn "mpc toggle")
+        , ((0, xF86XK_AudioPrev), spawn "mpc prev")
+        , ((0, xF86XK_AudioNext), spawn "mpc next")
+        -- Lock Xsession with Key Combination
         , ((mod1Mask .|. mod4Mask, xK_BackSpace), spawn "xscreensaver-command -lock")
+        -- Select workspace from prompt
         , ((mod4Mask              , xK_z     ), workspacePrompt defaultXPConfig (windows . W.view))
         , ((mod4Mask .|. shiftMask, xK_z     ), workspacePrompt defaultXPConfig (windows . W.shift))
+        -- Select workspace from Grid
+        , ((mod4Mask, xK_g), goToSelected defaultGSConfig)
+        , ((mod4Mask, xK_o), spawnSelected defaultGSConfig ["smplayer","xbmc","firefox","thunderbird"])
         ]

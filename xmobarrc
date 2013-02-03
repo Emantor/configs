@@ -1,22 +1,23 @@
-Config { font = "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true"  
-     , bgColor = "#000000"  
-     , fgColor = "grey"  
+Config { font = "xft:Droid Sans Mono:size=10:bold"  
+     , bgColor = "#111111"  
+     , fgColor = "#babdb6"  
      , position = Static { xpos = 0 , ypos = 0, width = 1504, height = 16 }  
      , commands = [ Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 20  
-             , Run Network "lan" ["-L","0","-H","70","--normal","green","--high","red"] 20   
-             , Run Network "wlan" ["-L","0","-H","70","--normal","green","--high","red"] 20   
-             , Run Memory ["-t","Mem: <usedratio>%"] 20  
-           , Run Date "%k:%M" "date" 10  
-           , Run StdinReader  
-           , Run BatteryP ["BAT0"]
-              ["-t", "<fc=red><leftbar></fc> <acstatus> -> <timeleft>",
-               "-L", "10", "-H", "80", "-p", "3",
-               "--", "-O", "- <fc=green>On</fc>", "-o", "- <fc=red>Off</fc>",
-               "-L", "-15", "-H", "-5",
-               "-l", "red", "-m", "blue", "-h", "green"]
-              600
-           ]  
+                  , Run DynNetwork ["-t", "<dev>: <rx>|<tx> ~",
+                                    "-L","0","-H","70","--normal","green","--high","red"] 10   
+                  , Run Memory ["-t","Mem: <usedratio>%"] 20  
+                  , Run Date "%k:%M" "date" 10  
+                  , Run StdinReader  
+                  , Run Com "/home/phoenix/bin/vol.sh" [] "vol" 10
+                  , Run BatteryP ["BAT0"]
+                  ["-t", "<fc=red><leftbar></fc><acstatus>",
+                      "-L", "10", "-H", "80", "-p", "3",
+                      "--", "-O", "<<fc=green>On</fc>", "-o", "><fc=red>Off</fc>",
+                      "-L", "-15", "-H", "-5",
+                      "-l", "red", "-m", "blue", "-h", "green"]
+                     600
+                  ]  
      , sepChar = "%"  
      , alignSep = "}{"  
-     , template = " %StdinReader%}{ <fc=grey>%cpu% ~ %memory% ~ %lan% ~ %wlan% </fc> ~ %battery% ~ <fc=yellow>%date%</fc> " 
+     , template = " %StdinReader%}{ <fc=grey>%cpu% ~ %memory% ~ %dynnetwork%</fc> %battery% [<fc=green>%vol%</fc>] <fc=yellow>%date%</fc> " 
      }  

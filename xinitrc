@@ -26,5 +26,7 @@ xsetroot -cursor_name left_ptr
 /usr/bin/xscreensaver -no-splash &
 # Set Keyboard layout
 setxkbmap -layout de
+#run systemd as user instance
+systemd --user &
 # start xmonad
 exec xmonad

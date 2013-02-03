@@ -16,7 +16,6 @@ alias sfb880='ssh rouven@sfb880.tu-bs.de'
 alias infam='ssh rouven@infam.rz.tu-bs.de'
 
 # Aliases für arch
-alias systemctl='sudo systemctl'
 alias pacman='sudo pacman'
 alias netcfg='sudo netcfg'
 

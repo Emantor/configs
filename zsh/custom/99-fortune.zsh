@@ -1,5 +1,6 @@
 # Echo fortune on new terminal
-if [ -e `which fortune` ]; then
+fort_path=`which fortune`
+if [ -e fort_path ]; then
   if [ -e /usr/share/fortune/discworld ]; then
     echo "`fortune discworld`"
   else

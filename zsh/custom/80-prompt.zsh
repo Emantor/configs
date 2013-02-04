@@ -7,6 +7,7 @@ autoload promptinit; promptinit
 # Set host-color for some workstations
 zstyle ':prompt:*:Lu-Tze*'  host-color 046
 zstyle ':prompt:*:Bibliothekar*'  host-color 088
+zstyle ':prompt:*:tiffanyaching*'  host-color 032
 
 # Hide if its the default user
 [[ $USER == phoenix ]] && zstyle ':prompt:*:ps1' hide-user 1

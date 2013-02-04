@@ -2,4 +2,4 @@
 export EDITOR=vim
 
 export PATH=$PATH:/home/phoenix/bin
-export ZSH=~/.zsh/
+export ZSH=~/.zsh

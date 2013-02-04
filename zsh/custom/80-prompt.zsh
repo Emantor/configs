@@ -1,4 +1,13 @@
-# Standard Prompt
-setopt prompt_subst
-PROMPT='%{$fg[red]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%}:%{$fg[yellow]%}%3~%{$reset_color%}${vcs_info_msg_0_}%#'
-RPROMPT="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
+# Set path to prompt
+fpath+=( $ZSH/prompt )
+# Autoload Promptinit AFTER fpath change
+autoload promptinit; promptinit
+# Set host-color for some workstations
+zstyle ':prompt:*:Lu-Tze*'  host-color 046
+# Hide if its the default user
+[[ $USER == phoenix ]] && zstyle ':prompt:*:ps1' hide-user 1
+if (( $+functions[prompt_phoenix_setup] )); then
+  prompt phoenix
+else
+  echo "Prompt not found :("
+fi

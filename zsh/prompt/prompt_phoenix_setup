@@ -1,0 +1,98 @@
+zmodload -i zsh/parameter || return 1
+
+prompt_phoenix_help () {
+    setopt localoptions nocshnullcmd noshnullcmd
+    [[ $ZSH_VERSION < 5.0.0 ]] &&
+	print 'Requires ZSH_VERSION 5.0.0'$'\n'
+    <<-\EOF
+        My basic prompt. A lot is stolen from fellow hackerspace member
+        Valodim. The source can be found at http://github.com/valodim/zshrc.
+	EOF
+}
+
+prompt_phoenix_precmd () {
+    setopt localoptions noksharrays unset
+
+    if [[ -w $PWD ]]; then
+        prompt_bits="%B%F{blue}"
+    elif [[ -r $PWD ]]; then
+        prompt_bits="%B%F{yellow}"
+    else
+        prompt_bits="%B%F{red}"
+    fi
+    [[ -O $PWD ]] && prompt_bits+=":" || prompt_bits+="."
+
+    # On Xterm, Rxvt and screen, print command/path as window title,
+    # otherwise exec only vcs_info
+    case $TERM in
+      xterm*|rxvt*|screen*)
+        print -Pn "\e]0;%m:%3~\a";
+        ;;
+    esac
+
+    vcs_info
+}
+
+prompt_phoenix_preexec () {
+    case $TERM in 
+    rxvt*|xterm*|screen*)
+      print -Pn "\e]0;$1\a"
+      ;;
+    esac
+}
+
+prompt_phoenix_ps1 () {
+    setopt localoptions noksharrays extendedglob
+
+    local host_color
+    if ! zstyle -s ":prompt:phoenix:ps1:${HOST}" host-color host_color; then
+      # get a number from the sha1 hash of the hostname
+      host_color=${${"$(sha1sum <<< $HOST)"//[a-z]#/}[1,16]}
+      # divide by 256/88/8 whatever
+      host_color=$(( host_color % $(echoti colors) ))
+    fi
+
+    # hide username if it's my regular one (anyone else might wanna change this)
+    local user=""
+    if ! zstyle -t ':prompt:phoenix:ps1' hide-user; then
+      user="%(!.%F{red}root%f@.%n@)"
+    fi
+
+    local host="%F{${host_color}%}%m%f"
+    local exstate="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
+
+    local gitinfo='%{$fg[yellow]%}%3~%{$reset_color%}${vcs_info_msg_0_}%#'
+
+    local bits=${prompt_bits}
+
+    PROMPT="${user}${host}${bits}${gitinfo}"
+    RPROMPT=${exstate}
+}
+
+prompt_phoenix_setup () {
+    setopt localoptions noksharrays unset
+
+    # load zsh/termcap
+    zmodload zsh/terminfo
+
+    # load vcs_info styles
+    #autoload -Uz vcs_info
+    #prompt_phoenix_vcsstyles 
+
+    # set up left-side prompt
+    prompt_phoenix_ps1
+
+    # we know add-zsh-hook has been loaded by promptinit
+    add-zsh-hook precmd prompt_phoenix_precmd
+
+    # Prexec Hook
+    add-zsh-hook preexec prompt_phoenix_preexec
+
+    # no multiline so we don't need cr, but we do need both % and $ expansion
+    prompt_opts=( percent subst )
+
+    return 0
+}
+
+[[ -o kshautoload ]] || prompt_phoenix_setup "$@"
+# vim: set filetype=zsh:

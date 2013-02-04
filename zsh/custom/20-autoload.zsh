@@ -1,4 +1,4 @@
 # Autoload
-autoload -Uz colors compinit promptinit vcs_info
+autoload -Uz colors compinit vcs_info
 compinit
 colors

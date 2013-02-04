@@ -13,6 +13,8 @@ prompt_phoenix_help () {
 prompt_phoenix_precmd () {
     setopt localoptions noksharrays unset
 
+    prompt_bits=
+
     if [[ -w $PWD ]]; then
         prompt_bits="%B%F{blue}"
     elif [[ -r $PWD ]]; then
@@ -20,7 +22,7 @@ prompt_phoenix_precmd () {
     else
         prompt_bits="%B%F{red}"
     fi
-    [[ -O $PWD ]] && prompt_bits+=":" || prompt_bits+="."
+    [[ -O $PWD ]] && prompt_bits+=":%b%f" || prompt_bits+=".%b%f"
 
     # On Xterm, Rxvt and screen, print command/path as window title,
     # otherwise exec only vcs_info
@@ -63,9 +65,9 @@ prompt_phoenix_ps1 () {
 
     local gitinfo='%{$fg[yellow]%}%3~%{$reset_color%}${vcs_info_msg_0_}%#'
 
-    local bits=${prompt_bits}
+    prompt_bits="%F{blue}::%f"
 
-    PROMPT="${user}${host}${bits}${gitinfo}"
+    PROMPT="${user}${host}\${prompt_bits}${gitinfo}"
     RPROMPT=${exstate}
 }
 

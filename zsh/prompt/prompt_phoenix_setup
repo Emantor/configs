@@ -10,6 +10,16 @@ prompt_phoenix_help () {
 	EOF
 }
 
+prompt_phoenix_vcsstyles () {
+    # vcs_info configuration 
+    zstyle ':vcs_info:*:phoenix:*' unstagedstr '●'
+    zstyle ':vcs_info:*:phoenix:*' stagedstr '✔'
+    zstyle ':vcs_info:*:phoenix:*' actionformats '(%F{10}%s->%F{3}%r%f|%F{14}%b%f%)%F{9}%u%F{10}%c%f(%F{9}%a%f):%F{3}%S%f'
+    zstyle ':vcs_info:*:phoenix:*' formats '(%F{10}%s->%F{3}%r%f|%F{14}%b%f%)%F{9}%u%F{10}%c%f%:%F{3}%S%f'
+    zstyle ':vcs_info:*:phoenix:*' nvcsformats "%3~"
+    zstyle ':vcs_info:(sv[nk]|bzr):*:phoenix:*' branchformat '%b%F{1}:%F{3}%r'
+}
+
 prompt_phoenix_precmd () {
     setopt localoptions noksharrays unset
 
@@ -32,7 +42,7 @@ prompt_phoenix_precmd () {
         ;;
     esac
 
-    vcs_info
+    vcs_info 'phoenix'
 }
 
 prompt_phoenix_preexec () {
@@ -63,7 +73,7 @@ prompt_phoenix_ps1 () {
     local host="%F{${host_color}%}%m%f"
     local exstate="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
 
-    local gitinfo='%{$fg[yellow]%}%3~%{$reset_color%}${vcs_info_msg_0_}%#'
+    local gitinfo='${vcs_info_msg_0_}%#'
 
     prompt_bits="%F{blue}::%f"
 
@@ -78,8 +88,8 @@ prompt_phoenix_setup () {
     zmodload zsh/terminfo
 
     # load vcs_info styles
-    #autoload -Uz vcs_info
-    #prompt_phoenix_vcsstyles 
+    autoload -Uz vcs_info
+    prompt_phoenix_vcsstyles 
 
     # set up left-side prompt
     prompt_phoenix_ps1

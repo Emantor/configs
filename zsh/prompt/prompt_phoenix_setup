@@ -16,7 +16,7 @@ prompt_phoenix_vcsstyles () {
     zstyle ':vcs_info:*:phoenix:*' stagedstr '✔'
     zstyle ':vcs_info:*:phoenix:*' actionformats '(%F{10}%s->%F{3}%r%f|%F{14}%b%f%)%F{9}%u%F{10}%c%f(%F{9}%a%f):%F{3}%S%f'
     zstyle ':vcs_info:*:phoenix:*' formats '(%F{10}%s->%F{3}%r%f|%F{14}%b%f%)%F{9}%u%F{10}%c%f%:%F{3}%S%f'
-    zstyle ':vcs_info:*:phoenix:*' nvcsformats "%3~"
+    zstyle ':vcs_info:*:phoenix:*' nvcsformats "%F{3}%3~%f"
     zstyle ':vcs_info:(sv[nk]|bzr):*:phoenix:*' branchformat '%b%F{1}:%F{3}%r'
 }
 

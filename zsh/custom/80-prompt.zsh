@@ -6,7 +6,7 @@ autoload promptinit; promptinit
 
 # Set host-color for some workstations
 zstyle ':prompt:*:Lu-Tze*'  host-color 046
-zstyle ':prompt:*:Bibliothekar*'  host-color 088
+zstyle ':prompt:*:Bibliothekar*'  host-color 196
 zstyle ':prompt:*:tiffanyaching*'  host-color 032
 
 # Git check-for-changes

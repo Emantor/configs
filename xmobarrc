@@ -1,7 +1,7 @@
 Config { font = "xft:Droid Sans Mono:size=10:bold"  
      , bgColor = "#111111"  
      , fgColor = "#babdb6"  
-     , position = Static { xpos = 0 , ypos = 0, width = 1504, height = 16 }  
+     , position = TopW L 95
      , commands = [ Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 20  
                   , Run DynNetwork ["-t", "<dev>: <rx>|<tx> ~",
                                     "-L","0","-H","70","--normal","green","--high","red"] 10   

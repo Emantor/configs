@@ -155,9 +155,9 @@ main = do
         -- Lock Xsession with Key Combination
         , ((mod1Mask .|. mod4Mask, xK_BackSpace), spawn "xscreensaver-command -lock")
         -- Select workspace from prompt
-        , ((mod4Mask              , xK_z     ), workspacePrompt defaultXPConfig (windows . W.view))
+        , ((mod4Mask              , xK_z     ), workspacePrompt defaultXPConfig (windows . W.greedyView))
         , ((mod4Mask .|. shiftMask, xK_z     ), workspacePrompt defaultXPConfig (windows . W.shift))
         -- Select workspace from Grid
         , ((mod4Mask, xK_g), goToSelected defaultGSConfig)
-        , ((mod4Mask, xK_o), spawnSelected defaultGSConfig ["smplayer","xbmc","firefox","thunderbird"])
+        , ((mod4Mask, xK_o), spawnSelected defaultGSConfig ["smplayer","xbmc","firefox","thunderbird","pidgin","urxvt -e weechat-curses","libreoffice"])
         ]

@@ -11,6 +11,11 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
   unset f
 fi
 
+# Xrandr
+if [[ "$(xrandr | grep 'HDMI1 connected')" != "" ]]; then
+  xrandr --output HDMI1 --primary --auto --output LVDS1 --left-of HDMI1
+fi
+
 # Set Cursor
 xsetroot -cursor_name left_ptr
 
@@ -24,8 +29,8 @@ xsetroot -cursor_name left_ptr
 # ...or the Window Manager of your choice
 # start xscreensaver
 /usr/bin/xscreensaver -no-splash &
-# Set Keyboard layout
-setxkbmap -layout de
+# Set Keyboard layout, moved to /etc/X11/xorg.conf.d/10-keyboard.conf
+# setxkbmap -layout de
 #run systemd as user instance
 systemd --user &
 # start xmonad

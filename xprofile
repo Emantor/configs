@@ -3,10 +3,10 @@ xset -b
 # Starte Compositing Manager
 # xcompmgr -c &
 # Trayer
-trayer --edge top --align right --SetDockType true --SetPartialStrut true --width 5 --transparent true --alpha 0 --tint 0x111111 --height 19 &
+# trayer --monitor primary --edge top --align right --SetDockType true --SetPartialStrut true --width 5 --transparent true --alpha 0 --tint 0x111111 --height 19 &
 # dunst
 dunst &
 # feh
 feh --bg-fill /home/phoenix/Bilder/samcha.png
 # Stratum 0 Tray Icon
-stratum0trayicon  &
+# stratum0trayicon  &

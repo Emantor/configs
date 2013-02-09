@@ -42,6 +42,7 @@ myManageHook = manageHook defaultConfig <+> manageDocks <+> composeAll
     , className =? "Steam"    --> doShift "steam"
     , className =? "Thunderbird"    --> doShift "mail"
     , className =? "Guild Wars"    --> doFloat
+    , isFullscreen --> doFullFloat
     ]
 
 -- LogHooks
@@ -159,5 +160,5 @@ main = do
         , ((mod4Mask .|. shiftMask, xK_z     ), workspacePrompt defaultXPConfig (windows . W.shift))
         -- Select workspace from Grid
         , ((mod4Mask, xK_g), goToSelected defaultGSConfig)
-        , ((mod4Mask, xK_o), spawnSelected defaultGSConfig ["smplayer","xbmc","firefox","thunderbird","pidgin","urxvt -e weechat-curses","libreoffice"])
+        , ((mod4Mask, xK_o), spawnSelected defaultGSConfig ["smplayer","xbmc","firefox","thunderbird","pidgin","urxvt -e weechat-curses","libreoffice","wireshark"])
         ]

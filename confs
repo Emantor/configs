@@ -27,6 +27,7 @@ collect)
   cp ~/.xmobarrc xmobarrc
   ;;
 deploy)
+  git submodule init
   git submodule update
   cp vimrc ~/.vimrc
   cp Xdefaults ~/.Xdefaults
@@ -39,7 +40,12 @@ deploy)
   cp zshrc ~/.zshrc
   cp -r -T zsh ~/.zsh
   cp -r external/molokai/* ~/.vim/
-  cp -r external/LS_COLORS ~/.zsh/
+  if [ ! -e ~/.zsh/external ]; then
+    echo -n "Erstelle ~/.zsh/external/..."
+    mkdir ~/.zsh/external
+    echo " Done"
+  fi
+  cp -r external/LS_COLORS ~/.zsh/external/
   cp xmobarrc ~/.xmobarrc
   ;;
 *)

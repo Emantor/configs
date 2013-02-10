@@ -19,6 +19,11 @@ collect)
     echo " Done"
   fi
   cp -R ~/.zsh/* zsh/
+  if [ -e zsh/external/LS_COLORS ]; then
+    echo -n "Entferne LS_COLORS aus zsh/external..."
+    rm -R zsh/external/LS_COLORS
+    echo " Done"
+  fi
   cp ~/.xmobarrc xmobarrc
   ;;
 deploy)
@@ -34,6 +39,7 @@ deploy)
   cp zshrc ~/.zshrc
   cp -r -T zsh ~/.zsh
   cp -r external/molokai/* ~/.vim/
+  cp -r external/LS_COLORS ~/.zsh/
   cp xmobarrc ~/.xmobarrc
   ;;
 *)

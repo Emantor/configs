@@ -4,3 +4,6 @@
 [submodule "external/zsh-git-prompt"]
 	path = external/zsh-git-prompt
 	url = https://github.com/olivierverdier/zsh-git-prompt
+[submodule "external/LS_COLORS"]
+	path = external/LS_COLORS
+	url = git://github.com/trapd00r/LS_COLORS.git

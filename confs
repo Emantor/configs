@@ -46,9 +46,9 @@ deploy)
     echo " Done"
   fi
   cp -r external/LS_COLORS ~/.zsh/external/
-  if [[ grep NORMAL ~/.zsh/external/LS_COLORS/LS_COLORS ]]; then
-    echo -n "Unpatched Version of LS_COLORS detected, patching..."
-    patch ~/.zsh/external/LS_COLORS/LS_COLORS patch/LS_COLORS.patch
+  if [[ $(grep NORMAL ~/.zsh/external/LS_COLORS/LS_COLORS) ]]; then
+    echo "Unpatched Version of LS_COLORS detected, patching..."
+    patch ~/.zsh/external/LS_COLORS/LS_COLORS patches/LS_COLORS.patch
     echo "Done"
   fi
   cp xmobarrc ~/.xmobarrc

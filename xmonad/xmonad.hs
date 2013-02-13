@@ -1,20 +1,24 @@
 import XMonad
+
+-- Layout
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Renamed
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.IM
 import XMonad.Layout.Grid
 import XMonad.Layout.Reflect
+
+-- XMonad
 import XMonad.Actions.NoBorders
 import XMonad.Actions.GridSelect
+import XMonad.Actions.TopicSpace
+
+-- Hooks
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
-import XMonad.Util.Run(spawnPipe)
-import Graphics.X11.ExtraTypes.XF86
-import XMonad.Util.EZConfig(additionalKeys)
-import System.IO
+
 -- Java Workaround
 import XMonad.Hooks.SetWMName
 import Data.Ratio ((%))
@@ -27,6 +31,11 @@ import XMonad.Prompt.Workspace
 import XMonad.Prompt.Window
 import XMonad.Prompt.Man
 
+-- Misc
+import XMonad.Util.Run(spawnPipe)
+import Graphics.X11.ExtraTypes.XF86
+import XMonad.Util.EZConfig(additionalKeys)
+import System.IO
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M

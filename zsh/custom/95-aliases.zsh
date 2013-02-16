@@ -1,6 +1,5 @@
 # Aliases
-alias ls='ls++'
-alias ls_='/bin/ls --color=auto -h'
+alias ls='ls --color=auto -h'
 alias :q='exit'
 alias iptables='echo "Alias: sudo iptables" && sudo iptables'
 

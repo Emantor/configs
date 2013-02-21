@@ -8,10 +8,11 @@ import XMonad.Layout.IM
 import XMonad.Layout.Grid
 import XMonad.Layout.Reflect
 
--- XMonad
+-- Actions
 import XMonad.Actions.NoBorders
 import XMonad.Actions.GridSelect
 import XMonad.Actions.TopicSpace
+import XMonad.Actions.CycleWS
 
 -- Hooks
 import XMonad.Hooks.DynamicLog
@@ -105,19 +106,62 @@ myLayoutHook = onWorkspace "web" myTileFirst $
                       -- Match roster window
                       roster = Title "Friends"
 
--- Workspaces
-myWorkspaces = map show [1..9] ++ 
-               [ "web"
-               , "im"
-               , "irc"
-               , "mail"
-               , "dev"
-               , "adm"
-               , "steam"
-               , "tmp"
-               , "music"
-               , "vpn"
-               ]
+-- Topicspace
+myTopics :: [Topic]
+myTopics =
+   [ "1", "2", "3", "4" -- 4 unnamed workspaces
+   , "web", "im", "irc", "mail", "sfb880", "logo"
+   , "adm", "steam", "tmp", "music", "work", "vpn"
+   , "infam"
+   ]
+
+myTopicConfig :: TopicConfig
+myTopicConfig = defaultTopicConfig
+    { topicDirs = M.fromList $
+       [ ("1",      "~")
+       , ("2",      "~")
+       , ("3",      "~")
+       , ("4",      "~")
+       , ("web",    "Download")
+       , ("im",     "Download")
+       , ("irc",    "Download")
+       , ("mail",   "Download")
+       , ("sfb880", "work/sfb880")
+       , ("logo",   "work/logo")
+       , ("adm",    "/etc")
+       , ("steam",  ".steam")
+       , ("tmp",    "tmp")
+       , ("music",  "Musik")
+       , ("work",   "work")
+       , ("vpn",    "/etc/openvpn")
+       , ("infam",  "work/infam")
+       ]
+   , defaultTopicAction = const $ spawnShell
+   , defaultTopic = "dashboard"
+   , topicActions = M.fromList $
+       [ ("im",         spawn "pidgin")
+       , ("irc",        spawn "urxvt -e weechat-curses")
+       , ("mail",       spawn "thunderbird")
+       , ("web",        spawn "firefox")
+       , ("steam",      spawn "steam")
+       , ("music",      spawn "urxvt -e ncmpcpp")
+       ]
+   }
+
+spawnShell :: X ()
+spawnShell = currentTopicDir myTopicConfig >>= spawnShellIn
+
+spawnShellIn :: Dir -> X ()
+spawnShellIn dir = spawn $ "urxvt -e /bin/sh -c 'cd " ++ dir ++ " && " ++ "zsh" ++ "'"
+
+goto :: Topic -> X ()
+goto = switchTopic myTopicConfig
+
+promptedGoto :: X ()
+promptedGoto = workspacePrompt defaultXPConfig goto
+
+promptedShift :: X ()
+promptedShift = workspacePrompt defaultXPConfig $ windows . W.shift
 
 -- Xmonad starten
 main = do
@@ -128,7 +172,7 @@ main = do
         { manageHook = myManageHook
         , layoutHook = myLayoutHook 
         , startupHook = setWMName "LG3D"
-        , workspaces = myWorkspaces
+        , workspaces = myTopics
         , logHook = myLogHook xmproc
         , modMask = mod4Mask     -- Rebind Mod to the Windows key
         , terminal = "urxvt"
@@ -152,6 +196,7 @@ main = do
         , ((mod4Mask, xK_b), sendMessage ToggleStruts)
         -- show and hide border
         , ((mod4Mask, xK_n), withFocused toggleBorder)
+        , ((mod4Mask .|. shiftMask, xK_Return), spawnShell)
         -- Firefox Hotkey
         , ((mod4Mask, xK_f), spawn "firefox")
         -- MPD Control External mpd Server Bibliothekar
@@ -165,8 +210,11 @@ main = do
         -- Lock Xsession with Key Combination
         , ((mod1Mask .|. mod4Mask, xK_BackSpace), spawn "xscreensaver-command -lock")
         -- Select workspace from prompt
-        , ((mod4Mask              , xK_z     ), workspacePrompt defaultXPConfig (windows . W.greedyView))
-        , ((mod4Mask .|. shiftMask, xK_z     ), workspacePrompt defaultXPConfig (windows . W.shift))
+        , ((mod4Mask              , xK_z     ), promptedGoto)
+        , ((mod4Mask .|. shiftMask, xK_z     ), promptedShift)
+        -- Cycle Through Workspaces
+        , ((mod4Mask .|. shiftMask, xK_h     ), prevWS)
+        , ((mod4Mask .|. shiftMask, xK_l     ), nextWS)
         -- Select workspace from Grid
         , ((mod4Mask, xK_g), goToSelected defaultGSConfig)
         , ((mod4Mask, xK_o), spawnSelected defaultGSConfig ["smplayer","xbmc","firefox","thunderbird","pidgin","urxvt -e weechat-curses","libreoffice","wireshark"])

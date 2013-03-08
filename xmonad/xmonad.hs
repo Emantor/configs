@@ -7,6 +7,9 @@ import XMonad.Layout.PerWorkspace
 import XMonad.Layout.IM
 import XMonad.Layout.Grid
 import XMonad.Layout.Reflect
+import XMonad.Layout.Tabbed
+import XMonad.Layout.Circle
+import XMonad.Layout.Spiral
 
 -- Actions
 import XMonad.Actions.NoBorders
@@ -69,14 +72,14 @@ myLayoutHook = onWorkspace "web" myTileFirst $
                myGridFirst
                  where
                    -- Tile First Layout
-                   myTileFirst = avoidStruts (smartBorders (tiled ||| Grid) ||| noBorders Full)
+                   myTileFirst = avoidStruts ( smartBorders (tiled ||| Grid ||| simpleTabbed ) ||| noBorders Full )
                      where
                        tiled = Tall nmaster delta ratio
                        nmaster = 1
                        ratio = 1/2
                        delta = 3/100
                    -- Grid as First Layout
-                   myGridFirst = avoidStruts (smartBorders (Grid ||| tiled) ||| noBorders Full)
+                   myGridFirst = avoidStruts ( smartBorders (Grid ||| tiled ||| simpleTabbed) ||| noBorders Full )
                      where
                        tiled = Tall nmaster delta ratio
                        nmaster = 1
@@ -148,6 +151,7 @@ myTopicConfig = defaultTopicConfig
        ]
    }
 
+-- Helpfunctions for TopicSpace
 spawnShell :: X ()
 spawnShell = currentTopicDir myTopicConfig >>= spawnShellIn
 
@@ -163,11 +167,11 @@ promptedGoto = workspacePrompt defaultXPConfig goto
 promptedShift :: X ()
 promptedShift = workspacePrompt defaultXPConfig $ windows . W.shift
 
--- Xmonad starten
+-- Main Loop
 main = do
-    -- Xmobar starten
+    -- start Xmobar
     xmproc <- spawnPipe "/usr/local/bin/xmobar /home/phoenix/.xmobarrc"
-    -- Xmonad starten
+    -- start XMonad
     xmonad $ defaultConfig
         { manageHook = myManageHook
         , layoutHook = myLayoutHook 
@@ -176,7 +180,7 @@ main = do
         , logHook = myLogHook xmproc
         , modMask = mod4Mask     -- Rebind Mod to the Windows key
         , terminal = "urxvt"
-        , borderWidth = 2
+        , borderWidth = 1
         , focusedBorderColor = "#FF0000"
         } `additionalKeys`
         -- Volume Control

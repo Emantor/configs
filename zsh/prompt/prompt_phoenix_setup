@@ -38,7 +38,7 @@ prompt_phoenix_precmd () {
     # otherwise exec only vcs_info
     case $TERM in
       xterm*|rxvt*|screen*)
-        print -Pn "\e]0;%m:%3~\a";
+        print -Pn "\e]0;$TERM:%m:%3~\a";
         ;;
     esac
 
@@ -48,7 +48,7 @@ prompt_phoenix_precmd () {
 prompt_phoenix_preexec () {
     case $TERM in 
     rxvt*|xterm*|screen*)
-      print -Pn "\e]0;$1\a"
+      print -Pn "\e]0;$TERM:$1\a"
       ;;
     esac
 }

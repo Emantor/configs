@@ -16,6 +16,7 @@ import XMonad.Actions.NoBorders
 import XMonad.Actions.GridSelect
 import XMonad.Actions.TopicSpace
 import XMonad.Actions.CycleWS
+import XMonad.Actions.PhysicalScreens
 
 -- Hooks
 import XMonad.Hooks.DynamicLog
@@ -72,14 +73,14 @@ myLayoutHook = onWorkspace "web" myTileFirst $
                myGridFirst
                  where
                    -- Tile First Layout
-                   myTileFirst = avoidStruts ( smartBorders (tiled ||| Grid ||| simpleTabbed ) ||| noBorders Full )
+                   myTileFirst = avoidStruts ( smartBorders (tiled ||| Mirror tiled ||| Grid ||| simpleTabbed ) ||| noBorders Full )
                      where
                        tiled = Tall nmaster delta ratio
                        nmaster = 1
                        ratio = 1/2
                        delta = 3/100
                    -- Grid as First Layout
-                   myGridFirst = avoidStruts ( smartBorders (Grid ||| tiled ||| simpleTabbed) ||| noBorders Full )
+                   myGridFirst = avoidStruts ( smartBorders (Grid ||| tiled ||| Mirror tiled ||| simpleTabbed) ||| noBorders Full )
                      where
                        tiled = Tall nmaster delta ratio
                        nmaster = 1
@@ -115,7 +116,7 @@ myTopics =
    [ "1", "2", "3", "4" -- 4 unnamed workspaces
    , "web", "im", "irc", "mail", "sfb880", "logo"
    , "adm", "steam", "tmp", "music", "work", "vpn"
-   , "infam"
+   , "infam", "weber"
    ]
 
 myTopicConfig :: TopicConfig
@@ -138,9 +139,10 @@ myTopicConfig = defaultTopicConfig
        , ("work",   "work")
        , ("vpn",    "/etc/openvpn")
        , ("infam",  "work/infam")
+       , ("weber",  "work/weber")
        ]
    , defaultTopicAction = const $ spawnShell
-   , defaultTopic = "dashboard"
+   , defaultTopic = "1"
    , topicActions = M.fromList $
        [ ("im",         spawn "pidgin")
        , ("irc",        spawn "urxvt -e weechat-curses")
@@ -170,7 +172,7 @@ promptedShift = workspacePrompt defaultXPConfig $ windows . W.shift
 -- Main Loop
 main = do
     -- start Xmobar
-    xmproc <- spawnPipe "/usr/local/bin/xmobar /home/phoenix/.xmobarrc"
+    xmproc <- spawnPipe "/usr/local/bin/xmobar -x 0 /home/phoenix/.xmobarrc"
     -- start XMonad
     xmonad $ defaultConfig
         { manageHook = myManageHook

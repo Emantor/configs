@@ -42,6 +42,13 @@ prompt_phoenix_precmd () {
         ;;
     esac
 
+    local screens=$(screen -ls 2> /dev/null | grep -c Detach )
+
+    if [[ $screens == "0" ]]; then
+      screenbits=""
+    else
+      screenbits="%F{yellow}[$screens]%f"
+    fi
     vcs_info 'phoenix'
 }
 
@@ -75,9 +82,10 @@ prompt_phoenix_ps1 () {
 
     local gitinfo='${vcs_info_msg_0_}%#'
 
+
     prompt_bits="%F{blue}::%f"
 
-    PROMPT="${user}${host}\${prompt_bits}${gitinfo}"
+    PROMPT="${user}\${screenbits}${host}\${prompt_bits}${gitinfo}"
     RPROMPT=${exstate}
 }
 

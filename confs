@@ -25,6 +25,7 @@ collect)
     echo " Done"
   fi
   cp ~/.xmobarrc xmobarrc
+  cp ~/.gitconfig gitconfig
   ;;
 deploy)
   git submodule init
@@ -52,6 +53,7 @@ deploy)
     echo "Done"
   fi
   cp xmobarrc ~/.xmobarrc
+  cp gitconfig ~/.gitconfig
   ;;
 *)
   echo "No Argument specified, usage:"

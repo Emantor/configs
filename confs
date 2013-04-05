@@ -13,9 +13,10 @@ collect)
   cp ~/.zshrc  zshrc
   cp -R ~/.vim/*  vim
   if [ -e vim/colors ]; then
-    echo -n "Entferne molokai color scheme..."
+    echo -n "Entferne molokai color scheme und vim-addons..."
     rm -R vim/colors
     rm vim/README.md
+    rm -fR vim/vim-addons
     echo " Done"
   fi
   cp -R ~/.zsh/* zsh/

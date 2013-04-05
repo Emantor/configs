@@ -1,8 +1,6 @@
 [user]
 	email = phoenix@emantor.de
 	name = Emantor
-[push]
-	default = simple
 [color]
 branch = auto
 diff = auto

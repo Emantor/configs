@@ -88,7 +88,7 @@ fun! SetupVAM()
   let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
   " Tell VAM which plugins to fetch & load:
-  call vam#ActivateAddons(['snipmate-snippets','github:garbas/vim-snipmate','surround','fugitive','minibufexplorer'], {'auto_install' : 0})
+  call vam#ActivateAddons(['snipmate-snippets','github:garbas/vim-snipmate','surround','fugitive','minibufexplorer','delimitMate','SearchComplete','taglist'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
   " Addons are put into plugin_root_dir/plugin-name directory

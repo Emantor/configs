@@ -37,7 +37,7 @@ import XMonad.Prompt.Window
 import XMonad.Prompt.Man
 
 -- Misc
-import XMonad.Util.Run(spawnPipe)
+import XMonad.Util.Run(spawnPipe,unsafeSpawn,safeSpawn)
 import Graphics.X11.ExtraTypes.XF86
 import XMonad.Util.EZConfig(additionalKeys)
 import System.IO
@@ -171,6 +171,8 @@ promptedShift = workspacePrompt defaultXPConfig $ windows . W.shift
 
 -- Main Loop
 main = do
+    -- Set Wallpaper
+    unsafeSpawn "feh --bg-fill /home/phoenix/Bilder/ME.png"
     -- start Xmobar
     xmproc <- spawnPipe "/usr/local/bin/xmobar -x 0 /home/phoenix/.xmobarrc"
     -- start XMonad

@@ -6,7 +6,7 @@ xset -b
 # trayer --monitor primary --edge top --align right --SetDockType true --SetPartialStrut true --width 5 --transparent true --alpha 0 --tint 0x111111 --height 19 &
 # dunst
 dunst &
-# feh
-feh --bg-fill /home/phoenix/Bilder/samcha.png
+# feh //Moved to xmonad.hs (Allows to change the Wallpaper by restarting XMonad)
+# feh --bg-fill /home/phoenix/Bilder/ww_3.jpg
 # Stratum 0 Tray Icon
 # stratum0trayicon  &

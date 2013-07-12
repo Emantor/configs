@@ -7,6 +7,7 @@ Config { font = "xft:Droid Sans Mono:size=10:bold"
                                     "-L","0","-H","70","--normal","green","--high","red"] 10   
                   , Run Memory ["-t","Mem: <usedratio>%"] 20  
                   , Run Date "%k:%M" "date" 10  
+                  , Run Weather "EDVE" ["-t", "<station>: <tempC>°C"] 36000
                   , Run StdinReader  
                   , Run Com "/home/phoenix/bin/vol.sh" [] "vol" 10
                   , Run BatteryP ["BAT0"]
@@ -19,5 +20,5 @@ Config { font = "xft:Droid Sans Mono:size=10:bold"
                   ]  
      , sepChar = "%"  
      , alignSep = "}{"  
-     , template = " %StdinReader%}{ <fc=grey>%cpu% ~ %memory% ~ %dynnetwork%</fc> %battery% [<fc=green>%vol%</fc>] <fc=yellow>%date%</fc> " 
+     , template = " %StdinReader%}{ <fc=grey>%dynnetwork% %cpu% ~ %memory% ~ %EDVE% ~</fc> %battery% [<fc=green>%vol%</fc>] <fc=yellow>%date%</fc> " 
      }  

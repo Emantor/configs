@@ -22,18 +22,33 @@ set statusline=%F%m%r%h%w[%L][%{strlen(&fenc)?&fenc:'none'},%{&ff}]%y[%p%%][%03l
 "              | | +-- readonly flag in square brackets
 "              | +-- rodified flag in square brackets
 "              +-- full path to file in the buffer
+"
 " Tabsize and autoident
 set smartindent
 set tabstop=2
 set shiftwidth=2
 set expandtab
+
 " Remap jj to esc 
 inoremap jj <esc>
+
+" toggle shortcuts for paste, hlsearch, invlist
+" nnoremap <F2> :set invpaste paste?<CR>
+" set pastetoggle=<F2>
+nnoremap <F3> :set invhlsearch hlsearch?<CR>
+inoremap <F3> <Esc>:set invhlsearch hlsearch?<CR>a
+nnoremap <F4> :set invlist list?<CR>
+inoremap <F4> <Esc>:set invlist list?<CR>a
+
 " foldmethod
 set foldmethod=syntax
 
 " Colorscheme
 colorscheme molokai
+
+" Listchars, to show nbsp
+set listchars=nbsp:¬,eol:¶,tab:>-,extends:»,precedes:«,trail:•
+
 "VAM
 " put this line first in ~/.vimrc
 set nocompatible | filetype indent plugin on | syn on
@@ -117,4 +132,4 @@ call SetupVAM()
 let g:miniBufExplMapWindowNavVim = 1
 let g:miniBufExplMapCTabSwitchBufs = 1
 " Buffer List
-map <F4> :ls<CR>:buffer<space>
+" map <F4> :ls<CR>:buffer<space>

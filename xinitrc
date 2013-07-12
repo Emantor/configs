@@ -35,6 +35,6 @@ xsetroot -cursor_name left_ptr
 # Set Keyboard layout, moved to /etc/X11/xorg.conf.d/10-keyboard.conf
 # setxkbmap -layout de
 #run systemd as user instance
-systemd --user &
+exec /usr/lib/systemd/systemd --user &
 # start xmonad
 exec xmonad

@@ -45,6 +45,10 @@ import System.IO
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+-- Variables
+myWallpaper = "/home/phoenix/Bilder/ww_2.jpg"
+myTerminal  = "urxvt"
+myModMask   = mod4Mask
 
 myXPConfig :: XPConfig
 myXPConfig = defaultXPConfig
@@ -116,7 +120,7 @@ myTopics =
    [ "1", "2", "3", "4" -- 4 unnamed workspaces
    , "web", "im", "irc", "mail", "sfb880", "logo"
    , "adm", "steam", "tmp", "music", "work", "vpn"
-   , "infam", "weber"
+   , "virt", "infam", "weber"
    ]
 
 myTopicConfig :: TopicConfig
@@ -140,6 +144,7 @@ myTopicConfig = defaultTopicConfig
        , ("vpn",    "/etc/openvpn")
        , ("infam",  "work/infam")
        , ("weber",  "work/weber")
+       , ("virt",   "work/virt")
        ]
    , defaultTopicAction = const $ spawnShell
    , defaultTopic = "1"
@@ -150,8 +155,13 @@ myTopicConfig = defaultTopicConfig
        , ("web",        spawn "firefox")
        , ("steam",      spawn "steam")
        , ("music",      spawn "urxvt -e ncmpcpp")
+       , ("virt",       spawn "virt-manager")
        ]
    }
+
+-- Functions
+setWallpaper :: String -> X () 
+setWallpaper strWallpaper = spawn $ "feh --bg-fill " ++ strWallpaper
 
 -- Helpfunctions for TopicSpace
 spawnShell :: X ()
@@ -169,12 +179,20 @@ promptedGoto = workspacePrompt defaultXPConfig goto
 promptedShift :: X ()
 promptedShift = workspacePrompt defaultXPConfig $ windows . W.shift
 
+-- Application List
+appList :: [String]
+appList =  [  "smplayer", "xbmc", "firefox", "thunderbird"
+           , "pidgin", "urxvt -e weechat-curses", "libreoffice", "wireshark"
+           , "virt-manager", "gimp"
+           ]
+
+
 -- Main Loop
 main = do
     -- Set Wallpaper
-    unsafeSpawn "feh --bg-fill /home/phoenix/Bilder/ME.png"
+    spawn $ "feh --bg-fill " ++ myWallpaper
     -- start Xmobar
-    xmproc <- spawnPipe "/usr/local/bin/xmobar -x 0 /home/phoenix/.xmobarrc"
+    xmproc <- spawnPipe "/usr/bin/xmobar -x 0 /home/phoenix/.xmobarrc"
     -- start XMonad
     xmonad $ defaultConfig
         { manageHook = myManageHook
@@ -182,10 +200,10 @@ main = do
         , startupHook = setWMName "LG3D"
         , workspaces = myTopics
         , logHook = myLogHook xmproc
-        , modMask = mod4Mask     -- Rebind Mod to the Windows key
-        , terminal = "urxvt"
+        , modMask = myModMask     -- Rebind Mod to the Windows key
+        , terminal = myTerminal
         , borderWidth = 1
-        , focusedBorderColor = "#FF0000"
+        , focusedBorderColor = "#0000FF"
         } `additionalKeys`
         -- Volume Control
         [ ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 0 -- -1%")
@@ -208,9 +226,9 @@ main = do
         -- Firefox Hotkey
         , ((mod4Mask, xK_f), spawn "firefox")
         -- MPD Control External mpd Server Bibliothekar
-        , ((mod4Mask, xF86XK_AudioPlay), spawn "mpc -h bibliothekar toggle")
-        , ((mod4Mask, xF86XK_AudioPrev), spawn "mpc -h bibliothekar prev")
-        , ((mod4Mask, xF86XK_AudioNext), spawn "mpc -h bibliothekar next")
+        , ((mod4Mask, xF86XK_AudioPlay), spawn "mpc -h 192.168.213.151 toggle")
+        , ((mod4Mask, xF86XK_AudioPrev), spawn "mpc -h 192.168.213.151 prev")
+        , ((mod4Mask, xF86XK_AudioNext), spawn "mpc -h 192.168.213.151 next")
         -- Local mpd control
         , ((0, xF86XK_AudioPlay), spawn "mpc toggle")
         , ((0, xF86XK_AudioPrev), spawn "mpc prev")
@@ -223,7 +241,9 @@ main = do
         -- Cycle Through Workspaces
         , ((mod4Mask .|. shiftMask, xK_h     ), prevWS)
         , ((mod4Mask .|. shiftMask, xK_l     ), nextWS)
+        -- Reload Wallpaper
+        , ((mod4Mask              , xK_r     ), setWallpaper myWallpaper)
         -- Select workspace from Grid
         , ((mod4Mask, xK_g), goToSelected defaultGSConfig)
-        , ((mod4Mask, xK_o), spawnSelected defaultGSConfig ["smplayer","xbmc","firefox","thunderbird","pidgin","urxvt -e weechat-curses","libreoffice","wireshark"])
+        , ((mod4Mask, xK_o), spawnSelected defaultGSConfig appList)
         ]

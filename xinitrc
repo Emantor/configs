@@ -26,10 +26,6 @@ xsetroot -cursor_name left_ptr
 [ -f /etc/xprofile ] && . /etc/xprofile
 [ -f ~/.xprofile ] && . ~/.xprofile
 
-# exec gnome-session
-# exec startkde
-# exec startxfce4
-# ...or the Window Manager of your choice
 # start xscreensaver
 /usr/bin/xscreensaver -no-splash &
 # Set Keyboard layout, moved to /etc/X11/xorg.conf.d/10-keyboard.conf

@@ -1,0 +1,91 @@
+# by sunFlw3r #
+#please feel free to mod/hack this code to your hearts content:)#
+#if you make anything cool I'd love to see it#
+
+# Conky settings #
+background no
+update_interval 1
+double_buffer yes
+no_buffers yes
+
+# MPD Settings
+mpd_host localhost
+
+# Window specifications #
+own_window yes
+own_window_transparent yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+own_window_class Conky
+own_window_colour EEEEEE
+minimum_size 200 200
+
+draw_borders no
+draw_graph_borders yes
+draw_outline no
+draw_shades no
+
+# Alignment #
+border_inner_margin 15
+border_outer_margin 0
+
+# Graphics settings #
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders yes
+
+# Text settings #
+use_xft yes
+xftalpha 0
+xftfont Droid Sans Mono:size=10
+
+override_utf8_locale yes
+
+imlib_cache_size 0
+
+# Color scheme #
+default_color FFFFFF
+
+lua_load ~/bin/draw_bg.lua
+lua_draw_hook_pre conky_draw_bg
+
+TEXT
+${font Droid Sans Mono:size=13}${time %A  |  %d.%B}
+${voffset 0}${hr 2}
+${font}$sysname $kernel
+Intel® Core™ i5-3320M $alignr ${cpu cpu0}%
+Laptop-Mode $alignr ${laptop_mode}
+Battery $alignr ${battery_percent}%
+${voffset 0}${hr 2}
+Cpu: ${cpu cpu0}%   Ram: ${memperc}%   
+${voffset 0}${hr 2}
+$alignc $mem / $memmax $alignr $memperc%
+$membar
+$alignc Swap ${swap}/${swapmax} $alignr $swapperc%
+${swapbar}
+${voffset 0}${hr 2}
+GW Interface: $alignr(${gw_iface})
+GW IP: $alignr(${gw_ip lan})
+DNS: $alignr${nameserver}
+${voffset 0}${hr 2}
+WLAN AP: $alignr${wireless_essid wlan}   
+WLAN Bitrate: $alignr${if_up wlan}${wireless_bitrate wlan}$else None $endif
+WLAN LINK: ${if_up wlan}${wireless_link_bar 8 wlan}$else $alignr None $endif
+WLAN IP: $alignr${addr wlan}
+${voffset 0}${hr 2}
+LAN IP: $alignr${addr lan}
+${voffset 0}${hr 2}
+Bibliothekar:      ${execpi 10 ~/bin/pingtest.sh 192.168.213.151}
+Nathan:            ${execpi 10 ~/bin/pingtest.sh 192.168.213.150}
+Zephyda:           ${execpi 10 ~/bin/pingtest.sh 192.168.213.254}
+Tiffany:           ${execpi 10 ~/bin/pingtest.sh 78.46.234.214}
+${voffset 0}${hr 2}
+$if_mpd_playing\
+$mpd_artist
+${mpd_title 25}
+$mpd_bar
+$else \
+$alignc No Song Playing
+$alignc -
+$alignc -
+$endif

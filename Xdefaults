@@ -7,12 +7,12 @@
 #Xft.hintstyle:  hintslight
 
 # Transparency - true or false (default)
-URxvt*transparent: true
+#URxvt*transparent: true
 #URxvt*tintColor: Blue
 
 # shading - 0 to 99 darkens, 101 to 200 lightens.
 #   Don't use with tintColor; just use a darker or lighter color instead.
-URxvt*shading: 5
+#URxvt*shading: 5
 
 # scrollback buffer lines - 65535 is max on most machines (64 is default)
 URxvt*saveLines: 32767
@@ -74,7 +74,7 @@ URxvt*scrollstyle: rxvt
 URxvt*termName: rxvt-256color
 
 URxvt.depth: 32
-#URxvt*background: rgba:0000/0000/0000/eeee
+URxvt*background: rgba:0000/0000/0000/eeee
 
 #URxvt.fading: 10
 #URxvt.fadeColor: [0]black
@@ -99,7 +99,7 @@ URxvt.depth: 32
 !URxvt*color15: #f8f8f2
 
 ! tangoesque scheme
-*background: #111111
+#*background: #111111
 *foreground: #babdb6
 ! Black (not tango) + DarkGrey
 *color0:  #000000

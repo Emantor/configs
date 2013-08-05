@@ -20,6 +20,7 @@ import XMonad.Actions.PhysicalScreens
 
 -- Hooks
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
@@ -39,6 +40,7 @@ import XMonad.Prompt.Man
 -- Misc
 import XMonad.Util.Run(spawnPipe,unsafeSpawn,safeSpawn)
 import Graphics.X11.ExtraTypes.XF86
+import Graphics.X11.Xinerama as Xin
 import XMonad.Util.EZConfig(additionalKeys)
 import System.IO
 
@@ -46,34 +48,50 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 -- Variables
-myWallpaper = "/home/phoenix/Bilder/ww_2.jpg"
+myWallpaper = "/home/phoenix/Bilder/ME.png"
 myTerminal  = "urxvt"
 myModMask   = mod4Mask
+
+myConkyOffset = Xin.getScreenInfo
+
 
 myXPConfig :: XPConfig
 myXPConfig = defaultXPConfig
 
+-- StartupHook
+myStartupHook = do
+             --   spawn "killall conky"
+                s <- spawnPipe "conky -c ~/conkyrc -a top_right -x +1940"
+                setWMName "LG3D"
+                setWallpaper myWallpaper
+
+mySHook = do
+          setWMName "LG3D"
+          setWallpaper myWallpaper
+
 -- ManageHook für Docks und Apps 
 myManageHook = manageHook defaultConfig <+> manageDocks <+> composeAll
-    [ className =? "Gimp"      --> doFloat
-    , className =? "Pidgin"    --> doShift "im"
-    , className =? "Steam"    --> doShift "steam"
-    , className =? "Thunderbird"    --> doShift "mail"
-    , className =? "Guild Wars"    --> doFloat
+    [ className =? "Gimp"        --> doFloat
+    , className =? "Pidgin"      --> doShift "im"
+    , className =? "Steam"       --> doShift "steam"
+    , className =? "Thunderbird" --> doShift "mail"
+    , className =? "Guild Wars"  --> doFloat
+    , className =? "Conky"       --> doIgnore
     , isFullscreen --> doFullFloat
     ]
 
 -- LogHooks
 myLogHook :: Handle -> X ()
-myLogHook xmproc = dynamicLogWithPP $ customPP { ppOutput = hPutStrLn xmproc }
+myLogHook xmproc1 = dynamicLogWithPP customPP { ppOutput = hPutStrLn xmproc1 }
+
                        
 customPP :: PP
-customPP = xmobarPP {ppLayout = xmobarColor "orange" "", ppTitle = xmobarColor "cyan" "" . shorten 80 } 
+customPP = xmobarPP {ppLayout = xmobarColor "orange" "", ppTitle = xmobarColor "cyan" "" . shorten 80, ppUrgent = xmobarColor "yellow" "red" . xmobarStrip} 
 
 -- LayoutHook: certain workspaces get a specific layout or layout order.
 myLayoutHook = onWorkspace "web" myTileFirst $
                onWorkspace "im" myChat $
-               onWorkspace "steam" mySteam $
+               onWorkspace "steam" mySteam
                myGridFirst
                  where
                    -- Tile First Layout
@@ -125,7 +143,7 @@ myTopics =
 
 myTopicConfig :: TopicConfig
 myTopicConfig = defaultTopicConfig
-    { topicDirs = M.fromList $
+    { topicDirs = M.fromList
        [ ("1",      "~")
        , ("2",      "~")
        , ("3",      "~")
@@ -146,9 +164,9 @@ myTopicConfig = defaultTopicConfig
        , ("weber",  "work/weber")
        , ("virt",   "work/virt")
        ]
-   , defaultTopicAction = const $ spawnShell
+   , defaultTopicAction = const spawnShell
    , defaultTopic = "1"
-   , topicActions = M.fromList $
+   , topicActions = M.fromList
        [ ("im",         spawn "pidgin")
        , ("irc",        spawn "urxvt -e weechat-curses")
        , ("mail",       spawn "thunderbird")
@@ -186,25 +204,28 @@ appList =  [  "smplayer", "xbmc", "firefox", "thunderbird"
            , "virt-manager", "gimp"
            ]
 
+myConfig xmproc1 = defaultConfig
+        { manageHook = myManageHook
+        , layoutHook = myLayoutHook 
+        , startupHook = myStartupHook
+        , workspaces = myTopics
+        , logHook = myLogHook xmproc1
+        , modMask = myModMask     -- Rebind Mod to the Windows key
+        , terminal = myTerminal
+        , borderWidth = 1
+        , focusedBorderColor = "blue"
+        }
 
 -- Main Loop
 main = do
     -- Set Wallpaper
-    spawn $ "feh --bg-fill " ++ myWallpaper
+    -- spawn $ "feh --bg-fill " ++ myWallpaper
     -- start Xmobar
-    xmproc <- spawnPipe "/usr/bin/xmobar -x 0 /home/phoenix/.xmobarrc"
+    xmproc1 <- spawnPipe "/usr/bin/xmobar -x 0 /home/phoenix/.xmobarrc"
     -- start XMonad
-    xmonad $ defaultConfig
-        { manageHook = myManageHook
-        , layoutHook = myLayoutHook 
-        , startupHook = setWMName "LG3D"
-        , workspaces = myTopics
-        , logHook = myLogHook xmproc
-        , modMask = myModMask     -- Rebind Mod to the Windows key
-        , terminal = myTerminal
-        , borderWidth = 1
-        , focusedBorderColor = "#0000FF"
-        } `additionalKeys`
+    xmonad $ withUrgencyHook NoUrgencyHook
+           $ (myConfig xmproc1)
+           `additionalKeys`
         -- Volume Control
         [ ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 0 -- -1%")
         , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume 0 +1%")
@@ -242,8 +263,10 @@ main = do
         , ((mod4Mask .|. shiftMask, xK_h     ), prevWS)
         , ((mod4Mask .|. shiftMask, xK_l     ), nextWS)
         -- Reload Wallpaper
-        , ((mod4Mask              , xK_r     ), setWallpaper myWallpaper)
+        , ((mod4Mask .|. shiftMask, xK_h     ), setWallpaper myWallpaper)
         -- Select workspace from Grid
         , ((mod4Mask, xK_g), goToSelected defaultGSConfig)
         , ((mod4Mask, xK_o), spawnSelected defaultGSConfig appList)
+        -- Remap Recompile to kill conky on exit
+        , ((mod4Mask              , xK_q     ), spawn "if type xmonad; then killall conky & xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
         ]

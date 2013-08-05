@@ -20,5 +20,5 @@ Config { font = "xft:Droid Sans Mono:size=10:bold"
                   ]  
      , sepChar = "%"  
      , alignSep = "}{"  
-     , template = " %StdinReader%}{ <fc=grey>%dynnetwork% %cpu% ~ %memory% ~ %EDVE% ~</fc> %battery% [<fc=green>%vol%</fc>] <fc=yellow>%date%</fc> " 
+     , template = " %StdinReader%}{ <fc=grey>%dynnetwork% %cpu% ~ %memory% ~ %EDVE% ~</fc> [<fc=green>%vol%</fc>] <fc=yellow>%date%</fc> " 
      }  

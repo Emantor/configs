@@ -74,7 +74,7 @@ URxvt*scrollstyle: rxvt
 URxvt*termName: rxvt-256color
 
 URxvt.depth: 32
-URxvt*background: rgba:0000/0000/0000/eeee
+URxvt*background: rgba:0000/0000/0000/cccc
 
 #URxvt.fading: 10
 #URxvt.fadeColor: [0]black
@@ -132,3 +132,9 @@ URxvt*background: rgba:0000/0000/0000/eeee
 URxvt*scrollTtyOutput:      false
 URxvt*scrollWithBuffer:     true
 URxvt*scrollTtyKeypress:    true
+! Urxvt URL Support
+URxvt.perl-ext:      default,url-select
+URxvt.keysym.M-u:    perl:url-select:select_next
+URxvt.url-select.launcher:   /usr/bin/firefox -new-tab
+URxvt.url-select.underline: true
+

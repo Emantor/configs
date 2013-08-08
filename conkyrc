@@ -57,8 +57,6 @@ Intel® Core™ i5-3320M $alignr ${cpu cpu0}%
 Laptop-Mode $alignr ${laptop_mode}
 Battery $alignr ${battery_percent}%
 ${voffset 0}${hr 2}
-Cpu: ${cpu cpu0}%   Ram: ${memperc}%   
-${voffset 0}${hr 2}
 $alignc $mem / $memmax $alignr $memperc%
 $membar
 $alignc Swap ${swap}/${swapmax} $alignr $swapperc%
@@ -75,10 +73,13 @@ WLAN IP: $alignr${addr wlan}
 ${voffset 0}${hr 2}
 LAN IP: $alignr${addr lan}
 ${voffset 0}${hr 2}
-Bibliothekar:      ${execpi 10 ~/bin/pingtest.sh 192.168.213.151}
-Nathan:            ${execpi 10 ~/bin/pingtest.sh 192.168.213.150}
-Zephyda:           ${execpi 10 ~/bin/pingtest.sh 192.168.213.254}
-Tiffany:           ${execpi 10 ~/bin/pingtest.sh 78.46.234.214}
+bibliothekar:      ${execpi 30 ~/bin/pingtest.sh 192.168.213.151}
+nathan:            ${execpi 30 ~/bin/pingtest.sh 192.168.213.150}
+zephyda:           ${execpi 30 ~/bin/pingtest.sh 192.168.213.254}
+tiffany:           ${execpi 30 ~/bin/pingtest.sh 78.46.234.214}
+${voffset 0}${hr 2}
+agva-ltsp:         ${execpi 30 ~/bin/pingtest.sh 134.169.18.166}
+devstack:          ${execpi 30 ~/bin/pingtest.sh 134.169.18.240}
 ${voffset 0}${hr 2}
 $if_mpd_playing\
 $mpd_artist

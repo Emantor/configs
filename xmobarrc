@@ -17,7 +17,7 @@ Config { font = "xft:Droid Sans Mono:size=10:bold"
                       "-L", "-15", "-H", "-5",
                       "-l", "red", "-m", "blue", "-h", "green"]
                      600
-                  ]  
+                  ]
      , sepChar = "%"  
      , alignSep = "}{"  
      , template = " %StdinReader%}{ <fc=grey>%dynnetwork% %cpu% ~ %memory% ~ %EDVE% ~</fc> [<fc=green>%vol%</fc>] <fc=yellow>%date%</fc> " 

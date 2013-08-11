@@ -53,25 +53,25 @@ TEXT
 ${font Droid Sans Mono:size=13}${time %A  |  %d.%B}
 ${voffset 0}${hr 2}
 ${font}$sysname $kernel
-Intel® Core™ i5-3320M $alignr ${cpu cpu0}%
-Laptop-Mode $alignr ${laptop_mode}
-Battery $alignr ${battery_percent}%
+Intel® Core™ i5-3320M $alignr ${color 0088FF}${cpu cpu0}%${color}
+Laptop-Mode $alignr ${color 0088FF}${laptop_mode}${color}
+Battery $alignr ${color 0088FF}${battery_percent}%${color}
 ${voffset 0}${hr 2}
 $alignc $mem / $memmax $alignr $memperc%
 $membar
 $alignc Swap ${swap}/${swapmax} $alignr $swapperc%
 ${swapbar}
 ${voffset 0}${hr 2}
-GW Interface: $alignr(${gw_iface})
-GW IP: $alignr(${gw_ip lan})
-DNS: $alignr${nameserver}
+GW Interface: ${color 0088FF}$alignr${gw_iface}${color}
+GW IP: ${color 0088FF}$alignr${gw_ip lan}${color}
+DNS: ${color 0088FF}$alignr${nameserver}${color}
 ${voffset 0}${hr 2}
-WLAN AP: $alignr${wireless_essid wlan}   
-WLAN Bitrate: $alignr${if_up wlan}${wireless_bitrate wlan}$else None $endif
-WLAN LINK: ${if_up wlan}${wireless_link_bar 8 wlan}$else $alignr None $endif
-WLAN IP: $alignr${addr wlan}
+WLAN AP: ${color 0088FF}$alignr${wireless_essid wlan}${color}
+WLAN Bitrate: ${color 0088FF}$alignr${if_up wlan}${wireless_bitrate wlan}$else None $endif${color}
+WLAN LINK: ${color 0088FF}${if_up wlan}${wireless_link_bar 8 wlan}$else $alignr None $endif${color}
+WLAN IP: ${color 0088FF}$alignr${addr wlan}${color}
 ${voffset 0}${hr 2}
-LAN IP: $alignr${addr lan}
+LAN IP: $alignr${color 0088FF}${addr lan}${color}
 ${voffset 0}${hr 2}
 bibliothekar:      ${execpi 30 ~/bin/pingtest.sh 192.168.213.151}
 nathan:            ${execpi 30 ~/bin/pingtest.sh 192.168.213.150}
@@ -79,7 +79,7 @@ zephyda:           ${execpi 30 ~/bin/pingtest.sh 192.168.213.254}
 tiffany:           ${execpi 30 ~/bin/pingtest.sh 78.46.234.214}
 ${voffset 0}${hr 2}
 agva-ltsp:         ${execpi 30 ~/bin/pingtest.sh 134.169.18.166}
-devstack:          ${execpi 30 ~/bin/pingtest.sh 134.169.18.240}
+devstack:          ${execpi 30 ~/bin/pingtest.sh 134.169.18.241}
 ${voffset 0}${hr 2}
 $if_mpd_playing\
 $mpd_artist

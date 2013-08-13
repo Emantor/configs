@@ -97,7 +97,12 @@ customPP :: PP
 customPP = xmobarPP { ppLayout = xmobarColor "green" ""
                     , ppTitle = xmobarColor "cyan" "" . shorten 80
                     , ppUrgent = xmobarColor "yellow" "red" . xmobarStrip
-                    , ppSep = " ~ "
+                    , ppCurrent = xmobarColor "#FF0088" ""
+                    , ppSep = "/"
+                    , ppWsSep = "/"
+                    , ppVisible = xmobarColor "#00FF88" ""
+                    , ppHidden = xmobarColor "#0088FF" ""
+                    , ppHiddenNoWindows = xmobarColor "#88FF00" ""
                     }
 
 -- LayoutHook: certain workspaces get a specific layout or layout order.
@@ -148,9 +153,9 @@ myLayoutHook = onWorkspace "web" myTileFirst $
 myTopics :: [Topic]
 myTopics =
    [ "1", "2", "3", "4" -- 4 unnamed workspaces
-   , "web", "im", "irc", "mail", "sfb880", "logo"
-   , "adm", "steam", "tmp", "music", "work", "vpn"
-   , "virt", "infam", "weber"
+   , "web", "im", "irc", "mail" 
+   , "steam", "music", "work", "vpn"
+   , "virt", "ik", "weber"
    ]
 
 myTopicConfig :: TopicConfig
@@ -172,7 +177,7 @@ myTopicConfig = defaultTopicConfig
        , ("music",  "Musik")
        , ("work",   "work")
        , ("vpn",    "/etc/openvpn")
-       , ("infam",  "work/infam")
+       , ("ik",  "work/infam")
        , ("weber",  "work/weber")
        , ("virt",   "work/virt")
        ]

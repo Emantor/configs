@@ -2,10 +2,8 @@ Config { font = "xft:Droid Sans Mono:size=10:bold"
      , bgColor = "#111111"  
      , fgColor = "#babdb6"  
      , position = TopW L 100
-     , commands = [ Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 20  
-                  , Run DynNetwork ["-t", "<dev>: <rx>|<tx> ~",
+     , commands = [ Run DynNetwork ["-t", "<rx>|<tx>/",
                                     "-L","0","-H","70","--normal","green","--high","red"] 10   
-                  , Run Memory ["-t","Mem: <usedratio>%"] 20  
                   , Run Date "%k:%M" "date" 10  
                   , Run Weather "EDVE" ["-t", "<station>: <tempC>°C"] 36000
                   , Run StdinReader  
@@ -20,5 +18,5 @@ Config { font = "xft:Droid Sans Mono:size=10:bold"
                   ]
      , sepChar = "%"  
      , alignSep = "}{"  
-     , template = " %StdinReader%}{ <fc=grey>%dynnetwork% %cpu% ~ %memory% ~ %EDVE% ~</fc> [<fc=green>%vol%</fc>] <fc=yellow>%date%</fc> " 
+     , template = " %StdinReader%}{ <fc=grey>%dynnetwork%/%EDVE%/</fc><fc=green>%vol%</fc>/<fc=yellow>%date%</fc> " 
      }  

@@ -51,7 +51,7 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 -- Variables
-myWallpaper = "ww_3.jpg"
+myWallpaper = "ME.png"
 myWallpapers = ["ww_3.jpg", "samcha.png", "ME.png"]
 myTerminal  = "urxvt"
 myModMask   = mod4Mask
@@ -71,8 +71,8 @@ promptWallpaper c = do
 
 -- StartupHook
 myStartupHook conkyOffset = do
-             --   spawn "killall conky"
-                spawn ("conky -c ~/conkyrc -a top_right -x +" ++ conkyOffset)
+                --   spawn "killall conky"
+                -- spawn ("conky -c ~/conkyrc -a top_right -x +" ++ conkyOffset)
                 setWMName "LG3D"
                 setWallpaper myWallpaper
 
@@ -109,7 +109,7 @@ customPP = xmobarPP { ppLayout = xmobarColor "green" ""
 myLayoutHook = onWorkspace "web" myTileFirst $
                onWorkspace "im" myChat $
                onWorkspace "steam" mySteam
-               myGridFirst
+               myTileFirst
                  where
                    -- Tile First Layout
                    myTileFirst = avoidStruts ( smartBorders (tiled ||| Mirror tiled ||| Grid ||| simpleTabbed ) ||| noBorders Full )
@@ -186,7 +186,7 @@ myTopicConfig = defaultTopicConfig
        , ("web",        spawn "firefox")
        , ("steam",      spawn "steam")
        , ("music",      spawn "urxvt -e ncmpcpp")
-       , ("virt",       spawn "virt-manager")
+       , ("virt",       spawn "virtualbox")
        ]
    }
 
@@ -343,5 +343,9 @@ main = do
             [  Rectangle {rect_x = 1080, rect_y = 0, rect_width = 1920, rect_height = 1200}
               ,Rectangle {rect_x = 3000, rect_y = 0, rect_width = 1920, rect_height = 1080}
               ,Rectangle {rect_x = 0, rect_y = 0, rect_width = 1080, rect_height = 1920}]
+              -> xmonad $ withUrgencyHook NoUrgencyHook (myConfig xmproc1 "1940");
+            [  Rectangle {rect_x = 1080, rect_y = 0, rect_width = 1920, rect_height = 1200}
+              ,Rectangle {rect_x = 0, rect_y = 0, rect_width = 1080, rect_height = 1920}
+              ,Rectangle {rect_x = 3000, rect_y = 0, rect_width = 1920, rect_height = 1080}]
               -> xmonad $ withUrgencyHook NoUrgencyHook (myConfig xmproc1 "1940");
             _ -> xmonad $ withUrgencyHook NoUrgencyHook (myConfig xmproc1 "40")

@@ -79,7 +79,8 @@ zephyda:           ${execpi 30 ~/bin/pingtest.sh 192.168.213.254}
 tiffany:           ${execpi 30 ~/bin/pingtest.sh 78.46.234.214}
 ${voffset 0}${hr 2}
 agva-ltsp:         ${execpi 30 ~/bin/pingtest.sh 134.169.18.166}
-devstack:          ${execpi 30 ~/bin/pingtest.sh 134.169.18.241}
+devstack-srv:      ${execpi 30 ~/bin/pingtest.sh 134.169.18.171}
+subversion-srv:    ${execpi 30 ~/bin/pingtest.sh 134.169.18.172}
 ${voffset 0}${hr 2}
 $if_mpd_playing\
 $mpd_artist

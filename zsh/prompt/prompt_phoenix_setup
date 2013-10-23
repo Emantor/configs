@@ -79,14 +79,14 @@ prompt_phoenix_ps1 () {
 
     local host="%F{${host_color}%}%m%f"
     local exstate="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
-
+    local date="%{$fg_no_bold[yellow]%}%D{%H:%M:%S}%{$reset_color%}"
     local gitinfo='${vcs_info_msg_0_}%#'
 
 
     prompt_bits="%F{blue}::%f"
 
     PROMPT="${user}\${screenbits}${host}\${prompt_bits}${gitinfo}"
-    RPROMPT=${exstate}
+    RPROMPT="${date}|${exstate}"
 }
 
 prompt_phoenix_setup () {

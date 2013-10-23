@@ -33,8 +33,8 @@ set expandtab
 inoremap jj <esc>
 
 " toggle shortcuts for paste, hlsearch, invlist
-" nnoremap <F2> :set invpaste paste?<CR>
-" set pastetoggle=<F2>
+nnoremap <F2> :set invpaste paste?<CR>
+" set pastetoggle=<F5>
 nnoremap <F3> :set invhlsearch hlsearch?<CR>
 inoremap <F3> <Esc>:set invhlsearch hlsearch?<CR>a
 nnoremap <F4> :set invlist list?<CR>
@@ -103,7 +103,7 @@ fun! SetupVAM()
   let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
   " Tell VAM which plugins to fetch & load:
-  call vam#ActivateAddons(['github:honza/vim-snippets','github:garbas/vim-snipmate','surround','fugitive','minibufexplorer','delimitMate','SearchComplete','taglist'], {'auto_install' : 0})
+  call vam#ActivateAddons(['github:honza/vim-snippets','github:garbas/vim-snipmate','surround','fugitive','minibufexplorer','delimitMate','SearchComplete','taglist','afterimage'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
   " Addons are put into plugin_root_dir/plugin-name directory

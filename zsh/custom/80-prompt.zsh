@@ -1,4 +1,4 @@
-# Set path to prompt
+# Add prompt to path
 fpath+=( $ZSH/prompt )
 
 # Autoload Promptinit AFTER fpath change

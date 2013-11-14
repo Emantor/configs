@@ -54,6 +54,7 @@ deploy)
     patch ~/.zsh/external/LS_COLORS/LS_COLORS patches/LS_COLORS.patch
     echo "Done"
   fi
+  cp -r external/zsh-livestreamer-completion ~/.zsh/external/
   cp xmobarrc ~/.xmobarrc
   cp gitconfig ~/.gitconfig
   cp conkyrc ~/.conkyrc

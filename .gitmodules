@@ -7,3 +7,9 @@
 [submodule "external/LS_COLORS"]
 	path = external/LS_COLORS
 	url = git://github.com/trapd00r/LS_COLORS.git
+[submodule "external/external/zsh-livestreamer-completion"]
+	path = external/external/zsh-livestreamer-completion
+	url = https://github.com/Valodim/zsh-livestreamer-completion
+[submodule "external/zsh-livestreamer-completion"]
+	path = external/zsh-livestreamer-completion
+	url = https://github.com/Valodim/zsh-livestreamer-completion

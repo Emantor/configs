@@ -1,6 +1,9 @@
 # Install completion
 # zstyle :compinstall filename '/home/phoenix/.zshrc'
 
+# Add completion to path
+fpath+=( $ZSH/external/zsh-livestreamer-completion )
+
 # Complete with menu
 unsetopt menu_complete
 setopt auto_menu complete_in_word always_to_end

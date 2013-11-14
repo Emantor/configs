@@ -18,5 +18,5 @@ Config { font = "xft:M+ 2c,M+ 2c medium:size=10"
                   ]
      , sepChar = "%"  
      , alignSep = "}{"  
-     , template = " %StdinReader%}{<fc=grey>%dynnetwork%%EDVE%/</fc><fc=green>%vol%</fc>/<fc=yellow>%date%</fc> " 
+     , template = " %StdinReader%}{<fc=grey>%dynnetwork%%EDVE%/</fc>%battery%/<fc=green>%vol%</fc>/<fc=yellow>%date%</fc>" 
      }  

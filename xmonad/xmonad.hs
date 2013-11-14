@@ -261,14 +261,14 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume 0 +1%")
     , ((0, xF86XK_AudioMute), spawn "~/bin/pa_toggle.sh")
     -- Brightness Control
-    , ((mod1Mask, xF86XK_AudioLowerVolume), spawn "xbacklight -10")
-    , ((mod1Mask, xF86XK_AudioRaiseVolume), spawn "xbacklight +10")
+    , ((mod1Mask, xF86XK_AudioLowerVolume), spawn "sudo light -sq 10")
+    , ((mod1Mask, xF86XK_AudioRaiseVolume), spawn "sudo light -aq 10")
     -- Brightness Hotkeys: 1 25 50 75 100
-    , ((mod1Mask .|. mod4Mask, xK_1), spawn "xbacklight -t 0 -set 1")
-    , ((mod1Mask .|. mod4Mask, xK_2), spawn "xbacklight -t 0 -set 25")
-    , ((mod1Mask .|. mod4Mask, xK_3), spawn "xbacklight -t 0 -set 50")
-    , ((mod1Mask .|. mod4Mask, xK_4), spawn "xbacklight -t 0 -set 75")
-    , ((mod1Mask .|. mod4Mask, xK_5), spawn "xbacklight -t 0 -set 100")
+    , ((mod1Mask .|. mod4Mask, xK_1), spawn "sudo light -q 1")
+    , ((mod1Mask .|. mod4Mask, xK_2), spawn "sudo light -q 25")
+    , ((mod1Mask .|. mod4Mask, xK_3), spawn "sudo light -q 50")
+    , ((mod1Mask .|. mod4Mask, xK_4), spawn "sudo light -q 75")
+    , ((mod1Mask .|. mod4Mask, xK_5), spawn "sudo light -q 100")
     -- Show and hide dock
     , ((mod4Mask, xK_b), sendMessage ToggleStruts)
     -- show and hide border

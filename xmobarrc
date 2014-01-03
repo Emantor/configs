@@ -8,7 +8,6 @@ Config { font = "xft:M+ 2c,M+ 2c medium:size=10"
                   , Run Weather "EDVE" ["-t", "<station>: <tempC>°C"] 36000
                   , Run StdinReader  
                   , Run Com "/home/phoenix/bin/vol.sh" [] "vol" 10
-                  , Run BatteryP ["BAT0"]
                   ["-t", "<fc=red><leftbar></fc><acstatus>",
                       "-L", "10", "-H", "80", "-p", "3",
                       "--", "-O", "<<fc=green>On</fc>", "-o", "><fc=red>Off</fc>",
@@ -18,5 +17,5 @@ Config { font = "xft:M+ 2c,M+ 2c medium:size=10"
                   ]
      , sepChar = "%"  
      , alignSep = "}{"  
-     , template = " %StdinReader%}{<fc=grey>%dynnetwork%%EDVE%/</fc>%battery%/<fc=green>%vol%</fc>/<fc=yellow>%date%</fc>" 
+     , template = " %StdinReader%}{<fc=grey>%dynnetwork%%EDVE%/</fc><fc=green>%vol%</fc>/<fc=yellow>%date%</fc>" 
      }  

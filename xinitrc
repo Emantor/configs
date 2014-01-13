@@ -25,9 +25,9 @@ xsetroot -cursor_name left_ptr
 # Make sure this is before the 'exec' command or it won't be executed.
 [ -f /etc/xprofile ] && . /etc/xprofile
 [ -f ~/.xprofile ] && . ~/.xprofile
-
+#
 # start xscreensaver
-/usr/bin/xscreensaver -no-splash &
+# /usr/bin/xscreensaver -no-splash &
 # Set Keyboard layout, moved to /etc/X11/xorg.conf.d/10-keyboard.conf
 # setxkbmap -layout de
 #run systemd as user instance

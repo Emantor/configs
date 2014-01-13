@@ -51,7 +51,7 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 -- Variables
-myWallpaper = "ME.png"
+myWallpaper = "ww_3.jpg"
 myWallpapers = ["ww_3.jpg", "samcha.png", "ME.png"]
 myTerminal  = "urxvt"
 myModMask   = mod4Mask
@@ -255,7 +255,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
     -- quit, or restart
     , ((modMask .|. shiftMask, xK_q     ), io (exitWith ExitSuccess)) -- %! Quit xmonad
-    , ((modMask              , xK_q     ), spawn "if type xmonad; then killall conky & xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
+    , ((modMask              , xK_q     ), spawn "if type xmonad; then killall conky trayer stratum0trayicon & xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
     -- Volume Control
     , ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 0 -- -1%")
     , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume 0 +1%")
@@ -271,6 +271,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((mod1Mask .|. mod4Mask, xK_5), spawn "sudo light -q 100")
     -- Show and hide dock
     , ((mod4Mask, xK_b), sendMessage ToggleStruts)
+    -- Show and hide battery overlay
+    , ((mod4Mask, xK_i), spawn "/usr/bin/showbatt")
     -- show and hide border
     , ((mod4Mask, xK_n), withFocused toggleBorder)
     , ((mod4Mask .|. shiftMask, xK_Return), spawnShell)
@@ -285,7 +287,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((0, xF86XK_AudioPrev), spawn "mpc prev")
     , ((0, xF86XK_AudioNext), spawn "mpc next")
     -- Lock Xsession with Key Combination
-    , ((mod1Mask .|. mod4Mask, xK_BackSpace), spawn "xscreensaver-command -lock")
+    , ((mod1Mask .|. mod4Mask, xK_BackSpace), spawn "slock")
     -- Select workspace from prompt
     , ((mod4Mask              , xK_z     ), promptedGoto)
     , ((mod4Mask .|. shiftMask, xK_z     ), promptedShift)
@@ -333,8 +335,14 @@ myConfig xmprocHandle conkyOffset = defaultConfig
 main = do
     -- Set Wallpaper
     -- spawn $ "feh --bg-fill " ++ myWallpaper
+    -- Spawn trayer
+    spawn "trayer --monitor primary --align right --widthtype percent --width 10 --edge top --height 22 --tint 0x111111 --alpha 0 --transparent true --SetDockType true --SetPartialStrut true"
+    -- Spawn stratum0trayicon
+    spawn "stratum0trayicon"
     -- start Xmobar
     xmproc1 <- spawnPipe "/usr/bin/xmobar -x 0 /home/phoenix/.xmobarrc"
+    -- Setup gpg-agent to use the right pinentry
+    spawn "echo UPDATESTARTUPTTY | gpg-connect-agent"
     -- start XMonad
     rects <- openDisplay "" >>= getScreenInfo
     case rects of

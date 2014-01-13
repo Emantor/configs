@@ -1,19 +1,13 @@
 Config { font = "xft:M+ 2c,M+ 2c medium:size=10"
      , bgColor = "#111111"  
      , fgColor = "#babdb6"  
-     , position = TopW L 100
+     , position = TopW L 90
      , commands = [ Run DynNetwork ["-t", "<rx>|<tx>/",
-                                    "-L","0","-H","70","--normal","green","--high","red"] 10   
+                                    "-L","0","-H","70","--normal","green","--high","red"] 50
                   , Run Date "%k:%M" "date" 10  
-                  , Run Weather "EDVE" ["-t", "<station>: <tempC>°C"] 36000
+                  , Run Weather "EDVE" ["-t", "<station>: <tempC>°C"] 6000
                   , Run StdinReader  
-                  , Run Com "/home/phoenix/bin/vol.sh" [] "vol" 10
-                  ["-t", "<fc=red><leftbar></fc><acstatus>",
-                      "-L", "10", "-H", "80", "-p", "3",
-                      "--", "-O", "<<fc=green>On</fc>", "-o", "><fc=red>Off</fc>",
-                      "-L", "-15", "-H", "-5",
-                      "-l", "red", "-m", "blue", "-h", "green"]
-                     600
+                  , Run Com "/home/phoenix/bin/vol.sh" [] "vol" 50
                   ]
      , sepChar = "%"  
      , alignSep = "}{"  

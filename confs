@@ -25,6 +25,11 @@ collect)
     rm -R zsh/external/LS_COLORS
     echo " Done"
   fi
+  if [ -e zsh/external/zsh-livestreamer-completion ]; then
+    echo -n "Entferne zsh-livestreamer-completion aus zsh/external..."
+    rm -R zsh/external/zsh-livestreamer-completion
+    echo " Done"
+  fi
   cp ~/.xmobarrc xmobarrc
   cp ~/.gitconfig gitconfig
   cp ~/.conkyrc conkyrc

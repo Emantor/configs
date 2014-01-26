@@ -2,14 +2,16 @@ Config { font = "xft:M+ 2c,M+ 2c medium:size=10"
      , bgColor = "#111111"  
      , fgColor = "#babdb6"  
      , position = TopW L 90
-     , commands = [ Run DynNetwork ["-t", "<rx>|<tx>/",
+     , commands = [ Run DynNetwork ["-t", "<dev>:<rx>|<tx>/",
                                     "-L","0","-H","70","--normal","green","--high","red"] 50
-                  , Run Date "%k:%M" "date" 10  
-                  , Run Weather "EDVE" ["-t", "<station>: <tempC>°C"] 6000
+                  , Run Date "%k:%M" "date" 600  
+                  , Run Weather "EDVE" ["-t", "<tempC>°C"] 6000
                   , Run StdinReader  
+                  , Run Wireless "wlan" ["-t","<fc=yellow><essid></fc><fc=grey>:</fc><fc=green><quality></fc>"] 50
                   , Run Com "/home/phoenix/bin/vol.sh" [] "vol" 50
+                  , Run CoreTemp ["-t", "<core0>:<core2>"] 50
                   ]
      , sepChar = "%"  
      , alignSep = "}{"  
-     , template = " %StdinReader%}{<fc=grey>%dynnetwork%%EDVE%/</fc><fc=green>%vol%</fc>/<fc=yellow>%date%</fc>" 
+     , template = " %StdinReader%}{%coretemp%/%wlanwi%<fc=grey>/%dynnetwork%%EDVE%/</fc><fc=green>%vol%</fc>/<fc=yellow>%date%</fc>" 
      }  

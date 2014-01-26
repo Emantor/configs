@@ -10,6 +10,8 @@ import XMonad.Layout.Reflect
 import XMonad.Layout.Tabbed
 import XMonad.Layout.Circle
 import XMonad.Layout.Spiral
+import XMonad.Layout.DwmStyle
+import XMonad.Layout.Decoration
 
 -- Actions
 import XMonad.Actions.NoBorders
@@ -112,14 +114,14 @@ myLayoutHook = onWorkspace "web" myTileFirst $
                myTileFirst
                  where
                    -- Tile First Layout
-                   myTileFirst = avoidStruts ( smartBorders (tiled ||| Mirror tiled ||| Grid ||| simpleTabbed ) ||| noBorders Full )
+                   myTileFirst = avoidStruts ( smartBorders ( dwmStyle shrinkText defaultTheme ( tiled ||| Mirror tiled ||| Grid ) ||| simpleTabbed ) ||| noBorders Full )
                      where
                        tiled = Tall nmaster delta ratio
                        nmaster = 1
                        ratio = 1/2
                        delta = 3/100
                    -- Grid as First Layout
-                   myGridFirst = avoidStruts ( smartBorders (Grid ||| tiled ||| Mirror tiled ||| simpleTabbed) ||| noBorders Full )
+                   myGridFirst = avoidStruts ( smartBorders ( dwmStyle shrinkText defaultTheme ( Grid ||| tiled ||| Mirror tiled ) ||| simpleTabbed) ||| noBorders Full )
                      where
                        tiled = Tall nmaster delta ratio
                        nmaster = 1
@@ -283,7 +285,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((mod4Mask, xF86XK_AudioPrev), spawn "mpc -h 192.168.213.151 prev")
     , ((mod4Mask, xF86XK_AudioNext), spawn "mpc -h 192.168.213.151 next")
     -- Local mpd control
-    , ((0, xF86XK_AudioPlay), spawn "mpc toggle")
+    , ((0, xF86XK_AudioPlay), spawn "/home/phoenix/bin/playpause")
     , ((0, xF86XK_AudioPrev), spawn "mpc prev")
     , ((0, xF86XK_AudioNext), spawn "mpc next")
     -- Lock Xsession with Key Combination

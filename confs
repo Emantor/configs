@@ -12,6 +12,7 @@ collect)
   cp ~/.zshenv zshenv
   cp ~/.zshrc  zshrc
   cp -R ~/.vim/*  vim
+  cp -R ~/.ncmpcpp/*  ncmpcpp
   if [ -e vim/colors ]; then
     echo -n "Entferne molokai color scheme und vim-addons..."
     rm -R vim/colors
@@ -47,6 +48,7 @@ deploy)
   cp zshenv ~/.zshenv
   cp zshrc ~/.zshrc
   cp -r -T zsh ~/.zsh
+  cp -r -T ncmpcpp ~/.ncmpcpp
   cp -r external/molokai/* ~/.vim/
   if [ ! -e ~/.zsh/external ]; then
     echo -n "Erstelle ~/.zsh/external/..."

@@ -39,6 +39,10 @@ URxvt*letterSpace: -1
 #  Fedora/debian packages: dejavu-sans-mono-fonts/ttf-dejavu 
 URxvt*font: xft:Droid Sans Mono:pixelsize=11
 URxvt*boldFont: xft:Droid Sans Mono:bold:pixelsize=11
+# Xft: DejaVu fonts
+#  Fedora/debian packages: dejavu-sans-mono-fonts/ttf-dejavu 
+#URxvt*font: xft:Lime:pixelsize=11
+#URxvt*boldFont: xft:Lime:bold:pixelsize=11
 #
 # Xft: Liberation fonts
 #  Fedora/debian packages: liberation-mono-fonts/ttf-liberation
@@ -74,7 +78,7 @@ URxvt*scrollstyle: rxvt
 URxvt*termName: rxvt-256color
 
 URxvt.depth: 32
-URxvt*background: rgba:0000/0000/0000/cccc
+URxvt*background: rgba:0000/0000/0000/dddd
 
 #URxvt.fading: 10
 #URxvt.fadeColor: [0]black

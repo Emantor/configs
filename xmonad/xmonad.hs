@@ -26,6 +26,7 @@ import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.FloatNext
 
 -- Java Workaround
 import XMonad.Hooks.SetWMName
@@ -87,6 +88,7 @@ myManageHook = manageHook defaultConfig <+> manageDocks <+> composeAll
     , className =? "Thunderbird" --> doShift "mail"
     , className =? "Guild Wars"  --> doFloat
     , className =? "Conky"       --> doIgnore
+    , appName   =? "floatingTerminal"       --> doFloat
     , isFullscreen --> doFullFloat
     ]
 
@@ -114,14 +116,7 @@ myLayoutHook = onWorkspace "web" myTileFirst $
                myTileFirst
                  where
                    -- Tile First Layout
-                   myTileFirst = avoidStruts ( smartBorders ( dwmStyle shrinkText defaultTheme ( tiled ||| Mirror tiled ||| Grid ) ||| simpleTabbed ) ||| noBorders Full )
-                     where
-                       tiled = Tall nmaster delta ratio
-                       nmaster = 1
-                       ratio = 1/2
-                       delta = 3/100
-                   -- Grid as First Layout
-                   myGridFirst = avoidStruts ( smartBorders ( dwmStyle shrinkText defaultTheme ( Grid ||| tiled ||| Mirror tiled ) ||| simpleTabbed) ||| noBorders Full )
+                   myTileFirst = avoidStruts ( smartBorders ( renamed [CutLeft 9] ( dwmStyle shrinkText defaultTheme ( tiled ||| renamed [Replace "MiTa"] (Mirror tiled) ||| Grid ) ) ||| renamed [Replace "SiTa"] simpleTabbed ) ||| noBorders Full )
                      where
                        tiled = Tall nmaster delta ratio
                        nmaster = 1
@@ -223,8 +218,8 @@ myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- launching and killing programs
     [ ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
+    , ((modMask .|. shiftMask .|. controlMask, xK_Return), spawn "urxvt -name floatingTerminal") -- %! Launch terminal
     , ((modMask,               xK_p     ), spawn "dmenu_run") -- %! Launch dmenu
-    , ((modMask .|. shiftMask, xK_p     ), spawn "gmrun") -- %! Launch gmrun
     , ((modMask .|. shiftMask, xK_c     ), kill) -- %! Close the focused window
 
     , ((modMask,               xK_space ), sendMessage NextLayout) -- %! Rotate through the available layout algorithms

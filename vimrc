@@ -1,3 +1,4 @@
+let $PYTHONPATH="/usr/lib/python3.3/site-packages"
 " Kein Kompatibilitätsmodus
 set nocompatible
 set background=dark
@@ -39,6 +40,7 @@ nnoremap <F3> :set invhlsearch hlsearch?<CR>
 inoremap <F3> <Esc>:set invhlsearch hlsearch?<CR>a
 nnoremap <F4> :set invlist list?<CR>
 inoremap <F4> <Esc>:set invlist list?<CR>a
+nnoremap <C-e> :NERDTreeToggle<CR>
 
 " foldmethod
 set foldmethod=syntax
@@ -103,7 +105,7 @@ fun! SetupVAM()
   let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
   " Tell VAM which plugins to fetch & load:
-  call vam#ActivateAddons(['github:honza/vim-snippets','github:garbas/vim-snipmate','surround','fugitive','minibufexplorer','delimitMate','SearchComplete','taglist','afterimage'], {'auto_install' : 0})
+  call vam#ActivateAddons(['github:honza/vim-snippets','github:garbas/vim-snipmate','surround','fugitive','minibufexplorer','delimitMate','SearchComplete','taglist','afterimage','github:scrooloose/nerdtree'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
   " Addons are put into plugin_root_dir/plugin-name directory

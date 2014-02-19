@@ -1,5 +1,5 @@
 [global]
-    font = Monospace-12
+    font = GohuFont
 
     # The format of the message. Possible variables are:
     #   %a  appname
@@ -7,7 +7,7 @@
     #   %b  body
     #   %i  iconname (including its path)
     #   %I  iconname (without its path)
-    format = "%s %b"
+    format = "%a:%s:%b"
 
     # Sort messages by urgency
     sort = yes
@@ -42,7 +42,7 @@
     # the window expands to the longest message displayed.
     # A positive x is measured from the left, a negative from the
     # right side of the screen.  Y is measured from the top and down respectevly.
-    geometry = "x3-0+16"
+    geometry = "x24-0+16"
 
     # The transparency of the window. range: [0; 100]
     # This option will only work if a compositing windowmanager is present (e.g. xcompmgr, compiz, etc..)
@@ -106,18 +106,18 @@
 [urgency_low]
     # IMPORTANT: colors have to be defined in quotation marks.
     # Otherwise the '#' and following  would be interpreted as a comment.
-    background = "#000000"
-    foreground = "#00ff00"
+    background = "#111111"
+    foreground = "#88ff00"
     timeout = 10
 
 [urgency_normal]
-    background = "#000000"
-    foreground = "#00ff00"
+    background = "#111111"
+    foreground = "#0088ff"
     timeout = 10
 
 [urgency_critical]
-    background = "#000000"
-    foreground = "#ff0000"
+    background = "#111111"
+    foreground = "#FF0088"
     timeout = 0
 
 

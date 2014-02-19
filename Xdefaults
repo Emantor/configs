@@ -23,26 +23,19 @@ URxvt*saveLines: 32767
 # background color (prior to tinting) (default is white)
 !URxvt*background: Black
 
-URxvt*letterSpace: -1
+URxvt*letterSpace: 0
 # Xft (X FreeType) with Bitstream, DejaVu, Liberation, or Terminus fonts:
 #  Fedora/debian packages: libXft/libxft2 
 #  An anti-aliased font setup with Xft looks fantastic; it can be a bit choppy 
 #  on older systems. You can always turn off anti-aliasing (antialias=false) if
 #  your terminal is sluggish. Use only ONE of the Xft pairs below:
-#
-# Xft: Bitstream fonts
-#  Fedora/debian packages: bitstream-vera-sans-mono-fonts/ttf-bitstream-vera 
-#URxvt*font: xft:Bitstream Vera Sans Mono:pixelsize=12:antialias=true:hinting=true
-#URxvt*boldFont: xft:Bitstream Vera Sans Mono:bold:pixelsize=12:antialias=true:hinting=true
-#
+#  Fedora/debian packages: dejavu-sans-mono-fonts/ttf-dejavu 
+#URxvt*font: xft:Droid Sans Mono:pixelsize=11
+#URxvt*boldFont: xft:Droid Sans Mono:bold:pixelsize=11
 # Xft: DejaVu fonts
 #  Fedora/debian packages: dejavu-sans-mono-fonts/ttf-dejavu 
-URxvt*font: xft:Droid Sans Mono:pixelsize=11
-URxvt*boldFont: xft:Droid Sans Mono:bold:pixelsize=11
-# Xft: DejaVu fonts
-#  Fedora/debian packages: dejavu-sans-mono-fonts/ttf-dejavu 
-#URxvt*font: xft:Lime:pixelsize=11
-#URxvt*boldFont: xft:Lime:bold:pixelsize=11
+URxvt*font: xft:gohufont:pixelsize=11
+#URxvt*boldFont: xft:gohufont:bold:size=11
 #
 # Xft: Liberation fonts
 #  Fedora/debian packages: liberation-mono-fonts/ttf-liberation
@@ -141,4 +134,3 @@ URxvt.perl-ext:      default,url-select
 URxvt.keysym.M-u:    perl:url-select:select_next
 URxvt.url-select.launcher:   /usr/bin/firefox -new-tab
 URxvt.url-select.underline: true
-

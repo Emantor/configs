@@ -88,7 +88,7 @@ myManageHook = manageHook defaultConfig <+> manageDocks <+> composeAll
     , className =? "Thunderbird" --> doShift "mail"
     , className =? "Guild Wars"  --> doFloat
     , className =? "Conky"       --> doIgnore
-    , appName   =? "floatingTerminal"       --> doFloat
+    , appName   =? "floatingTerminal"       --> doRectFloat (W.RationalRect 0.15 0.46 0.52 0.432)
     , isFullscreen --> doFullFloat
     ]
 
@@ -209,16 +209,15 @@ promptedShift = workspacePrompt defaultXPConfig $ windows . W.shift
 
 -- Application List
 appList :: [String]
-appList =  [  "smplayer", "xbmc", "firefox", "thunderbird"
-           , "pidgin", "urxvt -e weechat-curses", "libreoffice", "wireshark"
-           , "virt-manager", "gimp"
+appList =  [  "ristretto", "xbmc", "libreoffice", "wireshark"
+           , "virt-manager", "gimp", "emerillon"
            ]
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- launching and killing programs
     [ ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
-    , ((modMask .|. shiftMask .|. controlMask, xK_Return), spawn "urxvt -name floatingTerminal") -- %! Launch terminal
+    , ((modMask          , xK_asciicircum), spawn "urxvt -name floatingTerminal") -- %! Launch terminal
     , ((modMask,               xK_p     ), spawn "dmenu_run") -- %! Launch dmenu
     , ((modMask .|. shiftMask, xK_c     ), kill) -- %! Close the focused window
 

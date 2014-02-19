@@ -1,7 +1,7 @@
 # Deaktiviere Terminal Beep
 xset -b
 # Starte Compositing Manager
-xcompmgr &
+xcompmgr -c -r0 -o0 -l0 -t0 -D0 -O0 -I0&
 export GTK_IM_MODULE="gtk-im-context-simple"
 # Trayer
 # trayer --monitor primary --edge top --align right --SetDockType true --SetPartialStrut true --width 5 --transparent true --alpha 0 --tint 0x111111 --height 19 &

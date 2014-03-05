@@ -12,6 +12,7 @@ import XMonad.Layout.Circle
 import XMonad.Layout.Spiral
 import XMonad.Layout.DwmStyle
 import XMonad.Layout.Decoration
+import XMonad.Layout.Drawer
 
 -- Actions
 import XMonad.Actions.NoBorders
@@ -55,7 +56,7 @@ import qualified Data.Map        as M
 
 -- Variables
 myWallpaper = "ww_3.jpg"
-myWallpapers = ["ww_3.jpg", "samcha.png", "ME.png"]
+myWallpapers = ["ww_3.jpg", "samcha.png", "ME.png","bi.jpg","bg.jpg"]
 myTerminal  = "urxvt"
 myModMask   = mod4Mask
 
@@ -74,7 +75,7 @@ promptWallpaper c = do
 
 -- StartupHook
 myStartupHook conkyOffset = do
-                --   spawn "killall conky"
+                -- spawn "killall conky"
                 -- spawn ("conky -c ~/conkyrc -a top_right -x +" ++ conkyOffset)
                 setWMName "LG3D"
                 setWallpaper myWallpaper
@@ -82,14 +83,14 @@ myStartupHook conkyOffset = do
 
 -- ManageHook für Docks und Apps 
 myManageHook = manageHook defaultConfig <+> manageDocks <+> composeAll
-    [ className =? "Gimp"        --> doFloat
-    , className =? "Pidgin"      --> doShift "im"
-    , className =? "Steam"       --> doShift "steam"
-    , className =? "Thunderbird" --> doShift "mail"
-    , className =? "Guild Wars"  --> doFloat
-    , className =? "Conky"       --> doIgnore
-    , appName   =? "floatingTerminal"       --> doRectFloat (W.RationalRect 0.15 0.46 0.52 0.432)
-    , isFullscreen --> doFullFloat
+    [ className =? "Gimp"             --> doFloat
+    , className =? "Pidgin"           --> doShift "im"
+    , className =? "Steam"            --> doShift "steam"
+    , className =? "Thunderbird"      --> doShift "mail"
+    , className =? "Guild Wars"       --> doFloat
+    , className =? "Conky"            --> doIgnore
+    , appName   =? "floatingTerminal" --> doRectFloat (W.RationalRect 0.15 0.46 0.52 0.432)
+    , isFullscreen                    --> doFullFloat
     ]
 
 -- LogHooks
@@ -278,10 +279,16 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((mod4Mask, xF86XK_AudioPlay), spawn "mpc -h 192.168.213.151 toggle")
     , ((mod4Mask, xF86XK_AudioPrev), spawn "mpc -h 192.168.213.151 prev")
     , ((mod4Mask, xF86XK_AudioNext), spawn "mpc -h 192.168.213.151 next")
+    , ((mod1Mask .|. mod4Mask .|. shiftMask, xK_Down      ), spawn "mpc -h 192.168.213.151 toggle")
+    , ((mod1Mask .|. mod4Mask .|. shiftMask, xK_Left      ), spawn "mpc -h bibliothekar prev")
+    , ((mod1Mask .|. mod4Mask .|. shiftMask, xK_Right     ), spawn "mpc -h bibliothekar next")
     -- Local mpd control
-    , ((0, xF86XK_AudioPlay), spawn "/home/phoenix/bin/playpause")
-    , ((0, xF86XK_AudioPrev), spawn "mpc prev")
-    , ((0, xF86XK_AudioNext), spawn "mpc next")
+    , ((0, xF86XK_AudioPlay                    ), spawn "/home/phoenix/bin/playpause")
+    , ((0, xF86XK_AudioPrev                    ), spawn "mpc prev")
+    , ((0, xF86XK_AudioNext                    ), spawn "mpc next")
+    , ((mod1Mask .|. mod4Mask, xK_Down      ), spawn "/home/phoenix/bin/playpause")
+    , ((mod1Mask .|. mod4Mask, xK_Left      ), spawn "mpc prev")
+    , ((mod1Mask .|. mod4Mask, xK_Right     ), spawn "mpc next")
     -- Lock Xsession with Key Combination
     , ((mod1Mask .|. mod4Mask, xK_BackSpace), spawn "slock")
     -- Select workspace from prompt

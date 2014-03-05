@@ -42,6 +42,9 @@ nnoremap <F4> :set invlist list?<CR>
 inoremap <F4> <Esc>:set invlist list?<CR>a
 nnoremap <C-e> :NERDTreeToggle<CR>
 
+" formatoptions
+set formatoptions-=o " Don't open comment on o or O
+
 " foldmethod
 set foldmethod=syntax
 
@@ -105,7 +108,7 @@ fun! SetupVAM()
   let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
   " Tell VAM which plugins to fetch & load:
-  call vam#ActivateAddons(['github:honza/vim-snippets','github:garbas/vim-snipmate','surround','fugitive','minibufexplorer','delimitMate','SearchComplete','taglist','afterimage','github:scrooloose/nerdtree'], {'auto_install' : 0})
+  call vam#ActivateAddons(['github:honza/vim-snippets','github:garbas/vim-snipmate','surround','fugitive','minibufexplorer','github:valloric/youcompleteme','afterimage','github:scrooloose/nerdtree','github:kien/ctrlp.vim','ag','github:mattn/gist-vim','github:mattn/webapi-vim','github:godlygeek/tabular'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
   " Addons are put into plugin_root_dir/plugin-name directory
@@ -135,3 +138,8 @@ let g:miniBufExplMapWindowNavVim = 1
 let g:miniBufExplMapCTabSwitchBufs = 1
 " Buffer List
 " map <F4> :ls<CR>:buffer<space>
+" Enable mouse
+set mouse=a
+
+" Ag Options
+let g:aghighlight=1

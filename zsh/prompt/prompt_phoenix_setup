@@ -49,6 +49,7 @@ prompt_phoenix_precmd () {
     else
       screenbits="%F{yellow}[$screens]%f"
     fi
+
     vcs_info 'phoenix'
 }
 

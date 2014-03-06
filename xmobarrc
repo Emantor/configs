@@ -3,7 +3,9 @@ Config { font = "xft:M+ 2c,M+ 2c medium:size=10"
      , fgColor = "#babdb6"
      , position = TopW L 90
      , commands = [ Run Date "%k:%M" "date" 600  
-                  , Run Weather "EDVE" ["-t", "<tempC>°C"] 300
+                  , Run Weather "EDVE" ["-t", "<tempC>°C"] 1800
+                  , Run DynNetwork ["-t", "<dev>:<rx>|<tx>",
+                                    "-L","0","-H","70","--normal","green","--high","red"] 10
                   , Run StdinReader  
                   , Run Wireless "wlan" ["-t","<fc=yellow><essid></fc><fc=grey>:</fc><fc=green><quality></fc>"] 10
                   , Run CoreTemp ["-t", "<core0>:<core2>", "-L", "40", "-H", "60", "-l", "lightblue", "-n", "#babdb6", "-h", "red"] 10
@@ -14,5 +16,5 @@ Config { font = "xft:M+ 2c,M+ 2c medium:size=10"
                   ]
      , sepChar = "%"
      , alignSep = "}{"
-     , template = " %StdinReader%}{%coretemp%/%wlanwi%<fc=grey>/%battery%/%EDVE%/</fc><fc=yellow>%date%</fc>"
+     , template = " %StdinReader%}{%coretemp%/%wlanwi%<fc=grey>→%dynnetwork%/%battery%/%EDVE%/</fc><fc=yellow>%date%</fc>"
      }

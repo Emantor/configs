@@ -152,8 +152,8 @@ myTopics :: [Topic]
 myTopics =
    [ "1", "2", "3", "4" -- 4 unnamed workspaces
    , "web", "im", "irc", "mail" 
-   , "steam", "music", "work", "vpn"
-   , "virt", "ik", "weber"
+   , "steam", "music", "work", "opk"
+   , "ts", "virt"
    ]
 
 myTopicConfig :: TopicConfig
@@ -170,9 +170,8 @@ myTopicConfig = defaultTopicConfig
        , ("steam",  ".steam")
        , ("music",  "Musik")
        , ("work",   "work")
-       , ("vpn",    "/etc/openvpn")
-       , ("ik",     "work/ik")
-       , ("weber",  "work/weber")
+       , ("opk",    "work/openpgp-keychain")
+       , ("ts",     "work/TextSecure")
        , ("virt",   "work/virt")
        ]
    , defaultTopicAction = const spawnShell
@@ -185,6 +184,8 @@ myTopicConfig = defaultTopicConfig
        , ("steam",      spawn "steam")
        , ("music",      spawn "urxvt -e ncmpcpp")
        , ("virt",       spawn "virtualbox")
+       , ("opk",        spawnTmux)
+       , ("ts",         spawnTmux)
        ]
    }
 
@@ -197,7 +198,13 @@ spawnShell :: X ()
 spawnShell = currentTopicDir myTopicConfig >>= spawnShellIn
 
 spawnShellIn :: Dir -> X ()
-spawnShellIn dir = spawn $ "urxvt -e /bin/sh -c 'cd " ++ dir ++ " && " ++ "zsh" ++ "'"
+spawnShellIn shelldir = spawn $ "urxvt -e /bin/sh -c 'cd " ++ shelldir ++ " && " ++ "exec zsh" ++ "'"
+
+spawnTmux :: X ()
+spawnTmux = currentTopicDir myTopicConfig >>= spawnTmuxIn
+
+spawnTmuxIn :: Dir -> X ()
+spawnTmuxIn tmuxdir = spawn $ "urxvt -e /bin/sh -c 'cd " ++ tmuxdir ++ " && tmux -q has-session -t " ++ tmuxdir ++ "&& tmux attach-session -d -t " ++ tmuxdir ++ " || tmux new-session -s" ++ tmuxdir ++ "'"
 
 goto :: Topic -> X ()
 goto = switchTopic myTopicConfig
@@ -251,44 +258,46 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask              , xK_period), sendMessage (IncMasterN (-1))) -- %! Deincrement the number of windows in the master area
 
     -- quit, or restart
-    , ((modMask .|. shiftMask, xK_q     ), io (exitWith ExitSuccess)) -- %! Quit xmonad
-    , ((modMask              , xK_q     ), spawn "if type xmonad; then killall conky trayer stratum0trayicon & xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
+    , ((modMask .|. shiftMask, xK_q                   ), io (exitWith ExitSuccess)) -- %! Quit xmonad
+    , ((modMask              , xK_q                   ), spawn "if type xmonad; then killall conky trayer stratum0trayicon & xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
     -- Volume Control
-    , ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 0 -- -1%")
-    , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume 0 +1%")
-    , ((0, xF86XK_AudioMute), spawn "~/bin/pa_toggle.sh")
+    , ((0, xF86XK_AudioLowerVolume                    ), spawn "pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -- -1%")
+    , ((0, xF86XK_AudioRaiseVolume                    ), spawn "pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo +1%")
+    , ((0, xF86XK_AudioMute                           ), spawn "pactl set-sink-mute alsa_output.pci-0000_00_1b.0.analog-stereo toggle")
     -- Brightness Control
-    , ((mod1Mask, xF86XK_AudioLowerVolume), spawn "sudo light -sq 10")
-    , ((mod1Mask, xF86XK_AudioRaiseVolume), spawn "sudo light -aq 10")
+    , ((mod1Mask, xF86XK_AudioLowerVolume             ), spawn "sudo light -sq 10")
+    , ((mod1Mask, xF86XK_AudioRaiseVolume             ), spawn "sudo light -aq 10")
     -- Brightness Hotkeys: 1 25 50 75 100
-    , ((mod1Mask .|. mod4Mask, xK_1), spawn "sudo light -q 1")
-    , ((mod1Mask .|. mod4Mask, xK_2), spawn "sudo light -q 25")
-    , ((mod1Mask .|. mod4Mask, xK_3), spawn "sudo light -q 50")
-    , ((mod1Mask .|. mod4Mask, xK_4), spawn "sudo light -q 75")
-    , ((mod1Mask .|. mod4Mask, xK_5), spawn "sudo light -q 100")
+    , ((mod1Mask .|. mod4Mask, xK_1                   ), spawn "sudo light -q 1")
+    , ((mod1Mask .|. mod4Mask, xK_2                   ), spawn "sudo light -q 25")
+    , ((mod1Mask .|. mod4Mask, xK_3                   ), spawn "sudo light -q 50")
+    , ((mod1Mask .|. mod4Mask, xK_4                   ), spawn "sudo light -q 75")
+    , ((mod1Mask .|. mod4Mask, xK_5                   ), spawn "sudo light -q 100")
     -- Show and hide dock
-    , ((mod4Mask, xK_b), sendMessage ToggleStruts)
+    , ((mod4Mask, xK_b                                ), sendMessage ToggleStruts)
     -- Show and hide battery overlay
-    , ((mod4Mask, xK_i), spawn "/usr/bin/showbatt")
+    , ((mod4Mask, xK_i                                ), spawn "/usr/bin/showbatt")
     -- show and hide border
-    , ((mod4Mask, xK_n), withFocused toggleBorder)
-    , ((mod4Mask .|. shiftMask, xK_Return), spawnShell)
+    , ((mod4Mask, xK_n                                ), withFocused toggleBorder)
+    , ((mod4Mask .|. shiftMask, xK_Return             ), spawnShell)
     -- Firefox Hotkey
-    , ((mod4Mask, xK_f), spawn "firefox")
+    , ((mod4Mask, xK_f                                ), spawn "firefox")
     -- MPD Control External mpd Server Bibliothekar
-    , ((mod4Mask, xF86XK_AudioPlay), spawn "mpc -h 192.168.213.151 toggle")
-    , ((mod4Mask, xF86XK_AudioPrev), spawn "mpc -h 192.168.213.151 prev")
-    , ((mod4Mask, xF86XK_AudioNext), spawn "mpc -h 192.168.213.151 next")
-    , ((mod1Mask .|. mod4Mask .|. shiftMask, xK_Down      ), spawn "mpc -h 192.168.213.151 toggle")
-    , ((mod1Mask .|. mod4Mask .|. shiftMask, xK_Left      ), spawn "mpc -h bibliothekar prev")
-    , ((mod1Mask .|. mod4Mask .|. shiftMask, xK_Right     ), spawn "mpc -h bibliothekar next")
+    , ((mod4Mask, xF86XK_AudioPlay                    ), spawn "mpc -h 192.168.213.151 toggle")
+    , ((mod4Mask, xF86XK_AudioPrev                    ), spawn "mpc -h 192.168.213.151 prev")
+    , ((mod4Mask, xF86XK_AudioNext                    ), spawn "mpc -h 192.168.213.151 next")
+    , ((mod1Mask .|. mod4Mask, xK_Down  ), spawn "mpc -h 192.168.213.151 toggle")
+    , ((mod1Mask .|. mod4Mask, xK_Left  ), spawn "mpc -h bibliothekar prev")
+    , ((mod1Mask .|. mod4Mask, xK_Right ), spawn "mpc -h bibliothekar next")
     -- Local mpd control
-    , ((0, xF86XK_AudioPlay                    ), spawn "/home/phoenix/bin/playpause")
-    , ((0, xF86XK_AudioPrev                    ), spawn "mpc prev")
-    , ((0, xF86XK_AudioNext                    ), spawn "mpc next")
-    , ((mod1Mask .|. mod4Mask, xK_Down      ), spawn "/home/phoenix/bin/playpause")
-    , ((mod1Mask .|. mod4Mask, xK_Left      ), spawn "mpc prev")
-    , ((mod1Mask .|. mod4Mask, xK_Right     ), spawn "mpc next")
+    , ((0, xF86XK_AudioPlay                           ), spawn "/home/phoenix/bin/playpause")
+    , ((0, xF86XK_AudioPrev                           ), spawn "mpc prev")
+    , ((0, xF86XK_AudioNext                           ), spawn "mpc next")
+    , ((mod1Mask .|. mod4Mask, xK_Down                ), spawn "/home/phoenix/bin/playpause")
+    , ((mod1Mask .|. mod4Mask, xK_Left                ), spawn "mpc prev")
+    , ((mod1Mask .|. mod4Mask, xK_Right               ), spawn "mpc next")
+    , ((mod1Mask .|. mod4Mask, xF86XK_AudioLowerVolume                    ), spawn "mpc volume -1")
+    , ((mod1Mask .|. mod4Mask, xF86XK_AudioRaiseVolume                    ), spawn "mpc volume +1")
     -- Lock Xsession with Key Combination
     , ((mod1Mask .|. mod4Mask, xK_BackSpace), spawn "slock")
     -- Select workspace from prompt

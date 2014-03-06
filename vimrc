@@ -8,20 +8,20 @@ syntax on " syntax highlighting on
 set number "Zeilennummern anzeigen
 set numberwidth=4 " bis 9999
 set laststatus=2 " Statusleiste immer anzeigen
-set statusline=%F%m%r%h%w[%L][%{strlen(&fenc)?&fenc:'none'},%{&ff}]%y[%p%%][%03l,%03v]
-"              | | | | |  |   |                               |      |  |     |    |
-"              | | | | |  |   |                               |      |  |     |    + current 
-"              | | | | |  |   +-- file encoding (UTF-8,...)   |      |  |     |       column
-"              | | | | |  |                                   |      |  |     +-- current line
-"              | | | | |  |                                   |      |  +-- current % into file
-"              | | | | |  |                                   |      +-- current syntax in 
-"              | | | | |  |                                   |          square brackets
-"              | | | | |  |                                   +-- current fileformat
+set statusline=%F%m%r%h%w[%L]%{fugitive#statusline()}[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%y[%p%%][%03l,%03v]
+"              | | | | |  |   |                       |                               |      |  |     |    |
+"              | | | | |  |   |                       |                               |      |  |     |    + current 
+"              | | | | |  |   |                       +-- file encoding (UTF-8,...)   |      |  |     |       column
+"              | | | | |  |   |                                                       |      |  |     +-- current line
+"              | | | | |  |   +-- Git Status                                          |      |  +-- current % into file
+"              | | | | |  |                                                           |      +-- current syntax in 
+"              | | | | |  |                                                           |          square brackets
+"              | | | | |  |                                                           +-- current fileformat
 "              | | | | |  +-- number of lines
 "              | | | | +-- preview flag in square brackets
 "              | | | +-- help flag in square brackets
 "              | | +-- readonly flag in square brackets
-"              | +-- rodified flag in square brackets
+"              | +-- modified flag in square brackets
 "              +-- full path to file in the buffer
 "
 " Tabsize and autoident
@@ -33,6 +33,47 @@ set expandtab
 " Remap jj to esc 
 inoremap jj <esc>
 
+" set leader key to comma
+let mapleader = ","
+
+" rename current file, via Gary Bernhardt
+function! RenameFile()
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'))
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
+endfunction
+map <leader>n :call RenameFile()<cr>
+
+" rename current file, via Gary Bernhardt
+function! RenameFile()
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'))
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
+endfunction
+map <leader>r :call RenameFile()<cr>
+
+"""Leader Maps
+" Git Shortcuts 
+map <leader>c :Gcommit<cr>
+map <leader>a :Git add %<cr>
+map <leader>b :Gblame<cr>
+map <leader>l :!clear && git log -p %<cr>
+map <leader>d :!clear && git diff %<cr>
+" Silver Searcher
+map <leader>s :Ag!<space>
+" Search word under cursor with Silver Searcher
+map <leader>S :Ag! "<C-r>=expand('<cword>')<CR>"
+" Write with sudo
+noremap <Leader>W :w !sudo tee % > /dev/null
+
 " toggle shortcuts for paste, hlsearch, invlist
 nnoremap <F2> :set invpaste paste?<CR>
 " set pastetoggle=<F5>
@@ -40,6 +81,8 @@ nnoremap <F3> :set invhlsearch hlsearch?<CR>
 inoremap <F3> <Esc>:set invhlsearch hlsearch?<CR>a
 nnoremap <F4> :set invlist list?<CR>
 inoremap <F4> <Esc>:set invlist list?<CR>a
+map <F5> :setlocal spell! spelllang=de_de<cr>
+imap <F5> <ESC>:setlocal spell! spelllang=de_de<cr>
 nnoremap <C-e> :NERDTreeToggle<CR>
 
 " formatoptions
@@ -143,3 +186,9 @@ set mouse=a
 
 " Ag Options
 let g:aghighlight=1
+
+" ctrlp config
+let g:ctrlp_map = '<leader>f'
+let g:ctrlp_max_height = 30
+let g:ctrlp_working_path_mode = 0
+let g:ctrlp_match_window_reversed = 0

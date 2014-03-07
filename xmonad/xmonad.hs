@@ -55,8 +55,8 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 -- Variables
-myWallpaper = "ww_3.jpg"
-myWallpapers = ["ww_3.jpg", "samcha.png", "ME.png","bi.jpg","bg.jpg"]
+myWallpaper = "tgm.png"
+myWallpapers = ["ww_3.jpg", "samcha.png", "ME.png","bi.jpg","bg.jpg","tgm.png","samcha.png"]
 myTerminal  = "urxvt"
 myModMask   = mod4Mask
 

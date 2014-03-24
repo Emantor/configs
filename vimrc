@@ -6,6 +6,7 @@ syntax on " syntax highlighting on
 
 " Visuelle Einstellungen
 set number "Zeilennummern anzeigen
+set relativenumber "relative Zeilennummern
 set numberwidth=4 " bis 9999
 set laststatus=2 " Statusleiste immer anzeigen
 set statusline=%F%m%r%h%w[%L]%{fugitive#statusline()}[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%y[%p%%][%03l,%03v]

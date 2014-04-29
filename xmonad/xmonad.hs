@@ -55,8 +55,8 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 -- Variables
-myWallpaper = "tgm.png"
-myWallpapers = ["ww_3.jpg", "samcha.png", "ME.png","bi.jpg","bg.jpg","tgm.png","samcha.png"]
+myWallpaper = "ww_girlonroof.jpg"
+myWallpapers = ["ww_3.jpg", "samcha.png", "ME.png","bi.jpg","bg.jpg","tgm.png","samcha.png","ww_girlonroof.jpg","ww_girlhp.jpg"]
 myTerminal  = "urxvt"
 myModMask   = mod4Mask
 
@@ -100,7 +100,7 @@ myLogHook xmproc1 = dynamicLogWithPP customPP { ppOutput = hPutStrLn xmproc1 }
                        
 customPP :: PP
 customPP = xmobarPP { ppLayout = xmobarColor "green" ""
-                    , ppTitle = xmobarColor "cyan" "" . shorten 80
+                    , ppTitle = xmobarColor "cyan" "" . shorten 65
                     , ppUrgent = xmobarColor "yellow" "red" . xmobarStrip
                     , ppCurrent = xmobarColor "#FF0088" ""
                     , ppSep = "/"
@@ -112,7 +112,6 @@ customPP = xmobarPP { ppLayout = xmobarColor "green" ""
 
 -- LayoutHook: certain workspaces get a specific layout or layout order.
 myLayoutHook = onWorkspace "web" myTileFirst $
-               onWorkspace "im" myChat $
                onWorkspace "steam" mySteam
                myTileFirst
                  where
@@ -123,16 +122,6 @@ myLayoutHook = onWorkspace "web" myTileFirst $
                        nmaster = 1
                        ratio = 1/2
                        delta = 3/100
-
-                   -- Layout(s) for chat workspace
-                   myChat = renamed [Replace "Chat"] $ avoidStruts (myChat' Grid)
-                   -- Chat modifier, used on 7:chat workspace
-                   myChat' base = mirror base $ withIM size roster
-                     where
-                      -- Ratios of the screen roster will occupy
-                      size = 1%6
-                      -- Match roster window
-                      roster = Title "Buddy-Liste"
 
                    -- mirror modifier used for chat and steam
                    mirror base a = reflectHoriz $ a $ reflectHoriz base
@@ -151,7 +140,7 @@ myLayoutHook = onWorkspace "web" myTileFirst $
 myTopics :: [Topic]
 myTopics =
    [ "1", "2", "3", "4" -- 4 unnamed workspaces
-   , "web", "im", "irc", "mail" 
+   , "web", "irc", "mail" 
    , "steam", "music", "work", "opk"
    , "ts", "virt"
    ]
@@ -164,7 +153,6 @@ myTopicConfig = defaultTopicConfig
        , ("3",      "~")
        , ("4",      "~")
        , ("web",    "Download")
-       , ("im",     "Download")
        , ("irc",    "Download")
        , ("mail",   "Download")
        , ("steam",  ".steam")
@@ -259,7 +247,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
     -- quit, or restart
     , ((modMask .|. shiftMask, xK_q                   ), io (exitWith ExitSuccess)) -- %! Quit xmonad
-    , ((modMask              , xK_q                   ), spawn "if type xmonad; then killall conky trayer stratum0trayicon & xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
+    , ((modMask              , xK_q                   ), spawn "if type xmonad; then killall dunst nm-applet conky trayer stratum0trayicon & xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
     -- Volume Control
     , ((0, xF86XK_AudioLowerVolume                    ), spawn "pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -- -1%")
     , ((0, xF86XK_AudioRaiseVolume                    ), spawn "pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo +1%")
@@ -286,9 +274,9 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((mod4Mask, xF86XK_AudioPlay                    ), spawn "mpc -h 192.168.213.151 toggle")
     , ((mod4Mask, xF86XK_AudioPrev                    ), spawn "mpc -h 192.168.213.151 prev")
     , ((mod4Mask, xF86XK_AudioNext                    ), spawn "mpc -h 192.168.213.151 next")
-    , ((mod1Mask .|. mod4Mask, xK_Down  ), spawn "mpc -h 192.168.213.151 toggle")
-    , ((mod1Mask .|. mod4Mask, xK_Left  ), spawn "mpc -h bibliothekar prev")
-    , ((mod1Mask .|. mod4Mask, xK_Right ), spawn "mpc -h bibliothekar next")
+    , ((mod1Mask .|. mod4Mask .|. controlMask, xK_Down  ), spawn "mpc -h 192.168.213.151 toggle")
+    , ((mod1Mask .|. mod4Mask .|. controlMask, xK_Left  ), spawn "mpc -h 192.168.213.151 prev")
+    , ((mod1Mask .|. mod4Mask .|. controlMask, xK_Right ), spawn "mpc -h 192.168.213.151 next")
     -- Local mpd control
     , ((0, xF86XK_AudioPlay                           ), spawn "/home/phoenix/bin/playpause")
     , ((0, xF86XK_AudioPrev                           ), spawn "mpc prev")
@@ -351,6 +339,10 @@ main = do
     spawn "trayer --monitor primary --align right --widthtype percent --width 10 --edge top --height 22 --tint 0x111111 --alpha 0 --transparent true --SetDockType true --SetPartialStrut true"
     -- Spawn stratum0trayicon
     spawn "stratum0trayicon"
+    -- Spawn nm-applett
+    spawn "nm-applet"
+    -- Spawn dunst
+    spawn "dunst"
     -- start Xmobar
     xmproc1 <- spawnPipe "/usr/bin/xmobar -x 0 /home/phoenix/.xmobarrc"
     -- Setup gpg-agent to use the right pinentry

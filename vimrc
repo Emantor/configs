@@ -9,7 +9,8 @@ set number "Zeilennummern anzeigen
 set relativenumber "relative Zeilennummern
 set numberwidth=4 " bis 9999
 set laststatus=2 " Statusleiste immer anzeigen
-set statusline=%F%m%r%h%w[%L]%{fugitive#statusline()}[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%y[%p%%][%03l,%03v]
+set showtabline=2 " Tableiste immer anzeigen
+" set statusline=%F%m%r%h%w[%L]%{fugitive#statusline()}[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%y[%p%%][%03l,%03v]
 "              | | | | |  |   |                       |                               |      |  |     |    |
 "              | | | | |  |   |                       |                               |      |  |     |    + current 
 "              | | | | |  |   |                       +-- file encoding (UTF-8,...)   |      |  |     |       column
@@ -54,14 +55,22 @@ map <leader>r :call RenameFile()<cr>
 map <leader>c :Gcommit<cr>
 map <leader>a :Gwrite<cr>
 map <leader>b :Gblame<cr>
+map <leader>p :Git push<cr>
 map <leader>l :!clear && git log -p %<cr>
 map <leader>d :!clear && git diff %<cr>
+" Ctrlp
+map <leader>f :CtrlP<cr>
 " Silver Searcher
-map <leader>s :Ag!<space>
+map <leader>s :Ag! -f<space>
 " Search word under cursor with Silver Searcher
-map <leader>S :Ag! "<C-r>=expand('<cword>')<CR>"
+map <leader>S :Ag! -f "<C-r>=expand('<cword>')<CR>"
 " Write with sudo
 noremap <Leader>W :w !sudo tee % > /dev/null
+" Tab management
+map <leader>t <Esc>:tabnew<cr>
+map <leader>n <Esc>:tabn<cr>
+map <leader>p <Esc>:tabp<cr>
+map <leader>c <Esc>:tabclose<cr>
 
 " toggle shortcuts for paste, hlsearch, invlist
 nnoremap <F2> :set invpaste paste?<CR>
@@ -140,7 +149,22 @@ fun! SetupVAM()
   let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
   " Tell VAM which plugins to fetch & load:
-  call vam#ActivateAddons(['github:honza/vim-snippets','github:garbas/vim-snipmate','surround','fugitive','minibufexplorer','github:valloric/youcompleteme','afterimage','github:scrooloose/nerdtree','github:kien/ctrlp.vim','ag','github:mattn/gist-vim','github:mattn/webapi-vim','github:godlygeek/tabular'], {'auto_install' : 0})
+  call vam#ActivateAddons(['github:honza/vim-snippets'
+                         \,'github:garbas/vim-snipmate'
+                         \,'surround'
+                         \,'fugitive'
+                         \,'github:valloric/youcompleteme'
+                         \,'afterimage'
+                         \,'github:scrooloose/nerdtree'
+                         \,'github:kien/ctrlp.vim'
+                         \,'ag'
+                         \,'github:mattn/gist-vim'
+                         \,'vim-airline'
+                         \,'minibufexplorer'
+                         \,'github:mattn/webapi-vim'
+                         \,'github:airblade/vim-gitgutter'
+                         \,'github:scrooloose/syntastic'
+                         \,'github:godlygeek/tabular'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
   " Addons are put into plugin_root_dir/plugin-name directory
@@ -181,3 +205,8 @@ let g:ctrlp_map = '<leader>f'
 let g:ctrlp_max_height = 30
 let g:ctrlp_working_path_mode = 0
 let g:ctrlp_match_window_reversed = 0
+" vim-airline settings
+let g:airline_powerline_fonts = 1
+
+""" Syntastic Settings
+let g:syntastic_c_checkers = ['avrgcc']

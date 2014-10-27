@@ -13,3 +13,6 @@
 [submodule "external/zsh-livestreamer-completion"]
 	path = external/zsh-livestreamer-completion
 	url = https://github.com/Valodim/zsh-livestreamer-completion
+[submodule "external/vim-colors-solarized"]
+	path = external/vim-colors-solarized
+	url = https://github.com/altercation/vim-colors-solarized.git

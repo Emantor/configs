@@ -32,5 +32,9 @@ xsetroot -cursor_name left_ptr
 # setxkbmap -layout de
 #run systemd as user instance
 # /usr/lib/systemd/systemd --user &
+# Start GNOME Keyring
+eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets)
+# Export ENV Variables
+export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID
 # start xmonad
 exec xmonad

@@ -67,10 +67,10 @@ map <leader>S :Ag! -f "<C-r>=expand('<cword>')<CR>"
 " Write with sudo
 noremap <Leader>W :w !sudo tee % > /dev/null
 " Tab management
-map <leader>t <Esc>:tabnew<cr>
-map <leader>n <Esc>:tabn<cr>
-map <leader>p <Esc>:tabp<cr>
-map <leader>c <Esc>:tabclose<cr>
+map <leader>T <Esc>:tabnew<cr>
+map <leader>N <Esc>:tabn<cr>
+map <leader>P <Esc>:tabp<cr>
+map <leader>C <Esc>:tabclose<cr>
 
 " toggle shortcuts for paste, hlsearch, invlist
 nnoremap <F2> :set invpaste paste?<CR>
@@ -164,6 +164,7 @@ fun! SetupVAM()
                          \,'github:mattn/webapi-vim'
                          \,'github:airblade/vim-gitgutter'
                          \,'github:scrooloose/syntastic'
+                         \,'PreciseJump'
                          \,'github:godlygeek/tabular'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 

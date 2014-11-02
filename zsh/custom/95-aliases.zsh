@@ -24,3 +24,16 @@ alias spacekiste='ssh stratum0@192.168.178.196'
 
 # Alias für vserver
 alias tiffany='ssh tiffanyaching.emantor.de'
+
+# Alias für mpv
+alias mpv='systemd-inhibit --what=handle-lid-switch:idle --who=mpv --why="Video is playing" mpv'
+
+# File Aliases
+alias -s tex=vim
+alias -s c=vim
+alias -s h=vim
+alias -s txt=vim
+alias -s mkv=mpv
+
++(){ sudo "$*"; }
+++(){ sudo -i; }

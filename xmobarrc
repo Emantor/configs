@@ -1,20 +1,20 @@
-Config { font = "xft:M+ 2c,M+ 2c medium:size=10"
+Config { font = "xft:Monofur:size=12"
      , bgColor = "#111111"
      , fgColor = "#babdb6"
      , position = TopW L 90
      , commands = [ Run Date "%k:%M" "date" 600  
-                  , Run Weather "EDVE" ["-t", "<tempC>°C"] 1800
                   , Run DynNetwork ["-t", "<dev>:<rx>|<tx>",
                                     "-L","0","-H","70","--normal","green","--high","red"] 10
                   , Run StdinReader  
-                  , Run Wireless "wlan" ["-t","<fc=yellow><essid></fc><fc=grey>:</fc><fc=green><quality></fc>"] 10
-                  , Run CoreTemp ["-t", "<core0>:<core2>", "-L", "40", "-H", "60", "-l", "lightblue", "-n", "#babdb6", "-h", "red"] 10
-                  , Run BatteryP ["BAT0"] ["-t", "<leftbar><acstatus>/<timeleft>", 
+                  , Run Wireless "wlan" ["-t","[<fc=green><quality></fc>]"] 10
+                  , Run BatteryP ["BAT0"] ["-t", "<acstatus>", 
                                            "-L", "20", "-H", "80",
                                            "-l", "red", "-n", "lightblue", "-h", "green", "--",
-                                           "-O", "←<fc=green>ON</fc>", "-o", "→<fc=red>OFF</fc>"] 50
+                                           "-O", "<fc=green>ON</fc>", "-o", "<fc=red>OFF</fc>→<timeleft>"] 50
+                  , Run PipeReader "/home/phoenix/.xmonad/inettest" "inettest"
+                  , Run Com "/home/phoenix/bin/vol.sh" [] "vol" 10
                   ]
      , sepChar = "%"
      , alignSep = "}{"
-     , template = " %StdinReader%}{%coretemp%/%wlanwi%<fc=grey>→%dynnetwork%/%battery%/%EDVE%/</fc><fc=yellow>%date%</fc>"
+     , template = " %StdinReader%}{%wlanwi%<fc=grey>→%dynnetwork%/%inettest%/%battery%/</fc><fc=grey>[</fc><fc=green>%vol%</fc><fc=grey>]</fc>/<fc=yellow>%date%</fc>"
      }

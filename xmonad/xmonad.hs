@@ -1,4 +1,6 @@
-import XMonad
+import XMonad hiding ( (|||) )
+
+import XMonad.Config.Gnome
 
 -- Layout
 import XMonad.Layout.NoBorders
@@ -13,6 +15,8 @@ import XMonad.Layout.Spiral
 import XMonad.Layout.DwmStyle
 import XMonad.Layout.Decoration
 import XMonad.Layout.Drawer
+import XMonad.Layout.LayoutCombinators
+
 
 -- Actions
 import XMonad.Actions.NoBorders
@@ -55,8 +59,8 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 -- Variables
-myWallpaper = "ww_girlonroof.jpg"
-myWallpapers = ["ww_3.jpg", "samcha.png", "ME.png","bi.jpg","bg.jpg","tgm.png","samcha.png","ww_girlonroof.jpg","ww_girlhp.jpg"]
+myWallpaper = "ww_gun.jpg"
+myWallpapers = ["ww_3.jpg", "ww_gun.jpg", "samcha.png", "ME.png","bi.jpg","bg.jpg","tgm.png","samcha.png","ww_girlonroof.jpg","ww_girlhp.jpg","ww_drachen.jpg","ww_schloss.png","ww_schweden.png"]
 myTerminal  = "urxvt"
 myModMask   = mod4Mask
 
@@ -74,10 +78,8 @@ promptWallpaper c = do
      mkXPrompt Wallpaper c (mkComplFunFromList myWallpapers) setWallpaper
 
 -- StartupHook
-myStartupHook conkyOffset = do
-                -- spawn "killall conky"
-                -- spawn ("conky -c ~/conkyrc -a top_right -x +" ++ conkyOffset)
-                setWMName "LG3D"
+myStartupHook = do
+--                setWMName "LG3D"
                 setWallpaper myWallpaper
 
 
@@ -89,7 +91,7 @@ myManageHook = manageHook defaultConfig <+> manageDocks <+> composeAll
     , className =? "Thunderbird"      --> doShift "mail"
     , className =? "Guild Wars"       --> doFloat
     , className =? "Conky"            --> doIgnore
-    , appName   =? "floatingTerminal" --> doRectFloat (W.RationalRect 0.15 0.46 0.52 0.432)
+    , appName   =? "floatingTerminal" --> doRectFloat (W.RationalRect 0.15 0.5 0.5 0.4)
     , isFullscreen                    --> doFullFloat
     ]
 
@@ -116,8 +118,9 @@ myLayoutHook = onWorkspace "web" myTileFirst $
                myTileFirst
                  where
                    -- Tile First Layout
-                   myTileFirst = avoidStruts ( smartBorders ( renamed [CutLeft 9] ( dwmStyle shrinkText defaultTheme ( tiled ||| renamed [Replace "MiTa"] (Mirror tiled) ||| Grid ) ) ||| renamed [Replace "SiTa"] simpleTabbed ) ||| noBorders Full )
+                   myTileFirst = avoidStruts ( smartBorders ( renamed [CutLeft 9] ( dwmStyle shrinkText defaultTheme ( tiled ||| renamed [Replace "MiTa"] (Mirror tiled) ) ) ||| renamed [Replace "SiTa"] simpleTabbed ) ||| noBorders Full )
                      where
+                       drawer = simpleDrawer 0.0 0.3 ( ClassName "drawerTerminal" )
                        tiled = Tall nmaster delta ratio
                        nmaster = 1
                        ratio = 1/2
@@ -140,9 +143,8 @@ myLayoutHook = onWorkspace "web" myTileFirst $
 myTopics :: [Topic]
 myTopics =
    [ "1", "2", "3", "4" -- 4 unnamed workspaces
-   , "web", "irc", "mail" 
-   , "steam", "music", "work", "opk"
-   , "ts", "virt"
+   , "web", "irc", "mail", "photo"
+   , "steam", "music", "work", "virt"
    ]
 
 myTopicConfig :: TopicConfig
@@ -157,9 +159,8 @@ myTopicConfig = defaultTopicConfig
        , ("mail",   "Download")
        , ("steam",  ".steam")
        , ("music",  "Musik")
+       , ("photo",  "Bilder")
        , ("work",   "work")
-       , ("opk",    "work/openpgp-keychain")
-       , ("ts",     "work/TextSecure")
        , ("virt",   "work/virt")
        ]
    , defaultTopicAction = const spawnShell
@@ -168,12 +169,11 @@ myTopicConfig = defaultTopicConfig
        [ ("im",         spawn "pidgin")
        , ("irc",        spawn "urxvt -e weechat-curses")
        , ("mail",       spawn "thunderbird")
-       , ("web",        spawn "firefox")
+       , ("web",        spawn "chromium --password-store=gnome")
        , ("steam",      spawn "steam")
        , ("music",      spawn "urxvt -e ncmpcpp")
+       , ("photo",      spawn "darktable")
        , ("virt",       spawn "virtualbox")
-       , ("opk",        spawnTmux)
-       , ("ts",         spawnTmux)
        ]
    }
 
@@ -214,6 +214,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- launching and killing programs
     [ ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
     , ((modMask          , xK_asciicircum), spawn "urxvt -name floatingTerminal") -- %! Launch terminal
+    , ((modMask .|. shiftMask, xK_asciicircum), spawn "urxvt -name drawerTerminal") -- %! Launch terminal
     , ((modMask,               xK_p     ), spawn "dmenu_run") -- %! Launch dmenu
     , ((modMask .|. shiftMask, xK_c     ), kill) -- %! Close the focused window
 
@@ -247,7 +248,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
     -- quit, or restart
     , ((modMask .|. shiftMask, xK_q                   ), io (exitWith ExitSuccess)) -- %! Quit xmonad
-    , ((modMask              , xK_q                   ), spawn "if type xmonad; then killall dunst nm-applet conky trayer stratum0trayicon & xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
+    , ((modMask              , xK_q                   ), spawn "if type xmonad; then pkill -TERM -P `pgrep -o xmonad` && xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
     -- Volume Control
     , ((0, xF86XK_AudioLowerVolume                    ), spawn "pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -- -1%")
     , ((0, xF86XK_AudioRaiseVolume                    ), spawn "pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo +1%")
@@ -269,14 +270,14 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((mod4Mask, xK_n                                ), withFocused toggleBorder)
     , ((mod4Mask .|. shiftMask, xK_Return             ), spawnShell)
     -- Firefox Hotkey
-    , ((mod4Mask, xK_f                                ), spawn "firefox")
+    , ((mod4Mask, xK_f                                ), spawn "chromium --password-store=gnome")
     -- MPD Control External mpd Server Bibliothekar
-    , ((mod4Mask, xF86XK_AudioPlay                    ), spawn "mpc -h 192.168.213.151 toggle")
-    , ((mod4Mask, xF86XK_AudioPrev                    ), spawn "mpc -h 192.168.213.151 prev")
-    , ((mod4Mask, xF86XK_AudioNext                    ), spawn "mpc -h 192.168.213.151 next")
-    , ((mod1Mask .|. mod4Mask .|. controlMask, xK_Down  ), spawn "mpc -h 192.168.213.151 toggle")
-    , ((mod1Mask .|. mod4Mask .|. controlMask, xK_Left  ), spawn "mpc -h 192.168.213.151 prev")
-    , ((mod1Mask .|. mod4Mask .|. controlMask, xK_Right ), spawn "mpc -h 192.168.213.151 next")
+    , ((mod4Mask, xF86XK_AudioPlay                    ), spawn "mpc -h librarian toggle")
+    , ((mod4Mask, xF86XK_AudioPrev                    ), spawn "mpc -h librarian prev")
+    , ((mod4Mask, xF86XK_AudioNext                    ), spawn "mpc -h librarian next")
+    , ((mod1Mask .|. mod4Mask .|. controlMask, xK_Down  ), spawn "mpc -h librarian toggle")
+    , ((mod1Mask .|. mod4Mask .|. controlMask, xK_Left  ), spawn "mpc -h librarian prev")
+    , ((mod1Mask .|. mod4Mask .|. controlMask, xK_Right ), spawn "mpc -h librarian next")
     -- Local mpd control
     , ((0, xF86XK_AudioPlay                           ), spawn "/home/phoenix/bin/playpause")
     , ((0, xF86XK_AudioPrev                           ), spawn "mpc prev")
@@ -287,7 +288,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((mod1Mask .|. mod4Mask, xF86XK_AudioLowerVolume                    ), spawn "mpc volume -1")
     , ((mod1Mask .|. mod4Mask, xF86XK_AudioRaiseVolume                    ), spawn "mpc volume +1")
     -- Lock Xsession with Key Combination
-    , ((mod1Mask .|. mod4Mask, xK_BackSpace), spawn "slock")
+    , ((mod1Mask .|. mod4Mask, xK_BackSpace), spawn "xscreensaver-command --lock")
     -- Select workspace from prompt
     , ((mod4Mask              , xK_z     ), promptedGoto)
     , ((mod4Mask .|. shiftMask, xK_z     ), promptedShift)
@@ -318,17 +319,17 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
         | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
-myConfig xmprocHandle conkyOffset = defaultConfig
+myConfig xmprocHandle = defaultConfig
         { manageHook = myManageHook
         , layoutHook = myLayoutHook 
-        , startupHook = myStartupHook conkyOffset
+        , startupHook = myStartupHook
         , workspaces = myTopics
         , keys = myKeys
         , logHook = myLogHook xmprocHandle
         , modMask = myModMask     -- Rebind Mod to the Windows key
         , terminal = myTerminal
         , borderWidth = 1
-        , focusedBorderColor = "blue"
+        , focusedBorderColor = "orange"
         }
 
 -- Main Loop
@@ -343,21 +344,15 @@ main = do
     spawn "nm-applet"
     -- Spawn dunst
     spawn "dunst"
+    -- Spawn pasystray
+    spawn "pasystray"
+    -- Spawn xscreensaver
+    spawn "/usr/bin/xscreensaver -no-splash"
+    -- Spawn mpd_inhibit
+    spawn "/home/phoenix/bin/mpdinhibit"
     -- start Xmobar
     xmproc1 <- spawnPipe "/usr/bin/xmobar -x 0 /home/phoenix/.xmobarrc"
     -- Setup gpg-agent to use the right pinentry
     spawn "echo UPDATESTARTUPTTY | gpg-connect-agent"
     -- start XMonad
-    rects <- openDisplay "" >>= getScreenInfo
-    case rects of
-            [Rectangle {rect_x = 0, rect_y = 0, rect_width = 1600, rect_height=900}] 
-              -> xmonad $ withUrgencyHook NoUrgencyHook (myConfig xmproc1 "40");
-            [  Rectangle {rect_x = 1080, rect_y = 0, rect_width = 1920, rect_height = 1200}
-              ,Rectangle {rect_x = 3000, rect_y = 0, rect_width = 1920, rect_height = 1080}
-              ,Rectangle {rect_x = 0, rect_y = 0, rect_width = 1080, rect_height = 1920}]
-              -> xmonad $ withUrgencyHook NoUrgencyHook (myConfig xmproc1 "1940");
-            [  Rectangle {rect_x = 1080, rect_y = 0, rect_width = 1920, rect_height = 1200}
-              ,Rectangle {rect_x = 0, rect_y = 0, rect_width = 1080, rect_height = 1920}
-              ,Rectangle {rect_x = 3000, rect_y = 0, rect_width = 1920, rect_height = 1080}]
-              -> xmonad $ withUrgencyHook NoUrgencyHook (myConfig xmproc1 "1940");
-            _ -> xmonad $ withUrgencyHook NoUrgencyHook (myConfig xmproc1 "40")
+    xmonad $ withUrgencyHook NoUrgencyHook (myConfig xmproc1 );

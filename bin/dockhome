@@ -1,0 +1,4 @@
+#!/bin/zsh
+xrandr --output DP1 --auto --primary --right-of eDP1 --output eDP1 --auto --output DP2 --auto --left-of eDP1
+herbstclient reload
+xset -b

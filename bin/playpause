@@ -1,0 +1,10 @@
+#!/bin/zsh
+if pgrep mpv; then
+  if mpc | grep playing; then
+    mpc toggle
+  else 
+    echo "cycle pause" > /home/phoenix/.mpv/fifo
+  fi
+else
+  mpc toggle
+fi   

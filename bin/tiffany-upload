@@ -1,0 +1,14 @@
+#!/bin/bash
+FILENAME=$1
+EXT=${FILENAME##*.}
+MD5=`md5sum ${FILENAME} | awk '{ print $1 }'`
+if [ -e $FILENAME ]; then
+  echo "Neuer Dateiname:"
+  echo $MD5.$EXT
+  echo "Kopieren"
+  cp $FILENAME $MD5.$EXT
+  echo "Hochladen..."
+  scp -4 -c blowfish $MD5.$EXT phoenix@tiffanyaching.emantor.de:~/public_download
+else
+  echo "File not Found"
+fi

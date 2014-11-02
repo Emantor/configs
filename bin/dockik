@@ -1,0 +1,3 @@
+#!/bin/bash
+xrandr --output DP2 --primary --auto --output eDP1 --off --output DP1 --right-of DP2 --auto
+herbstclient reload

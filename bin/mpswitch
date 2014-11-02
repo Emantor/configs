@@ -1,0 +1,45 @@
+#!/usr/bin/env zsh
+
+# local and remote prefix to the same music database
+typeset -A prefixes
+prefixes[localhost]=''
+prefixes[fairycake]='valodim/'
+
+[[ $# == 0 ]] && { print "Usage: mpswitch [host-from] host-to" >&2 ; exit }
+
+if [[ $# == 1 ]]; then
+    host1='localhost'
+    host2=$1
+else
+    host1=$1
+    host2=$2
+fi
+
+# make sure both hosts are reachable!
+ping -W 1 -c 1 $host1 > /dev/null || { print "Unreachable host: $host1" >&2; exit }
+ping -W 1 -c 1 $host2 > /dev/null || { print "Unreachable host: $host2" >&2; exit }
+
+lprefix=$prefixes[$host1]
+rprefix=$prefixes[$host2]
+
+# get local playlist
+plist=( ${(f)"$( mpc -h $host1 -f '%file%' playlist )"} )
+
+# strip local prefix, add remote prefix
+plist=( $rprefix${^${plist#$lprefix}} )
+
+pos=$(mpc -h $host1 -f '%position%' status | head -n 1)
+
+# clear remote playlist
+mpc -h $host2 clear -q
+# set up new one
+print ${(F)plist} | mpc add -h $host2
+
+mpc -h $host1 pause -q
+ptime=${$(mpc -h $host1 status | grep -E -o '[0-9]+:[0-9]+/')%/}
+
+print "playing track: $pos ($ptime)"
+mpc -h $host2 -q play $pos
+if [[ -n $ptime ]]; then
+    mpc -h $host2 -q seek $ptime
+fi

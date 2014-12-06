@@ -13,7 +13,7 @@ zstyle ':prompt:*:tiffanyaching*'  host-color 032
 zstyle ':vcs_info:*' check-for-changes true
 
 # Hide if its the default user
-[[ $USER == phoenix || $USER == rouven ]] && zstyle ':prompt:*:ps1' hide-user 1
+[[ $USER == phoenix || $USER == rouven || $USER == czerwinski ]] && zstyle ':prompt:*:ps1' hide-user 1
 
 if (( $+functions[prompt_phoenix_setup] )); then
   prompt phoenix

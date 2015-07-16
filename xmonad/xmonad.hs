@@ -1,8 +1,7 @@
 import XMonad hiding ( (|||) )
 
-import XMonad.Config.Gnome
-
 -- Layout
+import XMonad.Layout.FixedColumn
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Renamed
 import XMonad.Layout.PerWorkspace
@@ -10,13 +9,12 @@ import XMonad.Layout.IM
 import XMonad.Layout.Grid
 import XMonad.Layout.Reflect
 import XMonad.Layout.Tabbed
-import XMonad.Layout.Circle
 import XMonad.Layout.DwmStyle
-import XMonad.Layout.Decoration
-import XMonad.Layout.Drawer
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
+import XMonad.Layout.CenteredMaster
+import XMonad.Layout.Master
 
 
 -- Actions
@@ -24,18 +22,14 @@ import XMonad.Actions.NoBorders
 import XMonad.Actions.GridSelect
 import XMonad.Actions.TopicSpace
 import XMonad.Actions.CycleWS
-import XMonad.Actions.PhysicalScreens
 import XMonad.Actions.DynamicWorkspaces
-import XMonad.Actions.CopyWindow(copy)
 
 
 -- Hooks
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.UrgencyHook
-import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
-import XMonad.Hooks.FloatNext
 
 -- Java Workaround
 import XMonad.Hooks.SetWMName
@@ -43,35 +37,38 @@ import Data.Ratio ((%))
 
 -- Prompts
 import XMonad.Prompt
-import XMonad.Prompt.DirExec
-import XMonad.Prompt.Shell
 import XMonad.Prompt.Workspace
-import XMonad.Prompt.Window
-import XMonad.Prompt.Man
 import XMonad.Prompt.Ssh
 
 -- Misc
-import XMonad.Util.Run(spawnPipe,unsafeSpawn,safeSpawn)
+import XMonad.Util.Run(spawnPipe)
 import Graphics.X11.ExtraTypes.XF86
 import Graphics.X11.Xinerama
-import Graphics.X11.Xlib
-import XMonad.Util.EZConfig(additionalKeys)
 import System.IO
 import System.Exit
-import Data.Char
 import XMonad.Util.NamedScratchpad
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 -- Variables
-myWallpaper = "ww_gun.jpg"
-myWallpapers = ["ww_3.jpg", "ww_gun.jpg", "samcha.png", "ME.png","bi.jpg","bg.jpg","tgm.png","samcha.png","ww_girlonroof.jpg","ww_girlhp.jpg","ww_drachen.jpg","ww_schloss.png","ww_schweden.png"]
-myTerminal  = "urxvt -name rxvt"
+myWallpaper :: [Char]
+myWallpaper = "skate_bg.jpg"
+
+myWallpapers :: [[Char]]
+myWallpapers = ["ww_3.jpg", "ww_gun.jpg", "samcha.png", "ME.png","bi.jpg",
+                "bg.jpg","tgm.png","samcha.png","ww_girlonroof.jpg",
+                "ww_girlhp.jpg","ww_drachen.jpg","ww_schloss.png",
+                "ww_schweden.png","skate_bg.jpg"]
+
+myTerminal :: [Char]
+myTerminal  = "terminology"
+
+myModMask :: KeyMask
 myModMask   = mod4Mask
 
 myXPConfig :: XPConfig
-myXPConfig = defaultXPConfig
+myXPConfig = def
 
 -- Wallpaper Prompt
 data Wallpaper = Wallpaper
@@ -85,39 +82,50 @@ promptWallpaper c = do
      mkXPrompt Wallpaper c (mkComplFunFromList myWallpapers) setWallpaper
 
 -- StartupHook
+myStartupHook :: X()
 myStartupHook = do
---                setWMName "LG3D"
+                setWMName "LG3D"
                 setWallpaper myWallpaper
 
 
--- ManageHook für Docks und Apps 
+-- ManageHook für Docks und Apps
+myManageHook :: ManageHook
 myManageHook = manageHook defaultConfig <+> namedScratchpadManageHook myScratchpads <+> manageDocks <+> composeAll
     [ className =? "Gimp"             --> doFloat
+    , className =? "Darktable"        --> doShift "photo"
+    , className =? "VirtualBox"       --> doShift "virt"
     , className =? "Pidgin"           --> doShift "im"
     , className =? "Steam"            --> doShift "steam"
     , className =? "Thunderbird"      --> doShift "mail"
     , className =? "Firefox"          --> doShift "web"
+    , className =? "Gnucash"          --> doShift "finance"
+    , className =? "skype"            --> doShift "skype"
+    , className =? "seperate_mpv"     --> doShift "video"
     , className =? "Guild Wars"       --> doFloat
     , className =? "Conky"            --> doIgnore
+    , className =? "Chromium"         --> doShift "hrpg"
     , isFullscreen                    --> doFullFloat
     ]
 
 
+myScratchpads :: [NamedScratchpad]
 myScratchpads = [
 -- run htop in xterm, find it by title, use default floating window placement
-    NS "htop" "urxvt -e htop" (title =? "htop") defaultFloating ,
+    NS "htop" "terminology -e htop -n=htop" (title =? "htop") defaultFloating ,
 
 -- run stardict, find it by class name, place it in the floating window
 -- 1/6 of screen width from the left, 1/6 of screen height
 -- from the top, 2/3 of screen width by 2/3 of screen height
-    NS "python2" "urxvt -name python2term -e python2" (appName =? "python2term")
+    NS "journal" "terminology -n=journalterm -e journalctl -n 100 -f" (appName =? "journalterm")
         (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
 
-    NS "python3" "urxvt -name python3term -e python3" (appName =? "python3term")
+    NS "python2" "terminology -n=python2term -e python2" (appName =? "python2term")
+        (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
+
+    NS "python3" "terminology -n=python3term -e python3" (appName =? "python3term")
         (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
 -- run gvim, find by role, don't float
-    NS "notes" "gvim --role notes ~/notes.txt" (role =? "notes") nonFloating,
-    NS "floatterm" "urxvt -name floatingTerminal" (appName =? "floatingTerminal")
+    NS "floatterm" "terminology -n=floatingTerminal" (appName =? "floatingTerminal")
         (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
 
    ] where role = stringProperty "WM_WINDOW_ROLE"
@@ -126,7 +134,7 @@ myScratchpads = [
 myLogHook :: Handle -> X ()
 myLogHook xmproc1 = dynamicLogWithPP  $ customPP { ppOutput = hPutStrLn xmproc1 }
 
-                       
+
 customPP :: PP
 customPP = dzenPP { ppLayout = dzenColor "green" ""
                     , ppTitle = dzenColor "cyan" ""
@@ -142,13 +150,27 @@ customPP = dzenPP { ppLayout = dzenColor "green" ""
 
 -- LayoutHook: certain workspaces get a specific layout or layout order.
 myLayoutHook = onWorkspace "web" myTileFirst $
-               onWorkspace "steam" mySteam
+               onWorkspace "steam" mySteam $
+               onWorkspace "irc" myIRC $
+               onWorkspace "skype" mySkype $
                myTileFirst
                  where
                    -- Tile First Layout
-                   myTileFirst = avoidStruts ( smartBorders ( renamed [CutLeft 9] ( dwmStyle shrinkText myDWConfig ( mkToggle (FULL ?? NOBORDERS ?? EOT) ( tiled ||| renamed [Replace "MiTa"] (Mirror tiled) ) ) ) ||| renamed [Replace "SiTa"] simpleTabbed ) ||| noBorders Full )
+                   myTileFirst = avoidStruts (
+                                  smartBorders (
+                                   mkToggle (FULL ?? NOBORDERS ?? EOT) (
+                                    renamed [CutLeft 9] (
+                                     dwmStyle shrinkText myDWConfig (
+                                      renamed [Replace "FixC"] (FixedColumn 1 20 160 10) |||
+                                      renamed [Replace "MiTa"] (Mirror tiled)
+                                     )
+                                    ) |||
+                                    renamed [Replace "SiTa"] ( mastered (1/100) (1/2) $ simpleTabbed ) |||
+                                    renamed [Replace "TRFC"] ( topRightMaster (FixedColumn 1 20 80 10) )
+                                   )
+                                  ) ||| noBorders Full
+                                 )
                      where
-                       drawer = simpleDrawer 0.0 0.3 ( ClassName "drawerTerminal" )
                        tiled = Tall nmaster delta ratio
                        nmaster = 1
                        ratio = 1/2
@@ -167,46 +189,86 @@ myLayoutHook = onWorkspace "web" myTileFirst $
                       -- Match roster window
                       roster = Title "Friends"
 
+                   myIRC = renamed [Replace "IRC"] $ avoidStruts (myIRC' Grid)
+                   -- IRC modifier, used on steam workspace
+                   myIRC' base = mirror base $ withIM size roster
+                     where
+                      -- Ratios of the screen roster will occupy
+                      size = 1%3
+                      -- Match roster window
+                      roster = ClassName "Corebird"
+
+                   mySkype = renamed [Replace "Skype"] $ avoidStruts (mySkype' Grid)
+                   -- Skype modifier, used on steam workspace
+                   mySkype' base = mirror base $ withIM size roster
+                     where
+                      -- Ratios of the screen roster will occupy
+                      size = 1%3
+                      -- Match roster window
+                      roster = Title "phoenix_firebow - Skype™"
+
 myDWConfig = defaultTheme { inactiveBorderColor = "#00ff88"
-                           , inactiveTextColor   = "#00ff88"}
+                           , inactiveTextColor   = "#00ff88"
+                           , decoWidth = 200
+                           , decoHeight = 20}
 -- Topicspace
 myTopics :: [Topic]
 myTopics =
-   [ "web",
+   [ "NSP",
+     "web",
      "irc",
      "mail",
      "work",
      "photo",
      "steam",
      "music",
-     "virt"
+     "beam",
+     "weber",
+     "virt",
+     "finance",
+     "skype",
+     "hrpg",
+     "video"
    ]
 
 myTopicConfig :: TopicConfig
 myTopicConfig = defaultTopicConfig
-    { topicDirs = M.fromList 
-      (zip myTopics [ "Download"
+    { topicDirs = M.fromList
+      (zip (tail myTopics) [ "Download"
                     , "Download"
                     , "Download"
                     , "work"
                     , "Bilder"
                     , ".steam"
-                    , "Musik"])
+                    , "Musik"
+                    , "work/beam"
+                    , "work/weber"
+                    , "work"
+                    , "work"
+                    , "Download"
+                    , "work"
+                    , "Videos"])
    , defaultTopicAction = const spawnShell
    , defaultTopic = "web"
    , topicActions = M.fromList
-     (zip myTopics[ spawn "firefox"
-                  , spawn "urxvt -e weechat-curses"
+     (zip (tail myTopics) [ spawn "firefox"
+                  , spawn "terminology -e weechat-curses"
                   , spawn "thunderbird"
                   , spawnShell
                   , spawn "darktable"
                   , spawn "steam"
-                  , spawn "urxvt -e ncmpcpp"
-                  , spawn "virtualbox"])
+                  , spawn "terminology -e ncmpcpp"
+                  , spawnShell
+                  , spawnShell
+                  , spawn "virtualbox"
+                  , spawn "gnucash"
+                  , spawn "skype"
+                  , spawn "chromium --app=https://habitrpg.com/#/tasks/"
+                  , spawnShell ])
    }
 
 -- Functions
-setWallpaper :: String -> X () 
+setWallpaper :: String -> X ()
 setWallpaper strWallpaper = spawn $ "feh --bg-fill /home/phoenix/Bilder/" ++ strWallpaper
 
 -- Helpfunctions for TopicSpace
@@ -214,13 +276,13 @@ spawnShell :: X ()
 spawnShell = currentTopicDir myTopicConfig >>= spawnShellIn
 
 spawnShellIn :: Dir -> X ()
-spawnShellIn shelldir = spawn $ "urxvt -e /bin/sh -c 'cd " ++ shelldir ++ " && " ++ "exec zsh" ++ "'"
+spawnShellIn shelldir = spawn $ "terminology -d=" ++ shelldir
 
-spawnTmux :: X ()
-spawnTmux = currentTopicDir myTopicConfig >>= spawnTmuxIn
-
-spawnTmuxIn :: Dir -> X ()
-spawnTmuxIn tmuxdir = spawn $ "urxvt -e /bin/sh -c 'cd " ++ tmuxdir ++ " && tmux -q has-session -t " ++ tmuxdir ++ "&& tmux attach-session -d -t " ++ tmuxdir ++ " || tmux new-session -s" ++ tmuxdir ++ "'"
+-- spawnTmux :: X ()
+-- spawnTmux = currentTopicDir myTopicConfig >>= spawnTmuxIn
+--
+-- spawnTmuxIn :: Dir -> X ()
+-- spawnTmuxIn tmuxdir = spawn $ "urxvt -e /bin/sh -c 'cd " ++ tmuxdir ++ " && tmux -q has-session -t " ++ tmuxdir ++ "&& tmux attach-session -d -t " ++ tmuxdir ++ " || tmux new-session -s" ++ tmuxdir ++ "'"
 
 goto :: Topic -> X ()
 goto = switchTopic myTopicConfig
@@ -255,21 +317,21 @@ myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- launching and killing programs
     [ ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
-    , ((modMask,               xK_p     ), spawn "dmenu_run") -- %! Launch dmenu
+    , ((modMask,               xK_p     ), spawn "~/.menu/menu main") -- %! Launch dmenu
     , ((modMask .|. shiftMask, xK_c     ), kill) -- %! Close the focused window
 
     , ((modMask,               xK_space ), sendMessage NextLayout) -- %! Rotate through the available layout algorithms
     , ((modMask .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf) -- %!  Reset the layouts on the current workspace to default
-    , ((modMask,               xK_a     ), addWorkspacePrompt myXPConfig)
+    , ((modMask,               xK_a     ), appendWorkspacePrompt myXPConfig)
     , ((modMask,               xK_d     ), removeWorkspace)
 
     , ((modMask,               xK_n     ), refresh) -- %! Resize viewed windows to the correct size
 
     -- Scratchpads
-    , ((modMask          , xK_asciicircum), namedScratchpadAction myScratchpads "floatterm") -- %! Launch terminal
+    , ((modMask                 , xK_asciicircum), namedScratchpadAction myScratchpads "floatterm") -- %! Launch terminal
     , ((modMask .|. controlMask , xK_1), namedScratchpadAction myScratchpads "python2")
     , ((modMask .|. controlMask , xK_2), namedScratchpadAction myScratchpads "python3")
-    , ((modMask .|. controlMask , xK_3), namedScratchpadAction myScratchpads "notes")
+    , ((modMask .|. mod1Mask    , xK_j), namedScratchpadAction myScratchpads "journal")
 
     -- move focus up or down the window stack
     , ((modMask,               xK_Tab   ), windows W.focusDown) -- %! Move focus to the next window
@@ -355,7 +417,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- mod-[1..9] %! Switch to Topic N
     -- mod-shift-[1..9] %! Move client to workspace N
     [((m .|. modMask, k), f )
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+        | (i, k) <- zip (tail (XMonad.workspaces conf)) [xK_1 .. xK_9]
         , (f, m) <- [ (switchTopic myTopicConfig i, 0), (windows $ W.shift i, shiftMask)]]
     ++
     -- mod-{w,e,r} %! Switch to physical/Xinerama screens 1, 2, or 3
@@ -366,7 +428,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
 myConfig xmprocHandle = defaultConfig
         { manageHook = myManageHook
-        , layoutHook = myLayoutHook 
+        , layoutHook = myLayoutHook
         , startupHook = myStartupHook
         , workspaces = myTopics
         , keys = myKeys
@@ -374,10 +436,13 @@ myConfig xmprocHandle = defaultConfig
         , modMask = myModMask     -- Rebind Mod to the Windows key
         , terminal = myTerminal
         , borderWidth = 1
+        , focusFollowsMouse = False
         , focusedBorderColor = "blue"
         }
 
+mySpawnCmd cmd = spawn $ "if not pgrep " ++ cmd ++ " >/dev/null; then " ++ cmd ++ ";else pkill -9 " ++ cmd ++ " && " ++ cmd ++"; fi"
 -- Main Loop
+main :: IO()
 main = do
     -- Set Wallpaper
     -- spawn $ "feh --bg-fill " ++ myWallpaper
@@ -386,32 +451,38 @@ main = do
     let
       screenW = sw
       xmonadW = screenW * 0.6
-      trayerW = 100
-      trayerO = screenW - trayerW
+      trayerW = 150
       statusW = screenW * 0.4 - trayerW
       statusO = screenW - statusW - trayerW
       myDzenBar = "/usr/bin/dzen2 -xs 1 -x 0 -y 0 -ta l -h 16 -fn -*-fixed-medium-*-*-*-12-*-*-*-*-*-*-* -w " ++ show xmonadW
-      trayerBarCmd ="if not pgrep trayer > /dev/null; then trayer --monitor primary --align right --widthtype pixel --width 100 --edge top --height 16 --tint 0x111111 --alpha 0 --transparent true --SetDockType true --SetPartialStrut true;fi"
+      trayerBarCmd ="if not pgrep trayer > /dev/null; then trayer --monitor primary --align right --widthtype pixel --width " ++ show trayerW ++ " --edge top --height 16 --tint 0x111111 --alpha 0 --transparent true --SetDockType true --SetPartialStrut true;fi"
       myDzenStatusBar = "if not pgrep conky >/dev/null; then conky -c /home/phoenix/work/statusbar/conkyrc | /home/phoenix/work/statusbar/plexer | dzen2 -xs 1 -x " ++ show statusO ++ " -y 0 -h 16 -w " ++ show statusW ++ " -ta 'r' -e 'entertitle=uncollapse,ungrabkeyboard,unhide;leavetitle=collapse;leaveslave=collapse' -sa 'c' -l 8 -u -fg '#8a8a8a' -fn -*-fixed-medium-*-*-*-12-*-*-*-*-*-*-* 2> statserr.log; fi"
 
     spawn trayerBarCmd
     -- Statsbar
     spawn myDzenStatusBar
     -- Spawn stratum0trayicon
-    spawn "if not pgrep stratum0tray >/dev/null; then stratum0trayicon; fi"
+    -- mySpawnCmd "stratum0trayicon"
     -- Spawn stratum0trayicon
-    spawn "if not pgrep xcompmgr >/dev/null; then xcompmgr; fi"
+    mySpawnCmd "xcompmgr"
     -- Spawn dunst
-    spawn "if not pgrep dunst >/dev/null; then dunst; fi"
+    mySpawnCmd "dunst"
     -- Spawn pasystray
-    spawn "if not pgrep pasystray >/dev/null; then pasystray; fi"
+    mySpawnCmd "pasystray"
     -- Spawn xscreensaver
     spawn "/usr/bin/xscreensaver -no-splash"
     -- Spawn mpd_inhibit
-    spawn "if not pgrep mpdinhibit >/dev/null; then /home/phoenix/work/mpd_inhibit/mpdinhibit;fi"
+    mySpawnCmd "mpdinhibit"
+    -- Spawn redshift-gtk
+    -- spawn "pkill redshift"
+    -- mySpawnCmd "redshift-gtk"
+    -- Spawn variety
+    mySpawnCmd "variety"
+    -- Spawn nm-applet
+    mySpawnCmd "nm-applet"
     -- start Xmobar
     xmproc1 <- spawnPipe myDzenBar
     -- Setup gpg-agent to use the right pinentry
-    spawn "echo UPDATESTARTUPTTY | gpg-connect-agent"
+    -- spawn "echo UPDATESTARTUPTTY | gpg-connect-agent"
     -- start XMonad
     xmonad $ withUrgencyHook NoUrgencyHook (myConfig xmproc1 );

@@ -1,18 +1,22 @@
 # Deaktiviere Terminal Beep
 xset -b
 # Starte Compositing Manager
-#xcompmgr &
+#xcompmgr & 
 #export GTK_IM_MODULE="gtk-im-context-simple"
+# Start dunst
+# dunst &
 # Start redshift-gtk
-redshift-gtk &
+# emacs
+#emacs --daemon &
+#redshift-gtk &
 # Start pasystray
-pasystray &
+#pasystray &
 # Stratum 0 Tray Icon
-stratum0trayicon  &
+# stratum0trayicon  &
 # Start mpdinhibit
-/home/phoenix/bin/mpdinhibit &
+# /home/phoenix/bin/mpdinhibit &
 # Suspend after 5 Minutes
-xautolock -time 5 -locker "systemctl suspend" -detectsleep &
+#xautolock -time 5 -locker "systemctl suspend" -detectsleep &
 # Trayer
 # trayer --monitor primary --edge top --align right --SetDockType true --SetPartialStrut true --width 5 --transparent true --alpha 0 --tint 0x111111 --height 19 &
 # dunst

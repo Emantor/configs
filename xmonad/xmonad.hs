@@ -161,6 +161,7 @@ myLayoutHook = onWorkspace "web" myTileFirst $
                                    mkToggle (FULL ?? NOBORDERS ?? EOT) (
                                     renamed [CutLeft 9] (
                                      dwmStyle shrinkText myDWConfig (
+                                      renamed [Replace "Tile"] (tiled) |||
                                       renamed [Replace "FixC"] (FixedColumn 1 20 160 10) |||
                                       renamed [Replace "MiTa"] (Mirror tiled)
                                      )
@@ -276,7 +277,10 @@ spawnShell :: X ()
 spawnShell = currentTopicDir myTopicConfig >>= spawnShellIn
 
 spawnShellIn :: Dir -> X ()
-spawnShellIn shelldir = spawn $ "terminology -d=" ++ shelldir
+spawnShellIn shelldir = case shelldir of
+                          "" -> spawn $ "terminology"
+                          otherwise -> spawn $ "terminology -d=" ++ shelldir
+
 
 -- spawnTmux :: X ()
 -- spawnTmux = currentTopicDir myTopicConfig >>= spawnTmuxIn
@@ -440,7 +444,6 @@ myConfig xmprocHandle = defaultConfig
         , focusedBorderColor = "blue"
         }
 
-mySpawnCmd cmd = spawn $ "if not pgrep " ++ cmd ++ " >/dev/null; then " ++ cmd ++ ";else pkill -9 " ++ cmd ++ " && " ++ cmd ++"; fi"
 -- Main Loop
 main :: IO()
 main = do
@@ -455,8 +458,9 @@ main = do
       statusW = screenW * 0.4 - trayerW
       statusO = screenW - statusW - trayerW
       myDzenBar = "/usr/bin/dzen2 -xs 1 -x 0 -y 0 -ta l -h 16 -fn -*-fixed-medium-*-*-*-12-*-*-*-*-*-*-* -w " ++ show xmonadW
-      trayerBarCmd ="if not pgrep trayer > /dev/null; then trayer --monitor primary --align right --widthtype pixel --width " ++ show trayerW ++ " --edge top --height 16 --tint 0x111111 --alpha 0 --transparent true --SetDockType true --SetPartialStrut true;fi"
-      myDzenStatusBar = "if not pgrep conky >/dev/null; then conky -c /home/phoenix/work/statusbar/conkyrc | /home/phoenix/work/statusbar/plexer | dzen2 -xs 1 -x " ++ show statusO ++ " -y 0 -h 16 -w " ++ show statusW ++ " -ta 'r' -e 'entertitle=uncollapse,ungrabkeyboard,unhide;leavetitle=collapse;leaveslave=collapse' -sa 'c' -l 8 -u -fg '#8a8a8a' -fn -*-fixed-medium-*-*-*-12-*-*-*-*-*-*-* 2> statserr.log; fi"
+      -- trayerBarCmd ="if not pgrep trayer > /dev/null; then trayer --monitor primary --align right --widthtype pixel --width " ++ show trayerW ++ " --edge top --height 16 --tint 0x111111 --alpha 0 --transparent true --SetDockType true --SetPartialStrut true;fi"
+      trayerBarCmd ="trayer --monitor primary --align right --widthtype pixel --width " ++ show trayerW ++ " --edge top --height 16 --tint 0x111111 --alpha 0 --transparent true --SetDockType true --SetPartialStrut true"
+      myDzenStatusBar = "LANG=en_US.utf8 conky -c /home/phoenix/work/statusbar/conkyrc | /home/phoenix/work/statusbar/plexer | dzen2 -xs 1 -x " ++ show statusO ++ " -y 0 -h 16 -w " ++ show statusW ++ " -ta 'r' -e 'entertitle=uncollapse,ungrabkeyboard,unhide;leavetitle=collapse;leaveslave=collapse' -sa 'c' -l 8 -u -fg '#8a8a8a' -fn -*-fixed-medium-*-*-*-12-*-*-*-*-*-*-* 2> statserr.log"
 
     spawn trayerBarCmd
     -- Statsbar
@@ -464,22 +468,22 @@ main = do
     -- Spawn stratum0trayicon
     -- mySpawnCmd "stratum0trayicon"
     -- Spawn stratum0trayicon
-    mySpawnCmd "xcompmgr"
+    -- spawn "compton --config ~/.config/compton.config -b"
     -- Spawn dunst
-    mySpawnCmd "dunst"
+    -- mySpawnCmd "dunst"
     -- Spawn pasystray
-    mySpawnCmd "pasystray"
+    -- mySpawnCmd "pasystray"
     -- Spawn xscreensaver
     spawn "/usr/bin/xscreensaver -no-splash"
     -- Spawn mpd_inhibit
-    mySpawnCmd "mpdinhibit"
+    -- mySpawnCmd "mpdinhibit"
     -- Spawn redshift-gtk
     -- spawn "pkill redshift"
     -- mySpawnCmd "redshift-gtk"
     -- Spawn variety
-    mySpawnCmd "variety"
+    -- mySpawnCmd "variety"
     -- Spawn nm-applet
-    mySpawnCmd "nm-applet"
+    -- mySpawnCmd "nm-applet"
     -- start Xmobar
     xmproc1 <- spawnPipe myDzenBar
     -- Setup gpg-agent to use the right pinentry

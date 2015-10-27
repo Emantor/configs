@@ -1,5 +1,17 @@
 [global]
-    font = Monofur 12
+    font = Sans Mono 16
+
+    # Allow a small subset of html markup:
+    #   <b>bold</b>
+    #   <i>italic</i>
+    #   <s>strikethrough</s>
+    #   <u>underline</u>
+    #
+    # For a complete reference see
+    # <http://developer.gnome.org/pango/stable/PangoMarkupFormat.html>.
+    # If markup is not allowed, those tags will be stripped out of the
+    # message.
+    allow_markup = yes
 
     # The format of the message. Possible variables are:
     #   %a  appname
@@ -7,14 +19,12 @@
     #   %b  body
     #   %i  iconname (including its path)
     #   %I  iconname (without its path)
-    format = "%a - %s\n%b"
+    format = "%a - <b>%s</b>\n%b"
 
     # Sort messages by urgency
     sort = yes
 
-    # Show how many messages are currently hidden (because of geometry)
-    indicate_hidden = yes
-
+    # Show how many messages are currently hidden (because of geometry) indicate_hidden = yes
     # alignment of message text.
     # Possible values are "left", "center" and "right"
     alignment = left
@@ -42,11 +52,11 @@
     # the window expands to the longest message displayed.
     # A positive x is measured from the left, a negative from the
     # right side of the screen.  Y is measured from the top and down respectevly.
-    geometry = "200x100-20+20"
+    geometry = "1200x200-20+20"
 
     # The transparency of the window. range: [0; 100]
     # This option will only work if a compositing windowmanager is present (e.g. xcompmgr, compiz, etc..)
-    transparency = 10
+    transparency = 0
 
     # Don't remove messages, if the user is idle (no mouse or keyboard input)
     # for longer than idle_threshold seconds.
@@ -101,23 +111,23 @@
 
     # redisplay last message(s)
     # On the US keyboard layout 'grave' is normally above TAB and left of '1'.
-    history = ctrl+grave
+    history = ctrl+mod1+h
 
 [urgency_low]
     # IMPORTANT: colors have to be defined in quotation marks.
     # Otherwise the '#' and following  would be interpreted as a comment.
     background = "#111111"
-    foreground = "#88ff00"
-    timeout = 60
+    foreground = "#dddddd"
+    timeout = 1
 
 [urgency_normal]
     background = "#111111"
-    foreground = "#0088ff"
-    timeout = 60
+    foreground = "#ffffff"
+    timeout = 4
 
 [urgency_critical]
     background = "#111111"
-    foreground = "#FF0088"
+    foreground = "#FF0000"
     timeout = 0
 
 
@@ -137,11 +147,11 @@
 #    summary = "foobar"
 #    format = ""
 
-#[signed_on]
-#    appname = Pidgin
-#    summary = "*signed on*"
-#    urgency = low
-#
+[netctl-auto]
+    appname = Journal
+    summary = "*netctl-auto*"
+    urgency = low
+
 #[signed_off]
 #    appname = Pidgin
 #    summary = *signed off*
@@ -157,3 +167,4 @@
 #    summary = *twitter.com*
 #    urgency = normal
 #
+# vim: ft=cfg

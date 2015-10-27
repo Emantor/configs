@@ -26,18 +26,9 @@ alias spacekiste='ssh stratum0@192.168.178.196'
 alias tiffany='ssh tiffanyaching.emantor.de'
 
 # Alias für mpv
-alias mpv='systemd-inhibit --what=handle-lid-switch:idle --who=mpv --why="Video is playing" mpv --msg-level=all=no'
+alias mpv='systemd-inhibit --what=handle-lid-switch:idle --who=mpv --why="Video is playing" mpv'
 
-alias mpv-s='systemd-inhibit --what=handle-lid-switch:idle --who=mpv --why="Video is playing" mpv --msg-level=all=no --x11-name seperate_mpv'
-
-alias fuck='eval $(thefuck $(fc -ln -1 | tail -n 1)); fc -R'
-
-ec() {
-    emacsclient -a= -c $1 &!;
-    echo "Emacs started!\n";
-    }
-
-alias dmesg='dmesg -T'
+alias ec='emacsclient -c'
 
 # File Aliases
 alias -s tex=vim
@@ -48,14 +39,3 @@ alias -s mkv=mpv
 
 +(){ sudo "$*"; }
 ++(){ sudo -i; }
-
-function sysrestart() { sudo systemctl restart $1; journalctl -n 10 -u $1 --no-pager; }
-
-function wlan() {
-    if [ $1 = "on" ];
-        then sudo systemctl start netctl-auto@wlan;
-    else if [ $1 = "off" ];
-        then sudo systemctl stop netctl-auto@wlan;
-    fi;
-    fi;
-}

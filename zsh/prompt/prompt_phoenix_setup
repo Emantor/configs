@@ -11,7 +11,8 @@ prompt_phoenix_help () {
 }
 
 prompt_phoenix_vcsstyles () {
-    # vcs_info configuration 
+    # vcs_info configuration
+    echo $nvcs_prompt
     zstyle ':vcs_info:*:phoenix:*' unstagedstr '●'
     zstyle ':vcs_info:*:phoenix:*' stagedstr '✔'
     zstyle ':vcs_info:*:phoenix:*' actionformats '(%F{10}%s->%F{3}%r%f|%F{14}%b%f%)%F{9}%u%F{10}%c%f(%F{9}%a%f):%F{3}%S%f'
@@ -43,18 +44,25 @@ prompt_phoenix_precmd () {
     esac
 
     local screens=$(screen -ls 2> /dev/null | grep -c Detach )
+    local jobs=$(jobs | wc -l )
 
     if [[ $screens == "0" ]]; then
       screenbits=""
     else
-      screenbits="%F{yellow}[$screens]%f"
+      screenbits="%F{yellow}[%F{white}s%F{grey}:%F{yellow}$screens]%f"
+    fi
+
+    if [[ $jobs == "0" ]]; then
+      jobbits=""
+    else
+      jobbits="%F{white}[%F{white}j%F{grey}:%F{yellow}$jobs%F{white}]%f"
     fi
 
     vcs_info 'phoenix'
 }
 
 prompt_phoenix_preexec () {
-    case $TERM in 
+    case $TERM in
     rxvt*|xterm*|screen*)
       print -Pn "\e]0;$TERM:$1\a"
       ;;
@@ -83,10 +91,9 @@ prompt_phoenix_ps1 () {
     local date="%{$fg_no_bold[yellow]%}%D{%H:%M:%S}%{$reset_color%}"
     local gitinfo='${vcs_info_msg_0_}%#'
 
-
     prompt_bits="%F{blue}::%f"
 
-    PROMPT="${user}\${screenbits}${host}\${prompt_bits}${gitinfo}"
+    PROMPT="${user}\${screenbits}\${jobbits}${host}\${prompt_bits}${gitinfo}"
     RPROMPT="${date}|${exstate}"
 }
 
@@ -98,7 +105,7 @@ prompt_phoenix_setup () {
 
     # load vcs_info styles
     autoload -Uz vcs_info
-    prompt_phoenix_vcsstyles 
+    prompt_phoenix_vcsstyles
 
     # set up left-side prompt
     prompt_phoenix_ps1

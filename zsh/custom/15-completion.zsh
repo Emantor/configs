@@ -101,3 +101,7 @@ zle -C complete-history complete-word _generic
 zstyle ':completion:complete-history:*' completer _history
 
 zstyle ':complete-recent-args' use-histbang yes
+
+# Twitch Token
+zstyle ':completion:*:twitch:*' oauth-token 2qig711jlla0xovtau35sg94580nj4d 
+zstyle ':completion:*:twitch' teams srl

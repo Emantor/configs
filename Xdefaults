@@ -18,7 +18,7 @@ URxvt*saveLines: 32767
 
 URxvt*letterSpace: 0
 
-URxvt*font: xft:Fantasque Sans Mono:style=Regular:size=8
+URxvt*font: xft:Fantasque Sans Mono:style=Regular:size=10
 
 ! scrollbar - true (default) or false
 URxvt*scrollBar: false
@@ -32,9 +32,9 @@ URxvt*scrollstyle: rxvt
 URxvt*termName: rxvt-256color
 
 URxvt.depth: 32
-URxvt*background: [90]#000000
+URxvt*background: [75]#000000
 
-#URxvt.fading: 10
+#URxvt.fading: 50
 #URxvt.fadeColor: [0]black
 # Molokai colorscheme
 ! tangoesque scheme

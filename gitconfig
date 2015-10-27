@@ -24,3 +24,5 @@ untracked = cyan
 	default = simple
 [github]
 	user = Emantor
+[credential]
+	helper = /usr/share/git/credential/gnome-keyring/git-credential-gnome-keyring

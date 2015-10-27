@@ -52,12 +52,12 @@ map <leader>r :call RenameFile()<cr>
 
 """Leader Maps
 " Git Shortcuts 
-map <leader>c :Gcommit<cr>
-map <leader>a :Gwrite<cr>
-map <leader>b :Gblame<cr>
-map <leader>p :Git push<cr>
-map <leader>l :!clear && git log -p %<cr>
-map <leader>d :!clear && git diff %<cr>
+map <leader>gc :Gcommit<cr>
+map <leader>ga :Gwrite<cr>
+map <leader>gb :Gblame<cr>
+map <leader>gp :Git push<cr>
+map <leader>gl :!clear && git log -p %<cr>
+map <leader>gd :!clear && git diff %<cr>
 " Ctrlp
 map <leader>f :CtrlP<cr>
 " Silver Searcher
@@ -71,6 +71,7 @@ map <leader>T <Esc>:tabnew<cr>
 map <leader>N <Esc>:tabn<cr>
 map <leader>P <Esc>:tabp<cr>
 map <leader>C <Esc>:tabclose<cr>
+nnoremap <leader>jd :YcmCompleter GoTo<CR>
 
 " toggle shortcuts for paste, hlsearch, invlist
 nnoremap <F2> :set invpaste paste?<CR>
@@ -82,6 +83,7 @@ inoremap <F4> <Esc>:set invlist list?<CR>a
 map <F5> :setlocal spell! spelllang=de_de<cr>
 imap <F5> <ESC>:setlocal spell! spelllang=de_de<cr>
 nnoremap <C-e> :NERDTreeToggle<CR>
+nnoremap <F8> :YcmForceCompileAndDiagnostics<CR>
 
 " formatoptions
 set formatoptions-=o " Don't open comment on o or O
@@ -150,7 +152,7 @@ fun! SetupVAM()
 
   " Tell VAM which plugins to fetch & load:
   call vam#ActivateAddons(['github:honza/vim-snippets'
-                         \,'github:garbas/vim-snipmate'
+                         \,'UltiSnips'
                          \,'surround'
                          \,'fugitive'
                          \,'github:valloric/youcompleteme'
@@ -197,6 +199,12 @@ let g:miniBufExplMapCTabSwitchBufs = 1
 " map <F4> :ls<CR>:buffer<space>
 " Enable mouse
 set mouse=a
+"
+""" Syntastic Settings
+let g:syntastic_check_on_open=1
+let g:syntastic_auto_loc_list=1
+let g:syntastic_enable_signs=1
+let g:syntastic_python_checkers = [ 'python' ]
 
 " Ag Options
 let g:aghighlight=1
@@ -209,5 +217,26 @@ let g:ctrlp_match_window_reversed = 0
 " vim-airline settings
 let g:airline_powerline_fonts = 1
 
-""" Syntastic Settings
-let g:syntastic_c_checkers = ['avrgcc']
+" You COmplete Me Options
+" let g:ycm_extra_conf_globlist = ['~/work/*','~/uni/*','!~/*']
+let g:ycm_always_populate_location_list = 1
+let g:ycm_key_detailed_diagnostics = '<leader>D'
+let g:ycm_semantic_triggers =  {
+  \   'c' : ['->', '.'],
+  \   'objc' : ['->', '.'],
+  \   'ocaml' : ['.', '#'],
+  \   'cpp,objcpp' : ['->', '.', '::'],
+  \   'perl' : ['->'],
+  \   'php' : ['->', '::'],
+  \   'cs,java,javascript,d,python,perl6,scala,vb,elixir,go' : ['.'],
+  \   'vim' : ['re![_a-zA-Z]+[_\w]*\.'],
+  \   'ruby' : ['.', '::'],
+  \   'lua' : ['.', ':'],
+  \   'erlang' : [':'],
+  \ }
+
+" Trigger configuration. Do not use <tab> if you use
+" https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<c-c>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-y>"

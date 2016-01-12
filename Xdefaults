@@ -16,7 +16,7 @@ URxvt*saveLines: 32767
 ! background color (prior to tinting) (default is white)
 !URxvt*background: Black
 
-URxvt*letterSpace: 0
+#URxvt*letterSpace: 0
 
 URxvt*font: xft:Fantasque Sans Mono:style=Regular:size=10
 

@@ -1,5 +1,5 @@
 # Env
-export EDITOR=vim
+export EDITOR='emacsclient -t -a='
 
 [ -n "$TMUX" ] && export TERM=screen-256color
 

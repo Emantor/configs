@@ -30,6 +30,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.EwmhDesktops
 
 -- Java Workaround
 import XMonad.Hooks.SetWMName
@@ -47,6 +48,7 @@ import Graphics.X11.Xinerama
 import System.IO
 import System.Exit
 import XMonad.Util.NamedScratchpad
+import XMonad.Util.Themes
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -62,7 +64,7 @@ myWallpapers = ["ww_3.jpg", "ww_gun.jpg", "samcha.png", "ME.png","bi.jpg",
                 "ww_schweden.png","skate_bg.jpg"]
 
 myTerminal :: [Char]
-myTerminal  = "terminology"
+myTerminal  = "urxvt"
 
 myModMask :: KeyMask
 myModMask   = mod4Mask
@@ -111,21 +113,21 @@ myManageHook = manageHook defaultConfig <+> namedScratchpadManageHook myScratchp
 myScratchpads :: [NamedScratchpad]
 myScratchpads = [
 -- run htop in xterm, find it by title, use default floating window placement
-    NS "htop" "terminology -e htop -n=htop" (title =? "htop") defaultFloating ,
+    NS "htop" "urxvt -e htop -n=htop" (title =? "htop") defaultFloating ,
 
 -- run stardict, find it by class name, place it in the floating window
 -- 1/6 of screen width from the left, 1/6 of screen height
 -- from the top, 2/3 of screen width by 2/3 of screen height
-    NS "journal" "terminology -n=journalterm -e journalctl -n 100 -f" (appName =? "journalterm")
+    NS "journal" "urxvt -name journalterm -e journalctl -n 100 -f" (appName =? "journalterm")
         (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
 
-    NS "python2" "terminology -n=python2term -e python2" (appName =? "python2term")
+    NS "python2" "urxvt -name python2term -e python2" (appName =? "python2term")
         (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
 
-    NS "python3" "terminology -n=python3term -e python3" (appName =? "python3term")
+    NS "python3" "urxvt -name python3term -e python3" (appName =? "python3term")
         (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
 -- run gvim, find by role, don't float
-    NS "floatterm" "terminology -n=floatingTerminal" (appName =? "floatingTerminal")
+    NS "floatterm" "urxvt -name floatingTerminal" (appName =? "floatingTerminal")
         (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
 
    ] where role = stringProperty "WM_WINDOW_ROLE"
@@ -140,7 +142,7 @@ customPP = dzenPP { ppLayout = dzenColor "green" ""
                     , ppTitle = dzenColor "cyan" ""
                     , ppUrgent = dzenColor "yellow" "red" . dzenStrip
                     , ppCurrent = dzenColor "#FF0088" ""
-                    , ppSep = "/"
+                    , ppSep = " | "
                     , ppWsSep = "/"
                     , ppVisible = dzenColor "#00FF88" ""
                     , ppHidden = dzenColor "#0088FF" ""
@@ -166,7 +168,8 @@ myLayoutHook = onWorkspace "web" myTileFirst $
                                       renamed [Replace "MiTa"] (Mirror tiled)
                                      )
                                     ) |||
-                                    renamed [Replace "SiTa"] ( mastered (1/100) (1/2) $ simpleTabbed ) |||
+                                    renamed [Replace "SiTa"] ( simpleTabbed ) |||
+                                    renamed [Replace "MiTa"] ( mastered (1/100) (1/2) $ simpleTabbed ) |||
                                     renamed [Replace "TRFC"] ( topRightMaster (FixedColumn 1 20 80 10) )
                                    )
                                   ) ||| noBorders Full
@@ -208,10 +211,8 @@ myLayoutHook = onWorkspace "web" myTileFirst $
                       -- Match roster window
                       roster = Title "phoenix_firebow - Skype™"
 
-myDWConfig = defaultTheme { inactiveBorderColor = "#00ff88"
-                           , inactiveTextColor   = "#00ff88"
-                           , decoWidth = 200
-                           , decoHeight = 20}
+myDWConfig :: Theme
+myDWConfig = (theme smallClean)
 -- Topicspace
 myTopics :: [Topic]
 myTopics =
@@ -224,18 +225,18 @@ myTopics =
      "steam",
      "music",
      "beam",
-     "weber",
      "virt",
      "finance",
+     "signal",
      "skype",
-     "hrpg",
      "video"
    ]
 
 myTopicConfig :: TopicConfig
 myTopicConfig = defaultTopicConfig
     { topicDirs = M.fromList
-      (zip (tail myTopics) [ "Download"
+      (zip (tail myTopics) [
+                      "Download"
                     , "Download"
                     , "Download"
                     , "work"
@@ -243,28 +244,27 @@ myTopicConfig = defaultTopicConfig
                     , ".steam"
                     , "Musik"
                     , "work/beam"
-                    , "work/weber"
                     , "work"
                     , "work"
                     , "Download"
-                    , "work"
+                    , "Download"
                     , "Videos"])
    , defaultTopicAction = const spawnShell
    , defaultTopic = "web"
    , topicActions = M.fromList
-     (zip (tail myTopics) [ spawn "firefox"
-                  , spawn "terminology -e weechat-curses"
+     (zip (tail myTopics) [
+                    spawn "firefox"
+                  , spawn "urxvt -e weechat-curses"
                   , spawn "thunderbird"
-                  , spawnShell
+                  , spawn "emacsclient -c -a="
                   , spawn "darktable"
                   , spawn "steam"
-                  , spawn "terminology -e ncmpcpp"
+                  , spawn "urxvt -e ncmpcpp"
                   , spawnShell
-                  , spawnShell
-                  , spawn "virtualbox"
+                  , spawn "virt-manager"
                   , spawn "gnucash"
+                  , spawn "/home/phoenix/bin/signal"
                   , spawn "skype"
-                  , spawn "chromium --app=https://habitrpg.com/#/tasks/"
                   , spawnShell ])
    }
 
@@ -278,8 +278,8 @@ spawnShell = currentTopicDir myTopicConfig >>= spawnShellIn
 
 spawnShellIn :: Dir -> X ()
 spawnShellIn shelldir = case shelldir of
-                          "" -> spawn $ "terminology"
-                          otherwise -> spawn $ "terminology -d=" ++ shelldir
+                          "" -> spawn $ "urxvt"
+                          otherwise -> spawn $ "urxvt -e /bin/sh -c 'cd " ++ shelldir ++ " && exec zsh'"
 
 
 -- spawnTmux :: X ()
@@ -313,8 +313,8 @@ getScreenDim n = do
 
 -- Application List
 appList :: [String]
-appList =  [  "ristretto", "xbmc", "libreoffice", "wireshark"
-           , "virt-manager", "gimp", "emerillon"
+appList =  [  "emacsclient -c -a=", "xbmc", "libreoffice", "wireshark"
+           , "virt-manager", "gimp", "eog"
            ]
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
@@ -364,9 +364,9 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask .|. shiftMask, xK_q                   ), io (exitWith ExitSuccess)) -- %! Quit xmonad
     , ((modMask              , xK_q                   ), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
     -- Volume Control
-    , ((0, xF86XK_AudioLowerVolume                    ), spawn "pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -1%")
-    , ((0, xF86XK_AudioRaiseVolume                    ), spawn "pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo +1%")
-    , ((0, xF86XK_AudioMute                           ), spawn "pactl set-sink-mute alsa_output.pci-0000_00_1b.0.analog-stereo toggle")
+    , ((0, xF86XK_AudioLowerVolume                    ), spawn "/usr/bin/pulseaudio-ctl down")
+    , ((0, xF86XK_AudioRaiseVolume                    ), spawn "/usr/bin/pulseaudio-ctl up")
+    , ((0, xF86XK_AudioMute                           ), spawn "/usr/bin/pulseaudio-ctl mute")
     -- Brightness Control
     , ((mod1Mask, xF86XK_AudioLowerVolume             ), spawn "sudo light -sq 10")
     , ((mod1Mask, xF86XK_AudioRaiseVolume             ), spawn "sudo light -aq 10")
@@ -383,8 +383,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- show and hide border
     , ((mod4Mask, xK_n                                ), withFocused toggleBorder)
     , ((mod4Mask .|. shiftMask, xK_Return             ), spawnShell)
-    -- Firefox Hotkey
-    , ((mod4Mask, xK_f                                ), sendMessage $ Toggle FULL)
+    -- Fullscreen Hotkey
+    , ((mod4Mask , xK_f                               ), sendMessage $ Toggle FULL)
     -- MPD Control External mpd Server Bibliothekar
     , ((mod4Mask, xF86XK_AudioPlay                    ), spawn "mpc -h librarian toggle")
     , ((mod4Mask, xF86XK_AudioPrev                    ), spawn "mpc -h librarian prev")
@@ -442,6 +442,7 @@ myConfig xmprocHandle = defaultConfig
         , borderWidth = 1
         , focusFollowsMouse = False
         , focusedBorderColor = "blue"
+        , handleEventHook = handleEventHook defaultConfig
         }
 
 -- Main Loop
@@ -489,4 +490,4 @@ main = do
     -- Setup gpg-agent to use the right pinentry
     -- spawn "echo UPDATESTARTUPTTY | gpg-connect-agent"
     -- start XMonad
-    xmonad $ withUrgencyHook NoUrgencyHook (myConfig xmproc1 );
+    xmonad $ withUrgencyHook NoUrgencyHook $ ewmh (myConfig xmproc1 );

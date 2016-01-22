@@ -2,6 +2,9 @@
 alias ls='ls --color=auto -h'
 alias :q='exit'
 alias iptables='echo "Alias: sudo iptables" && sudo iptables'
+alias rmg='ssh rmg'
+alias mg='ssh mg'
+alias s='ssh'
 
 # Aliases für Terra Netzwerk
 alias zephyda='ssh -p 8022 root@zephyda'
@@ -26,24 +29,23 @@ alias spacekiste='ssh stratum0@192.168.178.196'
 alias tiffany='ssh tiffanyaching.emantor.de'
 
 # Alias für mpv
-alias mpv='systemd-inhibit --what=handle-lid-switch:idle --who=mpv --why="Video is playing" mpv --msg-level=all=no'
+alias mpv='systemd-inhibit --what=handle-lid-switch:idle --who=mpv --why="Video is playing" mpv'
 
-alias mpv-s='systemd-inhibit --what=handle-lid-switch:idle --who=mpv --why="Video is playing" mpv --msg-level=all=no --x11-name seperate_mpv'
+alias mpv-s='systemd-inhibit --what=handle-lid-switch:idle --who=mpv --why="Video is playing" mpv --x11-name seperate_mpv'
 
 alias fuck='eval $(thefuck $(fc -ln -1 | tail -n 1)); fc -R'
 
 ec() {
-    emacsclient -a= -c $1 &!;
-    echo "Emacs started!\n";
-    }
+    emacsclient -a= -t $@
+}
 
 alias dmesg='dmesg -T'
 
 # File Aliases
-alias -s tex=vim
-alias -s c=vim
-alias -s h=vim
-alias -s txt=vim
+alias -s tex=ec
+alias -s c=ec
+alias -s h=ec
+alias -s txt=ec
 alias -s mkv=mpv
 
 +(){ sudo "$*"; }
@@ -53,9 +55,9 @@ function sysrestart() { sudo systemctl restart $1; journalctl -n 10 -u $1 --no-p
 
 function wlan() {
     if [ $1 = "on" ];
-        then sudo systemctl start netctl-auto@wlan;
+    then sudo systemctl start netctl-auto@wlan;
     else if [ $1 = "off" ];
-        then sudo systemctl stop netctl-auto@wlan;
-    fi;
+         then sudo systemctl stop netctl-auto@wlan;
+         fi;
     fi;
 }

@@ -42,10 +42,7 @@ import XMonad.Prompt.Workspace
 import XMonad.Prompt.Ssh
 
 -- Misc
-import XMonad.Util.Run(spawnPipe)
 import Graphics.X11.ExtraTypes.XF86
-import Graphics.X11.Xinerama
-import System.IO
 import System.Exit
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.Themes
@@ -92,7 +89,7 @@ myStartupHook = do
 
 -- ManageHook für Docks und Apps
 myManageHook :: ManageHook
-myManageHook = manageHook defaultConfig <+> namedScratchpadManageHook myScratchpads <+> manageDocks <+> composeAll
+myManageHook = manageHook def <+> namedScratchpadManageHook myScratchpads <+> manageDocks <+> composeAll
     [ className =? "Gimp"             --> doFloat
     , className =? "Darktable"        --> doShift "photo"
     , className =? "VirtualBox"       --> doShift "virt"
@@ -105,7 +102,6 @@ myManageHook = manageHook defaultConfig <+> namedScratchpadManageHook myScratchp
     , className =? "seperate_mpv"     --> doShift "video"
     , className =? "Guild Wars"       --> doFloat
     , className =? "Conky"            --> doIgnore
-    , className =? "Chromium"         --> doShift "hrpg"
     , isFullscreen                    --> doFullFloat
     ]
 
@@ -113,41 +109,37 @@ myManageHook = manageHook defaultConfig <+> namedScratchpadManageHook myScratchp
 myScratchpads :: [NamedScratchpad]
 myScratchpads = [
 -- run htop in xterm, find it by title, use default floating window placement
-    NS "htop" "urxvt -e htop -n=htop" (title =? "htop") defaultFloating ,
+    NS "htop" "urxvt -name htopterm -e htop" (appName =? "htopterm")
+        (customFloating $ W.RationalRect (0) (0) (1/2) (1)) ,
 
 -- run stardict, find it by class name, place it in the floating window
 -- 1/6 of screen width from the left, 1/6 of screen height
 -- from the top, 2/3 of screen width by 2/3 of screen height
     NS "journal" "urxvt -name journalterm -e journalctl -n 100 -f" (appName =? "journalterm")
+        (customFloating $ W.RationalRect (1/2) (0) (1/2) (1)) ,
+
+    NS "python2" "urxvt -name python2term -e ipython2" (appName =? "python2term")
         (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
 
-    NS "python2" "urxvt -name python2term -e python2" (appName =? "python2term")
-        (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
-
-    NS "python3" "urxvt -name python3term -e python3" (appName =? "python3term")
+    NS "python3" "urxvt -name python3term -e ipython3" (appName =? "python3term")
         (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
 -- run gvim, find by role, don't float
-    NS "floatterm" "urxvt -name floatingTerminal" (appName =? "floatingTerminal")
+    NS "floatterm" "urxvt -name floatingTerminal -e tmux new-session -A -s quick" (appName =? "floatingTerminal")
         (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
 
-   ] where role = stringProperty "WM_WINDOW_ROLE"
-
--- LogHooks
-myLogHook :: Handle -> X ()
-myLogHook xmproc1 = dynamicLogWithPP  $ customPP { ppOutput = hPutStrLn xmproc1 }
-
+   ]
 
 customPP :: PP
-customPP = dzenPP { ppLayout = dzenColor "green" ""
-                    , ppTitle = dzenColor "cyan" ""
-                    , ppUrgent = dzenColor "yellow" "red" . dzenStrip
-                    , ppCurrent = dzenColor "#FF0088" ""
+customPP = xmobarPP { ppLayout = xmobarColor "green" ""
+                    , ppTitle = xmobarColor "cyan" ""
+                    , ppUrgent = xmobarColor "yellow" "red" . xmobarStrip
+                    , ppCurrent = xmobarColor "#FF0088" ""
                     , ppSep = " | "
                     , ppWsSep = "/"
-                    , ppVisible = dzenColor "#00FF88" ""
-                    , ppHidden = dzenColor "#0088FF" ""
-                    , ppSort = fmap (.namedScratchpadFilterOutWorkspace) $ ppSort defaultPP
-                    , ppHiddenNoWindows = dzenColor "#88FF00" ""
+                    , ppVisible = xmobarColor "#00FF88" ""
+                    , ppHidden = xmobarColor "#0088FF" ""
+                    , ppSort = fmap (.namedScratchpadFilterOutWorkspace) $ ppSort def
+                    , ppHiddenNoWindows = xmobarColor "#88FF00" ""
                     }
 
 -- LayoutHook: certain workspaces get a specific layout or layout order.
@@ -164,13 +156,13 @@ myLayoutHook = onWorkspace "web" myTileFirst $
                                     renamed [CutLeft 9] (
                                      dwmStyle shrinkText myDWConfig (
                                       renamed [Replace "Tile"] (tiled) |||
-                                      renamed [Replace "FixC"] (FixedColumn 1 20 160 10) |||
+                                      renamed [Replace "FixC"] (FixedColumn 1 20 83 10) |||
                                       renamed [Replace "MiTa"] (Mirror tiled)
                                      )
                                     ) |||
                                     renamed [Replace "SiTa"] ( simpleTabbed ) |||
                                     renamed [Replace "MiTa"] ( mastered (1/100) (1/2) $ simpleTabbed ) |||
-                                    renamed [Replace "TRFC"] ( topRightMaster (FixedColumn 1 20 80 10) )
+                                    renamed [Replace "TRFC"] ( topRightMaster (FixedColumn 1 20 83 10) )
                                    )
                                   ) ||| noBorders Full
                                  )
@@ -178,7 +170,7 @@ myLayoutHook = onWorkspace "web" myTileFirst $
                        tiled = Tall nmaster delta ratio
                        nmaster = 1
                        ratio = 1/2
-                       delta = 3/100
+                       delta = 1/100
 
                    -- mirror modifier used for chat and steam
                    mirror base a = reflectHoriz $ a $ reflectHoriz base
@@ -233,7 +225,7 @@ myTopics =
    ]
 
 myTopicConfig :: TopicConfig
-myTopicConfig = defaultTopicConfig
+myTopicConfig = def
     { topicDirs = M.fromList
       (zip (tail myTopics) [
                       "Download"
@@ -292,29 +284,20 @@ goto :: Topic -> X ()
 goto = switchTopic myTopicConfig
 
 promptedGoto :: X ()
-promptedGoto = workspacePrompt defaultXPConfig goto
+promptedGoto = workspacePrompt def goto
 
 promptedShift :: X ()
-promptedShift = workspacePrompt defaultXPConfig $ windows . W.shift
-
--- Function to calculate Screen Dimension
-getScreenDim :: Num a => Int -> IO (a, a, a, a)
-getScreenDim n = do
-  d <- openDisplay ""
-  screens <- getScreenInfo d
-  closeDisplay d
-  let rn = screens !!(min (abs n) (length screens - 1))
-  case screens of
-    []        -> return (0, 0, 1024, 768) -- fallback
-    [r]       -> return (fromIntegral $ rect_x r , fromIntegral $ rect_y r ,
-                 fromIntegral $ rect_width r , fromIntegral $ rect_height r )
-    otherwise -> return (fromIntegral $ rect_x rn, fromIntegral $ rect_y rn,
-                 fromIntegral $ rect_width rn, fromIntegral $ rect_height rn)
+promptedShift = workspacePrompt def $ windows . W.shift
 
 -- Application List
 appList :: [String]
-appList =  [  "emacsclient -c -a=", "xbmc", "libreoffice", "wireshark"
+appList =  [  "emacsclient -c -a=", "evince", "google-chrome-stable", "xbmc", "libreoffice", "wireshark"
            , "virt-manager", "gimp", "eog"
+           ]
+
+screenList :: [String]
+screenList =  [  "xrandr --output DP-1 --off xrandr --output DP-2 --off --output HDMI1 --off", "xrandr --output HDMI1 --auto --above eDP-1", "xrandr --output HDMI --auto --right-of eDP-1", "xrandr --output HDMI --auto --left-of eDp1"
+           , "xrandr --output DP-1 --off", "xrandr --output DP-2 --off", "dockhome", "undock"
            ]
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
@@ -336,6 +319,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask .|. controlMask , xK_1), namedScratchpadAction myScratchpads "python2")
     , ((modMask .|. controlMask , xK_2), namedScratchpadAction myScratchpads "python3")
     , ((modMask .|. mod1Mask    , xK_j), namedScratchpadAction myScratchpads "journal")
+    , ((modMask .|. mod1Mask    , xK_h), namedScratchpadAction myScratchpads "htop")
 
     -- move focus up or down the window stack
     , ((modMask,               xK_Tab   ), windows W.focusDown) -- %! Move focus to the next window
@@ -412,10 +396,11 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- Reload Wallpaper
     , ((mod4Mask .|. shiftMask, xK_p     ), promptWallpaper myXPConfig)
     -- Select workspace from Grid
-    , ((mod4Mask, xK_g), goToSelected defaultGSConfig)
-    , ((mod4Mask, xK_o), spawnSelected defaultGSConfig appList)
+    , ((mod4Mask, xK_g), goToSelected def)
+    , ((mod4Mask, xK_o), spawnSelected def appList)
+    , ((mod4Mask, xK_u), spawnSelected def screenList)
     -- SSH Hotkey
-    , ((modMask .|. shiftMask, xK_s), sshPrompt defaultXPConfig)
+    , ((modMask .|. shiftMask, xK_s), sshPrompt def)
     ]
     ++
     -- mod-[1..9] %! Switch to Topic N
@@ -430,64 +415,27 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
         | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
-myConfig xmprocHandle = defaultConfig
+myConfig = def
         { manageHook = myManageHook
         , layoutHook = myLayoutHook
         , startupHook = myStartupHook
         , workspaces = myTopics
         , keys = myKeys
-        , logHook = myLogHook xmprocHandle
+        , logHook = dynamicLogString customPP >>= xmonadPropLog
         , modMask = myModMask     -- Rebind Mod to the Windows key
         , terminal = myTerminal
         , borderWidth = 1
         , focusFollowsMouse = False
         , focusedBorderColor = "blue"
-        , handleEventHook = handleEventHook defaultConfig
+        , handleEventHook = handleEventHook def
         }
 
 -- Main Loop
 main :: IO()
 main = do
-    -- Set Wallpaper
-    -- spawn $ "feh --bg-fill " ++ myWallpaper
-    -- Spawn trayer
-    (sx, sy, sw, sh) <- getScreenDim 0
-    let
-      screenW = sw
-      xmonadW = screenW * 0.6
-      trayerW = 150
-      statusW = screenW * 0.4 - trayerW
-      statusO = screenW - statusW - trayerW
-      myDzenBar = "/usr/bin/dzen2 -xs 1 -x 0 -y 0 -ta l -h 16 -fn -*-fixed-medium-*-*-*-12-*-*-*-*-*-*-* -w " ++ show xmonadW
-      -- trayerBarCmd ="if not pgrep trayer > /dev/null; then trayer --monitor primary --align right --widthtype pixel --width " ++ show trayerW ++ " --edge top --height 16 --tint 0x111111 --alpha 0 --transparent true --SetDockType true --SetPartialStrut true;fi"
-      trayerBarCmd ="trayer --monitor primary --align right --widthtype pixel --width " ++ show trayerW ++ " --edge top --height 16 --tint 0x111111 --alpha 0 --transparent true --SetDockType true --SetPartialStrut true"
-      myDzenStatusBar = "LANG=en_US.utf8 conky -c /home/phoenix/work/statusbar/conkyrc | /home/phoenix/work/statusbar/plexer | dzen2 -xs 1 -x " ++ show statusO ++ " -y 0 -h 16 -w " ++ show statusW ++ " -ta 'r' -e 'entertitle=uncollapse,ungrabkeyboard,unhide;leavetitle=collapse;leaveslave=collapse' -sa 'c' -l 8 -u -fg '#8a8a8a' -fn -*-fixed-medium-*-*-*-12-*-*-*-*-*-*-* 2> statserr.log"
-
-    spawn trayerBarCmd
-    -- Statsbar
-    spawn myDzenStatusBar
-    -- Spawn stratum0trayicon
-    -- mySpawnCmd "stratum0trayicon"
-    -- Spawn stratum0trayicon
-    -- spawn "compton --config ~/.config/compton.config -b"
-    -- Spawn dunst
-    -- mySpawnCmd "dunst"
-    -- Spawn pasystray
-    -- mySpawnCmd "pasystray"
     -- Spawn xscreensaver
     spawn "/usr/bin/xscreensaver -no-splash"
-    -- Spawn mpd_inhibit
-    -- mySpawnCmd "mpdinhibit"
-    -- Spawn redshift-gtk
-    -- spawn "pkill redshift"
-    -- mySpawnCmd "redshift-gtk"
-    -- Spawn variety
-    -- mySpawnCmd "variety"
-    -- Spawn nm-applet
-    -- mySpawnCmd "nm-applet"
-    -- start Xmobar
-    xmproc1 <- spawnPipe myDzenBar
-    -- Setup gpg-agent to use the right pinentry
-    -- spawn "echo UPDATESTARTUPTTY | gpg-connect-agent"
+    -- Start xmonad.target
+    spawn "systemctl --user start xmonad.target"
     -- start XMonad
-    xmonad $ withUrgencyHook NoUrgencyHook $ ewmh (myConfig xmproc1 );
+    xmonad $ withUrgencyHook NoUrgencyHook $ ewmh (myConfig);

@@ -71,7 +71,7 @@ WLAN Bitrate: ${color 0088FF}$alignr${if_up wlan}${wireless_bitrate wlan}$else N
 WLAN LINK: ${color 0088FF}${if_up wlan}${wireless_link_bar 8 wlan}$else $alignr None $endif${color}
 WLAN IP: ${color 0088FF}$alignr${addr wlan}${color}
 ${voffset 0}${hr 2}
-LAN IP: $alignr${color 0088FF}${addr lan}${color}
+LAN IP: $alignr${color 0088FF}${v6addrs tun0}${color}
 ${voffset 0}${hr 2}
 bibliothekar:      ${execpi 30 ~/bin/pingtest.sh 192.168.213.151}
 nathan:            ${execpi 30 ~/bin/pingtest.sh 192.168.213.150}

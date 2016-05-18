@@ -3,8 +3,8 @@ export EDITOR='emacsclient -t -a='
 
 [ -n "$TMUX" ] && export TERM=screen-256color
 
-if pgrep xmonad >/dev/null;then
-    eval $(gnome-keyring-daemon --start --components=ssh)
+if [ -n "$DESKTOP_SESSION" ];then
+    eval $(gnome-keyring-daemon --start)
     export SSH_AUTH_SOCK
 fi
 

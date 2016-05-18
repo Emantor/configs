@@ -1,3 +1,4 @@
+#!/usr/bin/zsh -f
 zmodload -i zsh/parameter || return 1
 
 prompt_phoenix_help () {
@@ -17,7 +18,7 @@ prompt_phoenix_vcsstyles () {
     zstyle ':vcs_info:*:phoenix:*' stagedstr '✔'
     zstyle ':vcs_info:*:phoenix:*' actionformats '(%F{10}%s->%F{3}%r%f|%F{14}%b%f%)%F{9}%u%F{10}%c%f(%F{9}%a%f):%F{3}%S%f'
     zstyle ':vcs_info:*:phoenix:*' formats '(%F{10}%s->%F{3}%r%f|%F{14}%b%f%)%F{9}%u%F{10}%c%f%:%F{3}%S%f'
-    zstyle ':vcs_info:*:phoenix:*' nvcsformats "%F{3}%3~%f"
+    zstyle ':vcs_info:*:phoenix:*' nvcsformats '%F{yellow}%3~%f'
     zstyle ':vcs_info:(sv[nk]|bzr):*:phoenix:*' branchformat '%b%F{1}:%F{3}%r'
 }
 
@@ -38,24 +39,24 @@ prompt_phoenix_precmd () {
     # On Xterm, Rxvt and screen, print command/path as window title,
     # otherwise exec only vcs_info
     case $TERM in
-      xterm*|rxvt*|screen*)
-        print -Pn "\e]0;$TERM:%m:%3~\a";
-        ;;
+        xterm*|rxvt*|screen*)
+            print -Pn "\e]0;$TERM:%m:%3~\a";
+            ;;
     esac
 
     local screens=$(screen -ls 2> /dev/null | grep -c Detach )
     local jobs=$(jobs | wc -l )
 
     if [[ $screens == "0" ]]; then
-      screenbits=""
+        screenbits=""
     else
-      screenbits="%F{yellow}[%F{white}s%F{grey}:%F{yellow}$screens]%f"
+        screenbits="%F{yellow}[%F{white}s%F{grey}:%F{yellow}$screens]%f"
     fi
 
     if [[ $jobs == "0" ]]; then
-      jobbits=""
+        jobbits=""
     else
-      jobbits="%F{white}[%F{white}j%F{grey}:%F{yellow}$jobs%F{white}]%f"
+        jobbits="%F{white}[%F{white}j%F{grey}:%F{yellow}$jobs%F{white}]%f"
     fi
 
     vcs_info 'phoenix'
@@ -63,9 +64,9 @@ prompt_phoenix_precmd () {
 
 prompt_phoenix_preexec () {
     case $TERM in
-    rxvt*|xterm*|screen*)
-      print -Pn "\e]0;$TERM:$1\a"
-      ;;
+        rxvt*|xterm*|screen*)
+            print -Pn "\e]0;$TERM:$1\a"
+            ;;
     esac
 }
 
@@ -74,22 +75,24 @@ prompt_phoenix_ps1 () {
 
     local host_color
     if ! zstyle -s ":prompt:phoenix:ps1:${HOST}" host-color host_color; then
-      # get a number from the sha1 hash of the hostname
-      host_color=${${"$(sha1sum <<< $HOST)"//[a-z]#/}[1,16]}
-      # divide by 256/88/8 whatever
-      host_color=$(( host_color % $(echoti colors) ))
+        # get a number from the sha1 hash of the hostname
+        host_color=${${"$(sha1sum <<< $HOST)"//[a-z]#/}[1,16]}
+        # divide by 256/88/8 whatever
+        host_color=$(( host_color % $(echoti colors) ))
     fi
 
     # hide username if it's my regular one (anyone else might wanna change this)
     local user=""
     if ! zstyle -t ':prompt:phoenix:ps1' hide-user; then
-      user="%(!.%F{red}root%f@.%n@)"
+        user="%(!.%F{red}root%f@.%n@)"
     fi
 
     local host="%F{${host_color}%}%m%f"
     local exstate="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
     local date="%{$fg_no_bold[yellow]%}%D{%H:%M:%S}%{$reset_color%}"
     local gitinfo='${vcs_info_msg_0_}%#'
+
+
 
     prompt_bits="%F{blue}::%f"
 

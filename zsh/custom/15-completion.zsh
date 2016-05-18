@@ -47,7 +47,7 @@ zstyle ':completion:*::::' completer _expand _complete _ignored _approximate
 
 # allow one error for every three characters typed in approximate completer
 zstyle ':completion:*:approximate:*' max-errors 3
-    
+
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order all-expansions
 
@@ -77,7 +77,7 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 
 #zstyle ':completion:*:processes' command 'ps ax -o pid,s,nice,stime,args | sed "/ps/d"'
 zstyle ':completion:*:*:kill:*:processes' command 'ps --forest -A -o pid,user,cmd'
-zstyle ':completion:*:processes-names' command 'ps axho command' 
+zstyle ':completion:*:processes-names' command 'ps axho command'
 
 # ignore completion functions (until the _ignored completer)
 zstyle ':completion:*:functions' ignored-patterns '_*'
@@ -103,5 +103,9 @@ zstyle ':completion:complete-history:*' completer _history
 zstyle ':complete-recent-args' use-histbang yes
 
 # Twitch Token
-zstyle ':completion:*:twitch:*' oauth-token 2qig711jlla0xovtau35sg94580nj4d 
+zstyle ':completion:*:twitch:*' oauth-token 2qig711jlla0xovtau35sg94580nj4d
 zstyle ':completion:*:twitch' teams srl
+# complete from man pages
+zstyle ':completion:*:manuals'    separate-sections true
+zstyle ':completion:*:manuals.*'  insert-sections   true
+zstyle ':completion:*:man:*'      menu yes select
